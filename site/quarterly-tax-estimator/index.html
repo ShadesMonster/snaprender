@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quarterly Tax Estimator for Freelancers | OneTab</title>
+  <meta name="description" content="Free quarterly estimated tax calculator for freelancers and self-employed. Calculate federal, state, and self-employment tax with quarterly payment deadlines.">
+  <meta name="keywords" content="quarterly tax estimator, estimated tax calculator, freelance taxes, self-employment tax, 1099 taxes, quarterly tax payments">
+
+  <meta property="og:title" content="Quarterly Tax Estimator for Freelancers | OneTab">
+  <meta property="og:description" content="Calculate your quarterly estimated tax payments. See federal, state, and self-employment tax breakdown.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://onetab.tools/quarterly-tax-estimator/">
+  <meta property="og:site_name" content="OneTab">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Quarterly Tax Estimator for Freelancers | OneTab">
+  <meta name="twitter:description" content="Calculate your quarterly estimated tax payments. See federal, state, and self-employment tax breakdown.">
+
+  <link rel="canonical" href="https://onetab.tools/quarterly-tax-estimator/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/style.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Quarterly Tax Estimator",
+    "url": "https://onetab.tools/quarterly-tax-estimator/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "description": "Free quarterly estimated tax calculator for freelancers and self-employed individuals."
+  }
+  </script>
+
+  <script>
+    (function() {
+      var t = localStorage.getItem('onetab-theme');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+  </script>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="../">OneTab</a>
+  <div class="header-actions">
+    <select class="country-select-global" id="country-select-global" title="Your location"></select>
+    <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">Dark</button>
+  </div>
+</header>
+
+<main class="container">
+  <h1>Quarterly Tax Estimator</h1>
+  <p class="subtitle">Calculate your estimated quarterly tax payments for freelance and self-employment income.</p>
+
+  <div class="ad-placeholder" data-size="leaderboard"><span class="ad-label">Ad</span><span class="ad-size">728 × 90</span></div>
+
+  <div id="non-us-notice" class="info-box warning" style="display:none;">
+    <strong>Note:</strong> This calculator uses US federal tax brackets and self-employment tax rules. For other countries, consult your local tax authority.
+  </div>
+
+  <!-- Income -->
+  <div class="card">
+    <div class="card-title">Income</div>
+    <div class="form-group">
+      <label>Expected annual freelance income</label>
+      <div class="input-with-prefix">
+        <span class="prefix" id="pfx1">$</span>
+        <input type="number" id="income" value="100000" min="0" step="1000">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Business expenses / deductions</label>
+      <div class="input-with-prefix">
+        <span class="prefix" id="pfx2">$</span>
+        <input type="number" id="expenses" value="15000" min="0" step="500">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Other income <span class="hint">(W-2, investments, etc.)</span></label>
+      <div class="input-with-prefix">
+        <span class="prefix" id="pfx3">$</span>
+        <input type="number" id="otherIncome" value="0" min="0" step="1000">
+      </div>
+    </div>
+  </div>
+
+  <!-- Filing Details -->
+  <div class="card">
+    <div class="card-title">Filing Details</div>
+    <div class="row">
+      <div class="form-group">
+        <label>Filing status</label>
+        <select id="filingStatus">
+          <option value="single">Single</option>
+          <option value="mfj">Married Filing Jointly</option>
+          <option value="mfs">Married Filing Separately</option>
+          <option value="hoh">Head of Household</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>State</label>
+        <select id="state"></select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Already Paid -->
+  <div class="card">
+    <div class="card-title">Payments Already Made</div>
+    <div class="row">
+      <div class="form-group">
+        <label>Estimated taxes paid this year</label>
+        <div class="input-with-prefix">
+          <span class="prefix" id="pfx4">$</span>
+          <input type="number" id="alreadyPaid" value="0" min="0" step="500">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Withholding from other jobs</label>
+        <div class="input-with-prefix">
+          <span class="prefix" id="pfx5">$</span>
+          <input type="number" id="withholding" value="0" min="0" step="500">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="results" class="result-section visible">
+
+    <div class="card result-hero" style="border-radius:var(--radius);">
+      <div class="rate-label">Quarterly Estimated Payment</div>
+      <div class="rate-value" id="heroQuarterly">$0</div>
+      <div class="rate-sublabel">due each quarter</div>
+    </div>
+
+    <div class="stat-grid" style="margin-bottom:1.5rem;">
+      <div class="stat-box">
+        <div class="stat-value" id="statTotal">$0</div>
+        <div class="stat-label">Annual Tax</div>
+      </div>
+      <div class="stat-box highlight">
+        <div class="stat-value" id="statRate">0%</div>
+        <div class="stat-label">Effective Rate</div>
+      </div>
+      <div class="stat-box warning">
+        <div class="stat-value" id="statSE">$0</div>
+        <div class="stat-label">SE Tax</div>
+      </div>
+      <div class="stat-box success">
+        <div class="stat-value" id="statMonthly">$0</div>
+        <div class="stat-label">Monthly Set-Aside</div>
+      </div>
+    </div>
+
+    <div class="ad-placeholder" data-size="rectangle"><span class="ad-label">Ad</span><span class="ad-size">300 × 250</span></div>
+
+    <!-- Tax Breakdown -->
+    <div class="card">
+      <h2>Tax Breakdown</h2>
+      <table class="breakdown-table" id="breakdownTable">
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Quarterly Deadlines -->
+    <div class="card">
+      <h2>Quarterly Deadlines</h2>
+      <div id="deadlines"></div>
+    </div>
+
+    <!-- Per-Invoice Set-Aside -->
+    <div id="setAsideBox" class="info-box success">
+      <strong>Set aside <span id="setAsidePct">0%</span> of every invoice for taxes.</strong><br>
+      For a <span id="sampleInvoice">$1,000</span> invoice, save <span id="sampleSave">$0</span> for taxes.
+    </div>
+
+    <!-- Stacked Bar -->
+    <div class="card">
+      <h2>Income Breakdown</h2>
+      <div class="stacked-bar" id="stackedBar"></div>
+      <div class="stacked-legend" id="stackedLegend"></div>
+    </div>
+
+    <div class="ad-placeholder" data-size="large-rectangle"><span class="ad-label">Ad</span><span class="ad-size">336 × 280</span></div>
+  </div>
+
+  <!-- Related Tools -->
+  <div class="card" style="margin-top:1.5rem;">
+    <div class="card-title">Related Tools</div>
+    <div style="display:flex;flex-direction:column;gap:0.5rem;">
+      <a href="../freelance-rate-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Freelance Hourly Rate Calculator</a>
+      <a href="../compound-interest-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Compound Interest Calculator</a>
+      <a href="../invoice-generator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Invoice Generator</a>
+    </div>
+  </div>
+
+  <div class="ad-placeholder" data-size="in-article"><span class="ad-label">Ad</span><span class="ad-size">Responsive</span></div>
+
+  <!-- SEO Content -->
+  <div class="content-section">
+    <h2>Understanding Quarterly Estimated Taxes</h2>
+    <p>If you're a freelancer, independent contractor, or self-employed individual in the US, you're generally required to make quarterly estimated tax payments to the IRS. Unlike W-2 employees who have taxes withheld from each paycheck, self-employed workers must pay taxes proactively throughout the year.</p>
+
+    <h2>Who Needs to Pay Quarterly Taxes?</h2>
+    <p>You generally need to make estimated tax payments if you expect to owe at least $1,000 in tax for the year after subtracting withholding and credits. This applies to freelancers, sole proprietors, partners, S-corporation shareholders, and anyone with significant income not subject to withholding.</p>
+
+    <h2>The Four Quarterly Deadlines</h2>
+    <ul>
+      <li><strong>Q1 (Jan 1 – Mar 31):</strong> Payment due April 15</li>
+      <li><strong>Q2 (Apr 1 – May 31):</strong> Payment due June 15</li>
+      <li><strong>Q3 (Jun 1 – Aug 31):</strong> Payment due September 15</li>
+      <li><strong>Q4 (Sep 1 – Dec 31):</strong> Payment due January 15 of the following year</li>
+    </ul>
+
+    <h2>Self-Employment Tax Explained</h2>
+    <p>Self-employment tax covers Social Security (12.4%) and Medicare (2.9%) taxes. As a self-employed person, you pay both the employer and employee portions, totaling 15.3%. This is calculated on 92.35% of your net self-employment income. The Social Security portion has a wage base cap ($168,600 for 2024), but Medicare has no cap.</p>
+
+    <h2>Safe Harbor Rule</h2>
+    <p>To avoid underpayment penalties, you should pay at least the lesser of: (1) 90% of your current year's tax liability, or (2) 100% of your prior year's tax liability (110% if your AGI exceeded $150,000). This is known as the "safe harbor" rule and is a common strategy for freelancers with variable income.</p>
+
+    <h2>Tips for Managing Quarterly Taxes</h2>
+    <ul>
+      <li><strong>Set aside money immediately:</strong> When you receive a payment, transfer your tax percentage to a separate savings account.</li>
+      <li><strong>Track expenses diligently:</strong> Business expenses reduce your taxable income. Keep receipts and records for everything.</li>
+      <li><strong>Consider a SEP IRA or Solo 401(k):</strong> Retirement contributions can significantly reduce your taxable income.</li>
+      <li><strong>Use IRS Direct Pay or EFTPS:</strong> Make payments electronically to get instant confirmation.</li>
+      <li><strong>Adjust quarterly:</strong> If your income changes significantly, recalculate and adjust your estimated payments.</li>
+    </ul>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <a href="../" style="color:var(--color-text-muted);text-decoration:none;">← Back to all tools</a>
+  <p style="margin-top:0.5rem;">Built for people who need quick answers.</p>
+</footer>
+
+<script src="../js/onetab-global.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  // State tax rates (approximate)
+  var STATE_TAXES = {
+    'AL':4.0,'AK':0,'AZ':2.5,'AR':4.4,'CA':9.3,'CO':4.4,'CT':5.0,'DE':5.5,'DC':8.5,'FL':0,
+    'GA':5.49,'HI':8.25,'ID':5.8,'IL':4.95,'IN':3.05,'IA':5.7,'KS':5.25,'KY':4.0,'LA':4.25,
+    'ME':7.15,'MD':5.0,'MA':5.0,'MI':4.25,'MN':7.85,'MS':5.0,'MO':4.8,'MT':5.9,'NE':5.01,
+    'NV':0,'NH':0,'NJ':6.37,'NM':4.9,'NY':6.85,'NC':4.5,'ND':1.95,'OH':3.5,'OK':4.75,
+    'OR':8.75,'PA':3.07,'RI':4.75,'SC':6.4,'SD':0,'TN':0,'TX':0,'UT':4.65,'VT':6.6,
+    'VA':5.0,'WA':0,'WV':5.12,'WI':5.3,'WY':0
+  };
+
+  var STATE_NAMES = {
+    'AL':'Alabama','AK':'Alaska','AZ':'Arizona','AR':'Arkansas','CA':'California',
+    'CO':'Colorado','CT':'Connecticut','DE':'Delaware','DC':'District of Columbia','FL':'Florida',
+    'GA':'Georgia','HI':'Hawaii','ID':'Idaho','IL':'Illinois','IN':'Indiana',
+    'IA':'Iowa','KS':'Kansas','KY':'Kentucky','LA':'Louisiana','ME':'Maine',
+    'MD':'Maryland','MA':'Massachusetts','MI':'Michigan','MN':'Minnesota','MS':'Mississippi',
+    'MO':'Missouri','MT':'Montana','NE':'Nebraska','NV':'Nevada','NH':'New Hampshire',
+    'NJ':'New Jersey','NM':'New Mexico','NY':'New York','NC':'North Carolina','ND':'North Dakota',
+    'OH':'Ohio','OK':'Oklahoma','OR':'Oregon','PA':'Pennsylvania','RI':'Rhode Island',
+    'SC':'South Carolina','SD':'South Dakota','TN':'Tennessee','TX':'Texas','UT':'Utah',
+    'VT':'Vermont','VA':'Virginia','WA':'Washington','WV':'West Virginia','WI':'Wisconsin','WY':'Wyoming'
+  };
+
+  // Federal brackets 2024
+  var BRACKETS = {
+    single: [
+      [11600, 0.10], [47150, 0.12], [100525, 0.22], [191950, 0.24],
+      [243725, 0.32], [609350, 0.35], [Infinity, 0.37]
+    ],
+    mfj: [
+      [23200, 0.10], [94300, 0.12], [201050, 0.22], [383900, 0.24],
+      [487450, 0.32], [731200, 0.35], [Infinity, 0.37]
+    ],
+    mfs: [
+      [11600, 0.10], [47150, 0.12], [100525, 0.22], [191950, 0.24],
+      [243725, 0.32], [609350, 0.35], [Infinity, 0.37]
+    ],
+    hoh: [
+      [16550, 0.10], [63100, 0.12], [100500, 0.22], [191950, 0.24],
+      [243700, 0.32], [609350, 0.35], [Infinity, 0.37]
+    ]
+  };
+
+  var STD_DEDUCTION = { single: 14600, mfj: 29200, mfs: 14600, hoh: 21900 };
+  var SS_CAP = 168600;
+
+  // Populate state dropdown
+  var stateSel = document.getElementById('state');
+  var codes = Object.keys(STATE_NAMES).sort(function(a,b){ return STATE_NAMES[a].localeCompare(STATE_NAMES[b]); });
+  for (var i = 0; i < codes.length; i++) {
+    var o = document.createElement('option');
+    o.value = codes[i];
+    o.textContent = STATE_NAMES[codes[i]] + (STATE_TAXES[codes[i]] === 0 ? ' (no income tax)' : '');
+    stateSel.appendChild(o);
+  }
+  stateSel.value = 'CA';
+
+  function calcFederalTax(taxableIncome, status) {
+    var brackets = BRACKETS[status];
+    var tax = 0, prev = 0;
+    for (var i = 0; i < brackets.length; i++) {
+      var limit = brackets[i][0], rate = brackets[i][1];
+      if (taxableIncome <= prev) break;
+      var amt = Math.min(taxableIncome, limit) - prev;
+      tax += amt * rate;
+      prev = limit;
+    }
+    return Math.max(0, tax);
+  }
+
+  function calcSETax(netSE) {
+    var base = netSE * 0.9235;
+    if (base <= 0) return { total: 0, ss: 0, medicare: 0 };
+    var ss = Math.min(base, SS_CAP) * 0.124;
+    var medicare = base * 0.029;
+    return { total: ss + medicare, ss: ss, medicare: medicare };
+  }
+
+  function getQuarterlyDeadlines() {
+    var year = new Date().getFullYear();
+    return [
+      { q: 'Q1', period: 'Jan 1 – Mar 31', due: new Date(year, 3, 15), label: 'Apr 15, ' + year },
+      { q: 'Q2', period: 'Apr 1 – May 31', due: new Date(year, 5, 15), label: 'Jun 15, ' + year },
+      { q: 'Q3', period: 'Jun 1 – Aug 31', due: new Date(year, 8, 15), label: 'Sep 15, ' + year },
+      { q: 'Q4', period: 'Sep 1 – Dec 31', due: new Date(year + 1, 0, 15), label: 'Jan 15, ' + (year + 1) }
+    ];
+  }
+
+  function calculate() {
+    var income = parseFloat(document.getElementById('income').value) || 0;
+    var expenses = parseFloat(document.getElementById('expenses').value) || 0;
+    var otherIncome = parseFloat(document.getElementById('otherIncome').value) || 0;
+    var status = document.getElementById('filingStatus').value;
+    var state = document.getElementById('state').value;
+    var alreadyPaid = parseFloat(document.getElementById('alreadyPaid').value) || 0;
+    var withholding = parseFloat(document.getElementById('withholding').value) || 0;
+
+    var netSE = Math.max(0, income - expenses);
+    var se = calcSETax(netSE);
+    var seDeduction = se.total / 2;
+    var agi = netSE + otherIncome - seDeduction;
+    var stdDed = STD_DEDUCTION[status];
+    var taxableIncome = Math.max(0, agi - stdDed);
+    var federalTax = calcFederalTax(taxableIncome, status);
+    var stateRate = (STATE_TAXES[state] || 0) / 100;
+    var stateTax = taxableIncome * stateRate;
+    var totalTax = federalTax + stateTax + se.total;
+    var totalPaid = alreadyPaid + withholding;
+    var remaining = Math.max(0, totalTax - totalPaid);
+
+    // Determine remaining quarters
+    var now = new Date();
+    var deadlines = getQuarterlyDeadlines();
+    var remainingQ = 0;
+    for (var i = 0; i < deadlines.length; i++) {
+      if (deadlines[i].due > now) remainingQ++;
+    }
+    if (remainingQ === 0) remainingQ = 4;
+    var quarterly = remaining / remainingQ;
+    var monthly = totalTax / 12;
+    var effectiveRate = income > 0 ? (totalTax / income * 100) : 0;
+    var setAsidePct = income > 0 ? (totalTax / income * 100) : 0;
+
+    // Hero
+    document.getElementById('heroQuarterly').textContent = OneTab.fmt(Math.round(quarterly));
+
+    // Stats
+    document.getElementById('statTotal').textContent = OneTab.fmt(Math.round(totalTax));
+    document.getElementById('statRate').textContent = effectiveRate.toFixed(1) + '%';
+    document.getElementById('statSE').textContent = OneTab.fmt(Math.round(se.total));
+    document.getElementById('statMonthly').textContent = OneTab.fmt(Math.round(monthly));
+
+    // Breakdown table
+    var rows = [
+      ['Gross freelance income', OneTab.fmt(Math.round(income))],
+      ['Business expenses', '− ' + OneTab.fmt(Math.round(expenses))],
+      ['Net self-employment income', OneTab.fmt(Math.round(netSE))],
+      ['', ''],
+      ['Self-employment tax (15.3%)', OneTab.fmt(Math.round(se.total))],
+      ['SE tax deduction (50%)', '− ' + OneTab.fmt(Math.round(seDeduction))],
+      ['Other income', OneTab.fmt(Math.round(otherIncome))],
+      ['Adjusted gross income', OneTab.fmt(Math.round(agi))],
+      ['Standard deduction', '− ' + OneTab.fmt(Math.round(stdDed))],
+      ['Taxable income', OneTab.fmt(Math.round(taxableIncome))],
+      ['', ''],
+      ['Federal income tax', OneTab.fmt(Math.round(federalTax))],
+      ['State income tax (' + state + ' ' + (stateRate * 100).toFixed(1) + '%)', OneTab.fmt(Math.round(stateTax))],
+      ['Self-employment tax', OneTab.fmt(Math.round(se.total))],
+      ['total', OneTab.fmt(Math.round(totalTax))],
+      ['', ''],
+      ['Already paid / withheld', '− ' + OneTab.fmt(Math.round(totalPaid))],
+      ['Remaining tax due', OneTab.fmt(Math.round(remaining))],
+      ['total', OneTab.fmt(Math.round(quarterly)) + ' × ' + remainingQ + ' quarters']
+    ];
+
+    var tbody = document.getElementById('breakdownTable').querySelector('tbody');
+    tbody.innerHTML = '';
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i][0] === '' && rows[i][1] === '') continue;
+      var tr = document.createElement('tr');
+      if (rows[i][0] === 'total') {
+        tr.className = 'total';
+        var td1 = document.createElement('td');
+        td1.textContent = i === rows.length - 1 ? 'Quarterly payment' : 'Total tax liability';
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      } else {
+        var td1 = document.createElement('td');
+        td1.textContent = rows[i][0];
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      }
+      tbody.appendChild(tr);
+    }
+
+    // Deadlines
+    var dlDiv = document.getElementById('deadlines');
+    dlDiv.innerHTML = '';
+    for (var i = 0; i < deadlines.length; i++) {
+      var d = deadlines[i];
+      var isNext = d.due > now;
+      var isPast = d.due <= now;
+      var daysUntil = isNext ? Math.ceil((d.due - now) / 86400000) : 0;
+
+      var box = document.createElement('div');
+      box.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:0.75rem 1rem;border-radius:var(--radius);margin-bottom:0.5rem;border:1px solid var(--color-border);background:' + (isNext && !dlDiv.querySelector('.next-q') ? 'var(--color-primary-light)' : isPast ? 'var(--color-bg)' : 'var(--color-bg)');
+
+      var isFirstNext = isNext && !dlDiv.querySelector('.next-q');
+      if (isFirstNext) {
+        box.className = 'next-q';
+        box.style.borderColor = 'var(--color-primary)';
+        box.style.background = 'var(--color-primary-light)';
+      }
+
+      var left = document.createElement('div');
+      left.innerHTML = '<strong>' + d.q + '</strong> <span style="color:var(--color-text-muted);font-size:0.85rem;">' + d.period + '</span>';
+
+      var right = document.createElement('div');
+      right.style.textAlign = 'right';
+      if (isPast) {
+        right.innerHTML = '<span style="color:var(--color-text-muted);font-size:0.85rem;">Due ' + d.label + '</span>';
+      } else if (isFirstNext) {
+        right.innerHTML = '<strong style="color:var(--color-primary);">' + OneTab.fmt(Math.round(quarterly)) + '</strong><br><span style="font-size:0.75rem;color:var(--color-primary);">Due ' + d.label + ' (' + daysUntil + ' days)</span>';
+      } else {
+        right.innerHTML = '<span style="font-size:0.85rem;">' + OneTab.fmt(Math.round(quarterly)) + '</span><br><span style="font-size:0.75rem;color:var(--color-text-muted);">Due ' + d.label + '</span>';
+      }
+
+      box.appendChild(left);
+      box.appendChild(right);
+      dlDiv.appendChild(box);
+    }
+
+    // Set-aside
+    document.getElementById('setAsidePct').textContent = setAsidePct.toFixed(0) + '%';
+    var sampleAmt = 1000;
+    document.getElementById('sampleInvoice').textContent = OneTab.fmt(sampleAmt);
+    document.getElementById('sampleSave').textContent = OneTab.fmt(Math.round(sampleAmt * setAsidePct / 100));
+
+    // Stacked bar
+    var takeHome = Math.max(0, income - totalTax);
+    var barDiv = document.getElementById('stackedBar');
+    var legDiv = document.getElementById('stackedLegend');
+    barDiv.innerHTML = '';
+    legDiv.innerHTML = '';
+
+    if (income > 0) {
+      var segments = [
+        { label: 'Take Home', value: takeHome, color: '#059669' },
+        { label: 'Federal Tax', value: federalTax, color: '#2563eb' },
+        { label: 'State Tax', value: stateTax, color: '#7c3aed' },
+        { label: 'SE Tax', value: se.total, color: '#d97706' }
+      ];
+      for (var i = 0; i < segments.length; i++) {
+        var pct = (segments[i].value / income * 100);
+        if (pct < 0.5) continue;
+        var seg = document.createElement('div');
+        seg.className = 'segment';
+        seg.style.width = pct + '%';
+        seg.style.background = segments[i].color;
+        if (pct > 8) seg.textContent = pct.toFixed(0) + '%';
+        barDiv.appendChild(seg);
+
+        var li = document.createElement('div');
+        li.className = 'legend-item';
+        li.innerHTML = '<span class="legend-dot" style="background:' + segments[i].color + '"></span>' + segments[i].label + ': ' + OneTab.fmt(Math.round(segments[i].value));
+        legDiv.appendChild(li);
+      }
+    }
+  }
+
+  // Bind inputs
+  var inputs = document.querySelectorAll('input, select');
+  for (var i = 0; i < inputs.length; i++) {
+    inputs[i].addEventListener('input', calculate);
+    inputs[i].addEventListener('change', calculate);
+  }
+
+  // Country change
+  OneTab.onCountryChange(function(c) {
+    var pfxs = document.querySelectorAll('[id^="pfx"]');
+    for (var i = 0; i < pfxs.length; i++) pfxs[i].textContent = c.currency;
+    var notice = document.getElementById('non-us-notice');
+    if (notice) notice.style.display = (OneTab.countryCode() !== 'US') ? 'block' : 'none';
+    calculate();
+  });
+
+  calculate();
+})();
+</script>
+</body>
+</html>

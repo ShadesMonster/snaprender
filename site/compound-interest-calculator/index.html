@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compound Interest Calculator — See How Your Money Grows Over Time</title>
+  <meta name="description" content="Free compound interest calculator with growth chart and year-by-year breakdown. See how your investments grow with monthly contributions, different compounding frequencies, and inflation adjustments.">
+  <meta name="keywords" content="compound interest calculator, investment calculator, compound growth, interest rate calculator, savings calculator, investment growth chart">
+
+  <meta property="og:title" content="Compound Interest Calculator — Visualize Your Investment Growth">
+  <meta property="og:description" content="See exactly how compound interest grows your money over time. Includes growth chart, year-by-year breakdown, and inflation-adjusted returns.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://onetab.tools/compound-interest-calculator/">
+  <meta property="og:site_name" content="OneTab">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Compound Interest Calculator">
+  <meta name="twitter:description" content="See how compound interest grows your money over time with charts and breakdowns.">
+
+  <link rel="canonical" href="https://onetab.tools/compound-interest-calculator/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>
+    (function() {
+      var t = localStorage.getItem('onetab-theme');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Compound Interest Calculator",
+    "description": "Calculate compound interest with monthly contributions, visualize growth over time with charts, and see year-by-year breakdowns. Supports multiple compounding frequencies and inflation adjustments.",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="../">OneTab</a>
+  <div class="header-actions">
+    <select class="country-select-global" id="country-select-global" title="Your location"></select>
+    <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">Dark</button>
+  </div>
+</header>
+
+<main class="container">
+  <h1>Compound Interest Calculator</h1>
+  <p class="subtitle">See how your money grows over time with compound interest, monthly contributions, and different compounding frequencies.</p>
+
+  <!-- Ad: Leaderboard -->
+  <div class="ad-placeholder" data-size="leaderboard">
+    <span class="ad-label">Advertisement</span>
+    <span class="ad-size">728 x 90</span>
+  </div>
+
+  <!-- Inputs -->
+  <div class="card">
+    <div class="card-title">Investment Details</div>
+
+    <div class="row">
+      <div class="form-group">
+        <label for="initial-investment">Initial Investment</label>
+        <div class="input-with-prefix">
+          <span class="prefix" id="currency-prefix-initial">$</span>
+          <input type="number" id="initial-investment" value="10000" min="0" step="1000">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="monthly-contribution">Monthly Contribution</label>
+        <div class="input-with-prefix">
+          <span class="prefix" id="currency-prefix-monthly">$</span>
+          <input type="number" id="monthly-contribution" value="500" min="0" step="50">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+        <label for="annual-rate">Annual Interest Rate</label>
+        <div class="input-with-suffix">
+          <input type="number" id="annual-rate" value="7" min="0" max="100" step="0.1">
+          <span class="suffix">%</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="time-period">Time Period</label>
+        <div class="input-with-suffix">
+          <input type="number" id="time-period" value="10" min="1" max="100" step="1">
+          <span class="suffix">years</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="compound-frequency">Compound Frequency</label>
+      <select id="compound-frequency">
+        <option value="365">Daily</option>
+        <option value="12" selected>Monthly</option>
+        <option value="4">Quarterly</option>
+        <option value="1">Annually</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="result-section" id="results">
+
+    <!-- Hero result -->
+    <div class="card result-hero">
+      <div class="rate-label">Final Balance</div>
+      <div class="rate-value" id="hero-value">&mdash;</div>
+      <div class="rate-sublabel" id="hero-sub">after <span id="hero-years">10</span> years of compounding</div>
+    </div>
+
+    <!-- Stat grid -->
+    <div class="card">
+      <div class="card-title">Summary</div>
+      <div class="stat-grid">
+        <div class="stat-box">
+          <div class="stat-value" id="stat-contributions">&mdash;</div>
+          <div class="stat-label">Total Contributions</div>
+        </div>
+        <div class="stat-box highlight">
+          <div class="stat-value" id="stat-interest">&mdash;</div>
+          <div class="stat-label">Total Interest Earned</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="stat-interest-pct">&mdash;</div>
+          <div class="stat-label">Interest % of Total</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="stat-effective-rate">&mdash;</div>
+          <div class="stat-label">Effective Annual Rate</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Growth Chart -->
+    <div class="card">
+      <div class="card-title">Growth Over Time</div>
+      <canvas id="growth-chart" width="760" height="360" style="width:100%;height:auto"></canvas>
+      <div class="stacked-legend" style="margin-top:0.75rem">
+        <div class="legend-item">
+          <span class="legend-dot" style="background:#2563eb"></span>
+          Contributions
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background:#059669"></span>
+          Interest Earned
+        </div>
+      </div>
+    </div>
+
+    <!-- Ad: Rectangle -->
+    <div class="ad-placeholder" data-size="rectangle">
+      <span class="ad-label">Advertisement</span>
+      <span class="ad-size">300 x 250</span>
+    </div>
+
+    <!-- Year-by-year breakdown table -->
+    <div class="card">
+      <div class="card-title">Year-by-Year Breakdown</div>
+      <div style="overflow-x:auto">
+        <table class="breakdown-table" id="yearly-table">
+          <thead>
+            <tr>
+              <td><strong>Year</strong></td>
+              <td style="text-align:right"><strong>Contributions</strong></td>
+              <td style="text-align:right"><strong>Interest</strong></td>
+              <td style="text-align:right"><strong>Balance</strong></td>
+            </tr>
+          </thead>
+          <tbody id="yearly-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Inflation-adjusted section -->
+    <div class="info-box" id="inflation-box">
+      <strong>Adjusted for Inflation (3% annually):</strong>
+      <span id="inflation-text">Your final balance would be worth approximately &mdash; in today's dollars, representing an effective real return of &mdash; per year.</span>
+    </div>
+
+    <!-- Ad: In-article -->
+    <div class="ad-placeholder" data-size="in-article">
+      <span class="ad-label">Advertisement</span>
+    </div>
+  </div>
+
+  <!-- Related Tools -->
+  <div class="card" style="margin-top:1.5rem">
+    <div class="card-title">Related Tools</div>
+    <p style="font-size:0.9rem;color:var(--color-text-muted);margin-bottom:0.5rem">
+      <a href="../salary-converter/" style="color:var(--color-primary);text-decoration:none;font-weight:600">Salary to Hourly Calculator</a> &mdash; Convert between annual salary and hourly rate
+    </p>
+    <p style="font-size:0.9rem;color:var(--color-text-muted);margin-bottom:0.5rem">
+      <a href="../freelance-rate-calculator/" style="color:var(--color-primary);text-decoration:none;font-weight:600">Freelance Rate Calculator</a> &mdash; Figure out what to charge as a freelancer
+    </p>
+    <p style="font-size:0.9rem;color:var(--color-text-muted);margin:0">
+      <a href="../quarterly-tax-estimator/" style="color:var(--color-primary);text-decoration:none;font-weight:600">Quarterly Tax Estimator</a> &mdash; Estimate your quarterly tax payments
+    </p>
+  </div>
+
+  <!-- Ad: Large Rectangle before SEO content -->
+  <div class="ad-placeholder" data-size="large-rectangle">
+    <span class="ad-label">Advertisement</span>
+    <span class="ad-size">336 x 280</span>
+  </div>
+
+  <!-- SEO Content -->
+  <div class="content-section">
+    <h2>How Compound Interest Works</h2>
+    <p>Compound interest is interest calculated on both the initial principal and the accumulated interest from previous periods. Unlike simple interest, which only earns interest on the original amount, compound interest allows your earnings to generate their own earnings &mdash; creating exponential growth over time.</p>
+    <p>The formula for compound interest is:</p>
+    <p><strong>A = P(1 + r/n)<sup>nt</sup> + PMT &times; [((1 + r/n)<sup>nt</sup> - 1) / (r/n)]</strong></p>
+    <p>Where P is principal, r is the annual rate, n is the compounding frequency, t is time in years, and PMT is the periodic contribution. This calculator handles all of this for you automatically.</p>
+
+    <h2>The Rule of 72</h2>
+    <p>The Rule of 72 is a quick mental math shortcut to estimate how long it takes for an investment to double. Simply divide 72 by the annual interest rate:</p>
+    <ul>
+      <li><strong>At 6% interest:</strong> 72 / 6 = 12 years to double</li>
+      <li><strong>At 8% interest:</strong> 72 / 8 = 9 years to double</li>
+      <li><strong>At 10% interest:</strong> 72 / 10 = 7.2 years to double</li>
+      <li><strong>At 12% interest:</strong> 72 / 12 = 6 years to double</li>
+    </ul>
+    <p>This rule works best for interest rates between 6% and 10%. For rates outside that range, 69.3 divided by the rate gives a more accurate result.</p>
+
+    <!-- Ad: In-article within SEO content -->
+    <div class="ad-placeholder" data-size="in-article">
+      <span class="ad-label">Advertisement</span>
+      <span class="ad-size">In-article</span>
+    </div>
+
+    <h2>How Compounding Frequency Matters</h2>
+    <p>The more frequently interest is compounded, the more you earn. Here is how different frequencies compare on a $10,000 investment at 7% over 10 years (with no additional contributions):</p>
+    <ul>
+      <li><strong>Annually:</strong> $19,671.51</li>
+      <li><strong>Quarterly:</strong> $19,897.89</li>
+      <li><strong>Monthly:</strong> $20,096.61</li>
+      <li><strong>Daily:</strong> $20,137.53</li>
+    </ul>
+    <p>While daily compounding earns more than annual, the difference between daily and monthly compounding is relatively small. Most savings accounts and investments compound daily or monthly.</p>
+
+    <h2>The Power of Starting Early</h2>
+    <p>Time is the most powerful factor in compound interest. Starting 10 years earlier can dramatically change your outcomes, even with smaller contributions. For example, investing $300/month starting at age 25 at 7% annual return grows to approximately $734,000 by age 65. Waiting until age 35 to start the same investment yields only about $340,000 &mdash; less than half, despite contributing for only 10 fewer years.</p>
+
+    <h2>Why Monthly Contributions Matter</h2>
+    <p>Regular monthly contributions have a massive impact on long-term wealth building. Even small amounts add up significantly thanks to compound interest. Contributing an additional $100 per month at 7% over 30 years adds over $120,000 to your final balance &mdash; far more than the $36,000 you actually contributed.</p>
+
+    <h2>Accounting for Inflation</h2>
+    <p>While your nominal returns might look impressive, inflation erodes purchasing power over time. At a typical 3% inflation rate, a dollar today is worth about 74 cents in 10 years and 55 cents in 20 years. This calculator includes an inflation-adjusted figure so you can see what your future balance is actually worth in today's purchasing power. The "real return" (after inflation) is what truly matters for your financial planning.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <p>Built for people who want to see their money grow. <a href="../" style="color:var(--color-primary);text-decoration:none">More tools &rarr;</a></p>
+</footer>
+
+<script src="../js/onetab-global.js"></script>
+<script>
+(function() {
+  var inputInitial = document.getElementById('initial-investment');
+  var inputMonthly = document.getElementById('monthly-contribution');
+  var inputRate = document.getElementById('annual-rate');
+  var inputYears = document.getElementById('time-period');
+  var inputFrequency = document.getElementById('compound-frequency');
+  var prefixInitial = document.getElementById('currency-prefix-initial');
+  var prefixMonthly = document.getElementById('currency-prefix-monthly');
+  var resultsSection = document.getElementById('results');
+  var canvas = document.getElementById('growth-chart');
+  var ctx = canvas.getContext('2d');
+
+  function calculate() {
+    var P = parseFloat(inputInitial.value) || 0;
+    var PMT = parseFloat(inputMonthly.value) || 0;
+    var annualRate = parseFloat(inputRate.value) || 0;
+    var years = parseInt(inputYears.value) || 0;
+    var n = parseInt(inputFrequency.value) || 12;
+
+    if (years <= 0) {
+      resultsSection.classList.remove('visible');
+      return;
+    }
+
+    var r = annualRate / 100;
+    var ratePerPeriod = r / n;
+
+    // Build year-by-year data
+    var yearData = [];
+    var balance = P;
+    var totalContributions = P;
+
+    // Contributions per compounding period
+    // Monthly contributions need to be distributed across compounding periods
+    var monthlyToCompounding;
+    if (n >= 12) {
+      // Daily or monthly: convert monthly contribution to per-period
+      monthlyToCompounding = PMT * 12 / n;
+    } else {
+      // Quarterly or annually: contributions accumulate between compounding periods
+      monthlyToCompounding = PMT * 12 / n;
+    }
+
+    for (var y = 1; y <= years; y++) {
+      var periodsThisYear = n;
+      for (var p = 0; p < periodsThisYear; p++) {
+        balance = balance * (1 + ratePerPeriod) + monthlyToCompounding;
+      }
+      totalContributions = P + PMT * 12 * y;
+      var totalInterest = balance - totalContributions;
+      yearData.push({
+        year: y,
+        contributions: totalContributions,
+        interest: totalInterest,
+        balance: balance
+      });
+    }
+
+    var finalBalance = balance;
+    var finalContributions = totalContributions;
+    var finalInterest = finalBalance - finalContributions;
+    var interestPct = finalBalance > 0 ? (finalInterest / finalBalance) * 100 : 0;
+
+    // Effective annual rate (APY)
+    var effectiveRate = (Math.pow(1 + ratePerPeriod, n) - 1) * 100;
+
+    // Update hero
+    document.getElementById('hero-value').textContent = OneTab.fmt(Math.round(finalBalance));
+    document.getElementById('hero-years').textContent = years;
+
+    // Update stats
+    document.getElementById('stat-contributions').textContent = OneTab.fmt(Math.round(finalContributions));
+    document.getElementById('stat-interest').textContent = OneTab.fmt(Math.round(finalInterest));
+    document.getElementById('stat-interest-pct').textContent = interestPct.toFixed(1) + '%';
+    document.getElementById('stat-effective-rate').textContent = effectiveRate.toFixed(2) + '%';
+
+    // Update table
+    var tbody = document.getElementById('yearly-tbody');
+    var rows = '';
+    for (var i = 0; i < yearData.length; i++) {
+      var d = yearData[i];
+      rows += '<tr>' +
+        '<td>' + d.year + '</td>' +
+        '<td style="text-align:right">' + OneTab.fmt(Math.round(d.contributions)) + '</td>' +
+        '<td style="text-align:right">' + OneTab.fmt(Math.round(d.interest)) + '</td>' +
+        '<td style="text-align:right">' + OneTab.fmt(Math.round(d.balance)) + '</td>' +
+        '</tr>';
+    }
+    // Total row
+    rows += '<tr class="total">' +
+      '<td>Total</td>' +
+      '<td style="text-align:right;font-weight:700">' + OneTab.fmt(Math.round(finalContributions)) + '</td>' +
+      '<td style="text-align:right;font-weight:700">' + OneTab.fmt(Math.round(finalInterest)) + '</td>' +
+      '<td style="text-align:right;font-weight:700">' + OneTab.fmt(Math.round(finalBalance)) + '</td>' +
+      '</tr>';
+    tbody.innerHTML = rows;
+
+    // Inflation-adjusted
+    var inflationRate = 0.03;
+    var inflationFactor = Math.pow(1 + inflationRate, years);
+    var realValue = finalBalance / inflationFactor;
+    var realReturn = (Math.pow(finalBalance / (P > 0 ? P : 1), 1 / years) - 1) * 100;
+    var nominalReturn = realReturn;
+    var realReturnRate = ((1 + nominalReturn / 100) / (1 + inflationRate) - 1) * 100;
+    // Better calculation: real return considering all contributions
+    // Use approximate method: real return ~= nominal - inflation
+    var approxRealReturn = annualRate - inflationRate * 100;
+    document.getElementById('inflation-text').innerHTML =
+      'Your final balance of ' + OneTab.fmt(Math.round(finalBalance)) +
+      ' would be worth approximately <strong>' + OneTab.fmt(Math.round(realValue)) +
+      '</strong> in today\'s dollars, representing an effective real return of approximately <strong>' +
+      approxRealReturn.toFixed(1) + '%</strong> per year after accounting for 3% annual inflation.';
+
+    // Draw chart
+    drawChart(yearData);
+
+    resultsSection.classList.add('visible');
+  }
+
+  function drawChart(yearData) {
+    var dpr = window.devicePixelRatio || 1;
+    var rect = canvas.getBoundingClientRect();
+    var w = rect.width || 760;
+    var h = rect.height || 360;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    var bgColor = isDark ? '#161b22' : '#ffffff';
+    var textColor = isDark ? '#8b949e' : '#6b7280';
+    var gridColor = isDark ? '#30363d' : '#e5e7eb';
+    var contribColor = isDark ? '#1d4ed8' : '#2563eb';
+    var contribFill = isDark ? 'rgba(29,78,216,0.35)' : 'rgba(37,99,235,0.25)';
+    var interestColor = isDark ? '#059669' : '#059669';
+    var interestFill = isDark ? 'rgba(5,150,105,0.35)' : 'rgba(5,150,105,0.25)';
+
+    // Chart padding
+    var padL = 70;
+    var padR = 20;
+    var padT = 20;
+    var padB = 40;
+    var chartW = w - padL - padR;
+    var chartH = h - padT - padB;
+
+    // Clear
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(0, 0, w, h);
+
+    if (yearData.length === 0) return;
+
+    // Determine max value
+    var maxVal = 0;
+    for (var i = 0; i < yearData.length; i++) {
+      if (yearData[i].balance > maxVal) maxVal = yearData[i].balance;
+    }
+    // Nice round max
+    var magnitude = Math.pow(10, Math.floor(Math.log10(maxVal || 1)));
+    maxVal = Math.ceil(maxVal / magnitude) * magnitude;
+    if (maxVal === 0) maxVal = 1000;
+
+    var numGridLines = 5;
+
+    // Draw grid lines and Y-axis labels
+    ctx.strokeStyle = gridColor;
+    ctx.lineWidth = 1;
+    ctx.font = '11px -apple-system, BlinkMacSystemFont, sans-serif';
+    ctx.fillStyle = textColor;
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+
+    for (var g = 0; g <= numGridLines; g++) {
+      var val = (maxVal / numGridLines) * g;
+      var yPos = padT + chartH - (g / numGridLines) * chartH;
+      ctx.beginPath();
+      ctx.moveTo(padL, yPos);
+      ctx.lineTo(padL + chartW, yPos);
+      ctx.stroke();
+      // Format label
+      var label;
+      if (val >= 1000000) {
+        label = (val / 1000000).toFixed(val % 1000000 === 0 ? 0 : 1) + 'M';
+      } else if (val >= 1000) {
+        label = (val / 1000).toFixed(val % 1000 === 0 ? 0 : 0) + 'K';
+      } else {
+        label = val.toFixed(0);
+      }
+      ctx.fillText(OneTab.country().currency + label, padL - 8, yPos);
+    }
+
+    // X-axis labels
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    var totalYears = yearData.length;
+    var xStep = Math.max(1, Math.ceil(totalYears / 10));
+    for (var xi = 0; xi <= totalYears; xi += xStep) {
+      var xPos = padL + (xi / totalYears) * chartW;
+      ctx.fillText(xi.toString(), xPos, padT + chartH + 10);
+    }
+    // "Years" label
+    ctx.fillText('Years', padL + chartW / 2, padT + chartH + 26);
+
+    // Helper: get x position for a year index
+    function getX(idx) {
+      return padL + ((idx + 1) / totalYears) * chartW;
+    }
+    function getY(val) {
+      return padT + chartH - (val / maxVal) * chartH;
+    }
+    var x0 = padL;
+    var yBase = padT + chartH;
+
+    // Draw contributions area (bottom layer)
+    ctx.beginPath();
+    ctx.moveTo(x0, yBase);
+    // Starting point at year 0 = initial investment
+    var initialContrib = yearData.length > 0 ? yearData[0].contributions - (parseFloat(inputMonthly.value) || 0) * 12 : 0;
+    ctx.lineTo(x0, getY(initialContrib > 0 ? initialContrib : (parseFloat(inputInitial.value) || 0)));
+    for (var c = 0; c < yearData.length; c++) {
+      ctx.lineTo(getX(c), getY(yearData[c].contributions));
+    }
+    ctx.lineTo(getX(yearData.length - 1), yBase);
+    ctx.closePath();
+    ctx.fillStyle = contribFill;
+    ctx.fill();
+
+    // Draw contributions line
+    ctx.beginPath();
+    ctx.moveTo(x0, getY(parseFloat(inputInitial.value) || 0));
+    for (var c2 = 0; c2 < yearData.length; c2++) {
+      ctx.lineTo(getX(c2), getY(yearData[c2].contributions));
+    }
+    ctx.strokeStyle = contribColor;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Draw total balance area (interest on top of contributions)
+    ctx.beginPath();
+    // Start from contributions line going forward
+    ctx.moveTo(x0, getY(parseFloat(inputInitial.value) || 0));
+    for (var b = 0; b < yearData.length; b++) {
+      ctx.lineTo(getX(b), getY(yearData[b].contributions));
+    }
+    // Now go backwards along the balance line
+    for (var b2 = yearData.length - 1; b2 >= 0; b2--) {
+      ctx.lineTo(getX(b2), getY(yearData[b2].balance));
+    }
+    ctx.lineTo(x0, getY(parseFloat(inputInitial.value) || 0));
+    ctx.closePath();
+    ctx.fillStyle = interestFill;
+    ctx.fill();
+
+    // Draw balance line
+    ctx.beginPath();
+    ctx.moveTo(x0, getY(parseFloat(inputInitial.value) || 0));
+    for (var b3 = 0; b3 < yearData.length; b3++) {
+      ctx.lineTo(getX(b3), getY(yearData[b3].balance));
+    }
+    ctx.strokeStyle = interestColor;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+
+  function updateCurrencyPrefixes(c) {
+    prefixInitial.textContent = c.currency;
+    prefixMonthly.textContent = c.currency;
+  }
+
+  // Listen for input changes
+  [inputInitial, inputMonthly, inputRate, inputYears, inputFrequency].forEach(function(el) {
+    el.addEventListener('input', calculate);
+  });
+
+  // React to country changes
+  OneTab.onCountryChange(function(c) {
+    updateCurrencyPrefixes(c);
+    calculate();
+  });
+
+  // Also re-draw on theme toggle to update chart colors
+  var themeToggle = document.getElementById('theme-toggle');
+  if (themeToggle) {
+    themeToggle.addEventListener('click', function() {
+      // Small delay to let the theme attribute update first
+      setTimeout(calculate, 50);
+    });
+  }
+
+  // Redraw chart on resize
+  var resizeTimer;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(calculate, 150);
+  });
+})();
+</script>
+</body>
+</html>
