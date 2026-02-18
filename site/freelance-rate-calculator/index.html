@@ -3,31 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Freelance Hourly Rate Calculator - Find Your Ideal Rate</title>
-  <meta name="description" content="Calculate your ideal freelance hourly rate based on your desired income, expenses, taxes, and available working hours. Free, no signup required.">
-  <meta name="keywords" content="freelance rate calculator, freelance hourly rate, how much to charge freelance, freelance pricing, consulting rate calculator">
+  <title>Freelance Rate Calculator - Hourly Rate, Project Cost, Profitability &amp; Tax</title>
+  <meta name="description" content="The most complete freelance calculator. Find your ideal hourly rate, estimate project costs, analyze profitability, and calculate self-employment taxes. Supports 15+ countries and currencies.">
+  <meta name="keywords" content="freelance rate calculator, freelance hourly rate, project cost estimator, freelance tax calculator, freelance profitability, consulting rate calculator, self-employment tax">
 
   <!-- Open Graph -->
-  <meta property="og:title" content="Freelance Hourly Rate Calculator">
-  <meta property="og:description" content="Find out exactly what hourly rate you need to charge as a freelancer. Factors in income goals, taxes, expenses, and time off.">
+  <meta property="og:title" content="Freelance Rate Calculator - Find Your Ideal Rate">
+  <meta property="og:description" content="Calculate your freelance hourly rate, estimate project costs, analyze profitability, and figure out your taxes. Supports 15+ countries.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://toolkitly.com/freelance-rate-calculator/">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Freelance Hourly Rate Calculator">
-  <meta name="twitter:description" content="Find out exactly what hourly rate you need to charge as a freelancer.">
+  <meta name="twitter:title" content="Freelance Rate Calculator">
+  <meta name="twitter:description" content="The most complete freelance calculator. Hourly rate, project costs, profitability, and taxes.">
 
   <link rel="canonical" href="https://toolkitly.com/freelance-rate-calculator/">
   <link rel="stylesheet" href="../css/style.css">
 
-  <!-- Schema.org structured data -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "Freelance Hourly Rate Calculator",
-    "description": "Calculate your ideal freelance hourly rate based on desired income, expenses, taxes, and available working hours.",
+    "name": "Freelance Rate Calculator",
+    "description": "Calculate your ideal freelance hourly rate, estimate project costs, analyze profitability, and figure out self-employment taxes. Supports 15+ countries and currencies.",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Any",
     "offers": {
@@ -45,236 +44,825 @@
 </header>
 
 <main class="container">
-  <h1>Freelance Hourly Rate Calculator</h1>
-  <p class="subtitle">Figure out exactly what to charge per hour so you hit your income goals after taxes, expenses, and time off.</p>
+  <h1>Freelance Rate Calculator</h1>
+  <p class="subtitle">Everything you need to price your freelance work: hourly rate, project estimates, profitability analysis, and tax calculations.</p>
 
-  <!-- Calculator Form -->
-  <form id="calculator-form" autocomplete="off">
+  <!-- Country / Currency Selector -->
+  <div class="locale-bar">
+    <label for="country-select">Your location</label>
+    <select id="country-select">
+      <option value="US">United States</option>
+      <option value="UK">United Kingdom</option>
+      <option value="CA">Canada</option>
+      <option value="AU">Australia</option>
+      <option value="DE">Germany</option>
+      <option value="FR">France</option>
+      <option value="NL">Netherlands</option>
+      <option value="SE">Sweden</option>
+      <option value="ES">Spain</option>
+      <option value="IT">Italy</option>
+      <option value="BR">Brazil</option>
+      <option value="IN">India</option>
+      <option value="JP">Japan</option>
+      <option value="SG">Singapore</option>
+      <option value="NZ">New Zealand</option>
+    </select>
+    <span class="currency-badge" id="currency-badge">USD ($)</span>
+  </div>
 
-    <div class="card">
-      <div class="card-title">Income Goal</div>
-      <div class="form-group">
-        <label for="desired-income">Desired Annual Income (take-home) <span class="hint">What you want in your pocket</span></label>
-        <div class="input-with-prefix">
-          <span class="prefix">$</span>
-          <input type="number" id="desired-income" value="80000" min="1000" max="10000000" step="1000" required>
+  <!-- Tabs -->
+  <div class="tabs" role="tablist">
+    <button class="tab-btn active" data-tab="hourly-rate" role="tab">Hourly Rate</button>
+    <button class="tab-btn" data-tab="project-cost" role="tab">Project Cost</button>
+    <button class="tab-btn" data-tab="profitability" role="tab">Profitability</button>
+    <button class="tab-btn" data-tab="tax-calc" role="tab">Tax Calculator</button>
+  </div>
+
+  <!-- ============================== -->
+  <!-- TAB 1: HOURLY RATE CALCULATOR  -->
+  <!-- ============================== -->
+  <div class="tab-content active" id="tab-hourly-rate">
+    <form id="hourly-form" autocomplete="off">
+
+      <div class="card">
+        <div class="card-title">Income Goal</div>
+        <div class="form-group">
+          <label for="desired-income">Desired Annual Take-Home Income <span class="hint">What you want in your pocket after taxes</span></label>
+          <div class="input-with-prefix">
+            <span class="prefix currency-symbol">$</span>
+            <input type="number" id="desired-income" value="80000" min="1000" max="10000000" step="1000" required>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="card">
-      <div class="card-title">Business Expenses</div>
-      <div class="row">
-        <div class="form-group">
-          <label for="software-costs">Software & Tools <span class="hint">/ year</span></label>
-          <div class="input-with-prefix">
-            <span class="prefix">$</span>
-            <input type="number" id="software-costs" value="2400" min="0" step="100">
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="hardware-costs">Hardware & Equipment <span class="hint">/ year</span></label>
-          <div class="input-with-prefix">
-            <span class="prefix">$</span>
-            <input type="number" id="hardware-costs" value="1500" min="0" step="100">
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="form-group">
-          <label for="insurance-costs">Health Insurance <span class="hint">/ year</span></label>
-          <div class="input-with-prefix">
-            <span class="prefix">$</span>
-            <input type="number" id="insurance-costs" value="6000" min="0" step="100">
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="other-expenses">Other Expenses <span class="hint">/ year</span></label>
-          <div class="input-with-prefix">
-            <span class="prefix">$</span>
-            <input type="number" id="other-expenses" value="2000" min="0" step="100">
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Taxes</div>
-      <div class="form-group">
-        <label for="tax-rate">Estimated Tax Rate <span class="hint">Income + self-employment tax</span></label>
+      <div class="card">
+        <div class="card-title">Business Expenses <span class="hint">(annual)</span></div>
         <div class="row">
-          <select id="tax-rate">
-            <option value="15">15% &mdash; Low bracket / lots of deductions</option>
-            <option value="20">20% &mdash; Low-to-moderate</option>
-            <option value="25">25% &mdash; Moderate (most common)</option>
-            <option value="30" selected>30% &mdash; Moderate-to-high (US default)</option>
-            <option value="35">35% &mdash; High bracket</option>
-            <option value="40">40% &mdash; High bracket + state tax</option>
-            <option value="45">45% &mdash; Very high (CA, NY, etc.)</option>
-          </select>
-          <div class="form-group" style="margin-bottom:0">
-            <label for="tax-rate-custom" class="hint" style="font-weight:400">Or enter custom %</label>
-            <input type="number" id="tax-rate-custom" placeholder="e.g. 28" min="0" max="70" step="1">
+          <div class="form-group">
+            <label for="software-costs">Software &amp; Tools</label>
+            <div class="input-with-prefix">
+              <span class="prefix currency-symbol">$</span>
+              <input type="number" id="software-costs" value="2400" min="0" step="100">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="hardware-costs">Hardware &amp; Equipment</label>
+            <div class="input-with-prefix">
+              <span class="prefix currency-symbol">$</span>
+              <input type="number" id="hardware-costs" value="1500" min="0" step="100">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group">
+            <label for="insurance-costs">Health Insurance</label>
+            <div class="input-with-prefix">
+              <span class="prefix currency-symbol">$</span>
+              <input type="number" id="insurance-costs" value="6000" min="0" step="100">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="office-costs">Office / Coworking</label>
+            <div class="input-with-prefix">
+              <span class="prefix currency-symbol">$</span>
+              <input type="number" id="office-costs" value="0" min="0" step="100">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group">
+            <label for="retirement-costs">Retirement Savings</label>
+            <div class="input-with-prefix">
+              <span class="prefix currency-symbol">$</span>
+              <input type="number" id="retirement-costs" value="5000" min="0" step="100">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="other-expenses">Other Expenses</label>
+            <div class="input-with-prefix">
+              <span class="prefix currency-symbol">$</span>
+              <input type="number" id="other-expenses" value="2000" min="0" step="100">
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="card">
-      <div class="card-title">Working Time</div>
-      <div class="row">
+      <div class="card">
+        <div class="card-title">Taxes</div>
         <div class="form-group">
-          <label for="hours-per-week">Hours Worked / Week <span class="hint">Total hours</span></label>
-          <input type="number" id="hours-per-week" value="40" min="1" max="100" step="1" required>
+          <label for="tax-rate">Estimated Total Tax Rate <span class="hint">Income + self-employment tax</span></label>
+          <div class="row">
+            <div>
+              <input type="range" id="tax-rate" min="5" max="60" value="30" step="1">
+              <div class="range-labels">
+                <span>5%</span>
+                <span id="tax-rate-display">30%</span>
+                <span>60%</span>
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+              <label for="tax-rate-exact" class="hint" style="font-weight:400">Or enter exact %</label>
+              <div class="input-with-suffix">
+                <input type="number" id="tax-rate-exact" placeholder="e.g. 28" min="0" max="70" step="0.5">
+                <span class="suffix">%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Working Time</div>
+        <div class="row">
+          <div class="form-group">
+            <label for="hours-per-week">Hours Worked / Week</label>
+            <input type="number" id="hours-per-week" value="40" min="1" max="100" step="1" required>
+          </div>
+          <div class="form-group">
+            <label for="billable-pct">Billable Percentage <span class="hint">Time on client work</span></label>
+            <select id="billable-pct">
+              <option value="40">40% &mdash; Just starting out</option>
+              <option value="50">50% &mdash; Heavy admin/marketing</option>
+              <option value="60">60% &mdash; Growing freelancer</option>
+              <option value="70" selected>70% &mdash; Established</option>
+              <option value="80">80% &mdash; Highly efficient</option>
+              <option value="90">90% &mdash; Almost all client work</option>
+            </select>
+          </div>
+        </div>
+        <div class="row-3">
+          <div class="form-group">
+            <label for="vacation-days">Vacation Days</label>
+            <input type="number" id="vacation-days" value="15" min="0" max="200" step="1">
+          </div>
+          <div class="form-group">
+            <label for="sick-days">Sick Days</label>
+            <input type="number" id="sick-days" value="5" min="0" max="100" step="1">
+          </div>
+          <div class="form-group">
+            <label for="holidays">Public Holidays</label>
+            <input type="number" id="holidays" value="10" min="0" max="30" step="1">
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Calculate My Rate</button>
+    </form>
+
+    <!-- Hourly Rate Results -->
+    <div id="hourly-results" class="result-section">
+      <div class="card result-hero">
+        <div class="rate-label">Your Minimum Hourly Rate</div>
+        <div class="rate-value" id="result-rate">$0</div>
+        <div class="rate-sublabel">to hit <span id="result-income-goal">$0</span>/year take-home</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Suggested Rates</div>
+        <div class="alternative-rates">
+          <div class="alt-rate">
+            <div class="alt-label">Comfortable (+20%)</div>
+            <div class="alt-value" id="rate-comfortable">$0</div>
+          </div>
+          <div class="alt-rate">
+            <div class="alt-label">Premium (+50%)</div>
+            <div class="alt-value" id="rate-premium">$0</div>
+          </div>
+          <div class="alt-rate">
+            <div class="alt-label">Expert (2x)</div>
+            <div class="alt-value" id="rate-expert">$0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Revenue Breakdown</div>
+        <div class="stacked-bar" id="revenue-bar"></div>
+        <div class="stacked-legend" id="revenue-legend"></div>
+        <table class="breakdown-table" style="margin-top:1rem">
+          <tr>
+            <td>Desired take-home</td>
+            <td id="bd-income">$0</td>
+          </tr>
+          <tr>
+            <td>+ Business expenses</td>
+            <td id="bd-expenses">$0</td>
+          </tr>
+          <tr>
+            <td>= Pre-tax needed</td>
+            <td id="bd-pretax-subtotal">$0</td>
+          </tr>
+          <tr>
+            <td>+ Taxes (<span id="bd-tax-rate">0</span>%)</td>
+            <td id="bd-taxes">$0</td>
+          </tr>
+          <tr class="total">
+            <td>Gross revenue needed</td>
+            <td id="bd-gross">$0</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Time Breakdown</div>
+        <table class="breakdown-table">
+          <tr>
+            <td>Total weeks/year</td>
+            <td>52</td>
+          </tr>
+          <tr>
+            <td>&minus; Time off</td>
+            <td id="bd-weeks-off">0 weeks</td>
+          </tr>
+          <tr>
+            <td>= Working weeks</td>
+            <td id="bd-working-weeks">0</td>
+          </tr>
+          <tr>
+            <td>Hours/week &times; Billable %</td>
+            <td id="bd-billable-calc">0</td>
+          </tr>
+          <tr class="total">
+            <td>Billable hours/year</td>
+            <td id="bd-billable-hours">0</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Other Ways to Look at It</div>
+        <div class="stat-grid">
+          <div class="stat-box">
+            <div class="stat-value" id="bd-daily">$0</div>
+            <div class="stat-label">Daily Rate (8hr)</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value" id="bd-weekly">$0</div>
+            <div class="stat-label">Weekly Revenue</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value" id="bd-monthly">$0</div>
+            <div class="stat-label">Monthly Revenue</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value" id="bd-equiv-salary">$0</div>
+            <div class="stat-label">Equiv. Salary</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <strong>Tip:</strong> Most successful freelancers charge 20-50% above their minimum rate. This accounts for slow months, unexpected costs, and savings. Use the "Comfortable" rate as your starting point, not the minimum.
+      </div>
+
+      <!-- Affiliate placeholder -->
+      <div class="rec-box" id="rec-tools">
+        <div class="rec-title">Recommended Tools for Freelancers</div>
+        <div class="rec-items">
+          <div class="rec-item">
+            <div>
+              <div class="rec-name">FreshBooks</div>
+              <div class="rec-desc">Invoicing &amp; accounting built for freelancers</div>
+            </div>
+            <span class="rec-link">Try free &rarr;</span>
+          </div>
+          <div class="rec-item">
+            <div>
+              <div class="rec-name">Toggl Track</div>
+              <div class="rec-desc">Time tracking that proves your billable hours</div>
+            </div>
+            <span class="rec-link">Try free &rarr;</span>
+          </div>
+          <div class="rec-item">
+            <div>
+              <div class="rec-name">Bonsai</div>
+              <div class="rec-desc">Contracts, proposals &amp; invoices in one place</div>
+            </div>
+            <span class="rec-link">Try free &rarr;</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Share Your Result</div>
+        <div class="share-bar">
+          <button class="btn btn-outline" id="share-copy">Copy Link</button>
+          <button class="btn btn-outline" id="share-twitter">Share on X</button>
+          <button class="btn btn-outline" id="share-linkedin">Share on LinkedIn</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================== -->
+  <!-- TAB 2: PROJECT COST ESTIMATOR  -->
+  <!-- ============================== -->
+  <div class="tab-content" id="tab-project-cost">
+    <form id="project-form" autocomplete="off">
+
+      <div class="card">
+        <div class="card-title">Your Rate</div>
+        <div class="form-group">
+          <label for="proj-hourly-rate">Hourly Rate <span class="hint" id="proj-rate-hint">Calculate in the Hourly Rate tab first</span></label>
+          <div class="input-with-prefix">
+            <span class="prefix currency-symbol">$</span>
+            <input type="number" id="proj-hourly-rate" value="100" min="1" max="10000" step="1" required>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Project Details</div>
+        <div class="form-group">
+          <label for="proj-hours">Estimated Hours <span class="hint">Your best guess for the total scope</span></label>
+          <input type="number" id="proj-hours" value="40" min="1" max="10000" step="1" required>
         </div>
         <div class="form-group">
-          <label for="billable-pct">Billable Percentage <span class="hint">% of time on client work</span></label>
-          <select id="billable-pct">
-            <option value="50">50% &mdash; Heavy admin/marketing</option>
-            <option value="60">60% &mdash; Growing freelancer</option>
-            <option value="70" selected>70% &mdash; Established freelancer</option>
-            <option value="80">80% &mdash; Highly efficient</option>
-            <option value="90">90% &mdash; Almost all client work</option>
+          <label for="proj-complexity">Complexity Multiplier</label>
+          <select id="proj-complexity">
+            <option value="1.0">1.0x &mdash; Straightforward, done it before</option>
+            <option value="1.2">1.2x &mdash; Some unknowns</option>
+            <option value="1.5" selected>1.5x &mdash; Moderate complexity (recommended)</option>
+            <option value="1.8">1.8x &mdash; High complexity, new tech</option>
+            <option value="2.0">2.0x &mdash; Cutting-edge or very risky</option>
           </select>
         </div>
+        <div class="row">
+          <div class="form-group">
+            <label for="proj-revisions">Revision Rounds Included</label>
+            <input type="number" id="proj-revisions" value="2" min="0" max="20" step="1">
+          </div>
+          <div class="form-group">
+            <label for="proj-revision-hours">Hours per Revision Round</label>
+            <input type="number" id="proj-revision-hours" value="4" min="0" max="100" step="1">
+          </div>
+        </div>
       </div>
-      <div class="row">
-        <div class="form-group">
-          <label for="vacation-days">Vacation Days / Year</label>
-          <input type="number" id="vacation-days" value="15" min="0" max="200" step="1">
+
+      <div class="card">
+        <div class="card-title">Payment Terms</div>
+        <div class="row">
+          <div class="form-group">
+            <label for="proj-deposit">Upfront Deposit %</label>
+            <select id="proj-deposit">
+              <option value="0">0% &mdash; No deposit</option>
+              <option value="25">25% &mdash; Quarter upfront</option>
+              <option value="33">33% &mdash; Third upfront</option>
+              <option value="50" selected>50% &mdash; Half upfront (recommended)</option>
+              <option value="100">100% &mdash; Full payment upfront</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="proj-rush">Rush Fee</label>
+            <select id="proj-rush">
+              <option value="0" selected>None</option>
+              <option value="25">+25% rush fee</option>
+              <option value="50">+50% rush fee</option>
+              <option value="100">+100% rush fee (emergency)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Estimate Project Cost</button>
+    </form>
+
+    <!-- Project Cost Results -->
+    <div id="project-results" class="result-section">
+      <div class="card result-hero">
+        <div class="rate-label">Recommended Project Price</div>
+        <div class="rate-value" id="proj-result-price">$0</div>
+        <div class="rate-sublabel">for ~<span id="proj-result-hours">0</span> total hours of work</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Price Estimates</div>
+        <div class="alternative-rates">
+          <div class="alt-rate">
+            <div class="alt-label">Budget</div>
+            <div class="alt-value" id="proj-price-low">$0</div>
+          </div>
+          <div class="alt-rate">
+            <div class="alt-label">Recommended</div>
+            <div class="alt-value" id="proj-price-mid">$0</div>
+          </div>
+          <div class="alt-rate">
+            <div class="alt-label">Premium</div>
+            <div class="alt-value" id="proj-price-high">$0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Cost Breakdown</div>
+        <table class="breakdown-table">
+          <tr>
+            <td>Base hours &times; rate</td>
+            <td id="proj-bd-base">$0</td>
+          </tr>
+          <tr>
+            <td>Complexity buffer (<span id="proj-bd-complexity-label">1.5x</span>)</td>
+            <td id="proj-bd-complexity">$0</td>
+          </tr>
+          <tr>
+            <td>Revision rounds (<span id="proj-bd-rev-label">2 &times; 4hr</span>)</td>
+            <td id="proj-bd-revisions">$0</td>
+          </tr>
+          <tr>
+            <td>Rush fee</td>
+            <td id="proj-bd-rush">$0</td>
+          </tr>
+          <tr class="total">
+            <td>Total project price</td>
+            <td id="proj-bd-total">$0</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Payment Schedule</div>
+        <table class="breakdown-table">
+          <tr>
+            <td>Deposit (due on signing)</td>
+            <td id="proj-pay-deposit">$0</td>
+          </tr>
+          <tr>
+            <td>Final payment (on delivery)</td>
+            <td id="proj-pay-final">$0</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="info-box">
+        <strong>Pro tip:</strong> Always use the complexity multiplier. Projects almost never take exactly as long as estimated. The 1.5x buffer is standard and accounts for communication overhead, scope clarification, and the unexpected.
+      </div>
+
+      <div class="card">
+        <div class="card-title">Effective Hourly Rate Check</div>
+        <table class="breakdown-table">
+          <tr>
+            <td>If project takes estimated hours</td>
+            <td id="proj-eff-rate-est">$0/hr</td>
+          </tr>
+          <tr>
+            <td>If project takes 50% longer</td>
+            <td id="proj-eff-rate-over">$0/hr</td>
+          </tr>
+          <tr>
+            <td>If project finishes early (75% of est.)</td>
+            <td id="proj-eff-rate-under">$0/hr</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================== -->
+  <!-- TAB 3: PROFITABILITY ANALYSIS  -->
+  <!-- ============================== -->
+  <div class="tab-content" id="tab-profitability">
+    <form id="profit-form" autocomplete="off">
+
+      <div class="card">
+        <div class="card-title">Current Situation</div>
+        <div class="row">
+          <div class="form-group">
+            <label for="profit-rate">Your Current Hourly Rate</label>
+            <div class="input-with-prefix">
+              <span class="prefix currency-symbol">$</span>
+              <input type="number" id="profit-rate" value="100" min="1" max="10000" step="1" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="profit-hours-week">Billable Hours / Week</label>
+            <input type="number" id="profit-hours-week" value="28" min="1" max="100" step="1" required>
+          </div>
         </div>
         <div class="form-group">
-          <label for="sick-days">Sick / Personal Days / Year</label>
-          <input type="number" id="sick-days" value="5" min="0" max="100" step="1">
+          <label for="profit-weeks-year">Weeks Worked / Year <span class="hint">After vacation and holidays</span></label>
+          <input type="number" id="profit-weeks-year" value="46" min="1" max="52" step="1">
         </div>
       </div>
-      <div class="form-group">
-        <label for="holidays">Public Holidays / Year</label>
-        <input type="number" id="holidays" value="10" min="0" max="30" step="1">
-      </div>
-    </div>
 
-    <button type="submit" class="btn btn-primary">Calculate My Rate</button>
-  </form>
-
-  <!-- Results -->
-  <div id="results" class="result-section">
-    <div class="card result-hero">
-      <div class="rate-label">Your Minimum Hourly Rate</div>
-      <div class="rate-value" id="result-rate">$0</div>
-      <div class="rate-sublabel">to hit <span id="result-income-goal">$0</span>/year take-home</div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">At Other Rates</div>
-      <div class="alternative-rates">
-        <div class="alt-rate">
-          <div class="alt-label">Comfortable</div>
-          <div class="alt-value" id="rate-comfortable">$0</div>
-        </div>
-        <div class="alt-rate">
-          <div class="alt-label">Premium</div>
-          <div class="alt-value" id="rate-premium">$0</div>
-        </div>
-        <div class="alt-rate">
-          <div class="alt-label">Expert</div>
-          <div class="alt-value" id="rate-expert">$0</div>
+      <div class="card">
+        <div class="card-title">Annual Expenses</div>
+        <div class="row">
+          <div class="form-group">
+            <label for="profit-biz-expenses">Business Expenses</label>
+            <div class="input-with-prefix">
+              <span class="prefix currency-symbol">$</span>
+              <input type="number" id="profit-biz-expenses" value="16900" min="0" step="100">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="profit-tax-rate">Tax Rate %</label>
+            <div class="input-with-suffix">
+              <input type="number" id="profit-tax-rate" value="30" min="0" max="70" step="1">
+              <span class="suffix">%</span>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="card">
-      <div class="card-title">How We Got There</div>
-      <table class="breakdown-table">
-        <tr>
-          <td>Desired take-home income</td>
-          <td id="bd-income">$0</td>
-        </tr>
-        <tr>
-          <td>+ Business expenses</td>
-          <td id="bd-expenses">$0</td>
-        </tr>
-        <tr>
-          <td>= Pre-tax income needed</td>
-          <td id="bd-pretax-subtotal">$0</td>
-        </tr>
-        <tr>
-          <td>+ Taxes (<span id="bd-tax-rate">0</span>%)</td>
-          <td id="bd-taxes">$0</td>
-        </tr>
-        <tr class="total">
-          <td>Gross revenue needed</td>
-          <td id="bd-gross">$0</td>
-        </tr>
-      </table>
-    </div>
+      <div class="card">
+        <div class="card-title">Goals <span class="hint">(optional)</span></div>
+        <div class="row">
+          <div class="form-group">
+            <label for="profit-income-goal">Desired Annual Take-Home</label>
+            <div class="input-with-prefix">
+              <span class="prefix currency-symbol">$</span>
+              <input type="number" id="profit-income-goal" value="80000" min="0" step="1000">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="profit-savings-goal">Annual Savings Goal</label>
+            <div class="input-with-prefix">
+              <span class="prefix currency-symbol">$</span>
+              <input type="number" id="profit-savings-goal" value="15000" min="0" step="1000">
+            </div>
+          </div>
+        </div>
+      </div>
 
-    <div class="card">
-      <div class="card-title">Working Time Breakdown</div>
-      <table class="breakdown-table">
-        <tr>
-          <td>Total weeks per year</td>
-          <td>52</td>
-        </tr>
-        <tr>
-          <td>&minus; Time off</td>
-          <td id="bd-weeks-off">0 weeks</td>
-        </tr>
-        <tr>
-          <td>= Working weeks</td>
-          <td id="bd-working-weeks">0</td>
-        </tr>
-        <tr>
-          <td>Hours per week</td>
-          <td id="bd-hours-week">0</td>
-        </tr>
-        <tr>
-          <td>Billable percentage</td>
-          <td id="bd-billable-pct">0%</td>
-        </tr>
-        <tr class="total">
-          <td>Billable hours per year</td>
-          <td id="bd-billable-hours">0</td>
-        </tr>
-      </table>
-    </div>
+      <button type="submit" class="btn btn-primary">Analyze Profitability</button>
+    </form>
 
-    <div class="card">
-      <div class="card-title">Equivalent Salaries</div>
-      <table class="breakdown-table">
-        <tr>
-          <td>Equivalent annual salary (with benefits)</td>
-          <td id="bd-equiv-salary">$0</td>
-        </tr>
-        <tr>
-          <td>Monthly revenue needed</td>
-          <td id="bd-monthly">$0</td>
-        </tr>
-        <tr>
-          <td>Weekly revenue needed</td>
-          <td id="bd-weekly">$0</td>
-        </tr>
-        <tr>
-          <td>Daily rate (8hr day)</td>
-          <td id="bd-daily">$0</td>
-        </tr>
-      </table>
-    </div>
+    <!-- Profitability Results -->
+    <div id="profit-results" class="result-section">
+      <div class="card">
+        <div class="card-title">Your Numbers at a Glance</div>
+        <div class="stat-grid">
+          <div class="stat-box highlight">
+            <div class="stat-value" id="profit-gross-revenue">$0</div>
+            <div class="stat-label">Gross Revenue</div>
+          </div>
+          <div class="stat-box" id="profit-take-home-box">
+            <div class="stat-value" id="profit-take-home">$0</div>
+            <div class="stat-label">Take-Home Pay</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value" id="profit-eff-rate">$0</div>
+            <div class="stat-label">Effective Hourly Rate</div>
+          </div>
+          <div class="stat-box" id="profit-margin-box">
+            <div class="stat-value" id="profit-margin">0%</div>
+            <div class="stat-label">Profit Margin</div>
+          </div>
+        </div>
+      </div>
 
-    <div class="info-box">
-      <strong>Tip:</strong> Most successful freelancers charge 20-50% above their minimum rate to account for slow months, unexpected expenses, and building savings. The "Comfortable" rate above adds a 20% buffer.
-    </div>
+      <div class="card">
+        <div class="card-title">Where Your Revenue Goes</div>
+        <div class="stacked-bar" id="profit-revenue-bar"></div>
+        <div class="stacked-legend" id="profit-revenue-legend"></div>
+        <table class="breakdown-table" style="margin-top:1rem">
+          <tr>
+            <td>Gross revenue</td>
+            <td id="profit-bd-gross">$0</td>
+          </tr>
+          <tr>
+            <td>&minus; Taxes</td>
+            <td id="profit-bd-taxes">$0</td>
+          </tr>
+          <tr>
+            <td>&minus; Business expenses</td>
+            <td id="profit-bd-expenses">$0</td>
+          </tr>
+          <tr class="total">
+            <td>Take-home pay</td>
+            <td id="profit-bd-takehome">$0</td>
+          </tr>
+        </table>
+      </div>
 
-    <div class="card">
-      <div class="card-title">Share Your Result</div>
-      <div class="share-bar">
-        <button class="btn btn-outline" id="share-copy">Copy Link</button>
-        <button class="btn btn-outline" id="share-twitter">Share on X</button>
-        <button class="btn btn-outline" id="share-linkedin">Share on LinkedIn</button>
+      <div class="card">
+        <div class="card-title">Goal Tracking</div>
+        <div style="margin-bottom:1rem">
+          <label style="font-size:0.8rem;color:var(--color-text-muted)">Income Goal Progress</label>
+          <div class="progress-bar">
+            <div class="progress-fill" id="profit-income-progress"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--color-text-muted)">
+            <span id="profit-income-current">$0</span>
+            <span id="profit-income-target">Goal: $0</span>
+          </div>
+        </div>
+        <div>
+          <label style="font-size:0.8rem;color:var(--color-text-muted)">Savings Goal Progress</label>
+          <div class="progress-bar">
+            <div class="progress-fill" id="profit-savings-progress"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--color-text-muted)">
+            <span id="profit-savings-current">$0</span>
+            <span id="profit-savings-target">Goal: $0</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="profit-advice" class="info-box"></div>
+
+      <div class="card">
+        <div class="card-title">What-If Scenarios</div>
+        <table class="breakdown-table">
+          <tr>
+            <td>If you raised your rate by 10%</td>
+            <td id="profit-whatif-rate">$0 more/yr</td>
+          </tr>
+          <tr>
+            <td>If you added 5 billable hrs/week</td>
+            <td id="profit-whatif-hours">$0 more/yr</td>
+          </tr>
+          <tr>
+            <td>If you cut expenses by 20%</td>
+            <td id="profit-whatif-expenses">$0 more/yr</td>
+          </tr>
+        </table>
       </div>
     </div>
+  </div>
 
-    <button class="btn btn-primary" id="recalculate-btn" style="margin-top:0.5rem">Recalculate</button>
+  <!-- ============================== -->
+  <!-- TAB 4: TAX CALCULATOR          -->
+  <!-- ============================== -->
+  <div class="tab-content" id="tab-tax-calc">
+    <form id="tax-form" autocomplete="off">
+
+      <div class="card">
+        <div class="card-title">Income</div>
+        <div class="form-group">
+          <label for="tax-gross-income">Gross Annual Revenue <span class="hint">Total before any deductions</span></label>
+          <div class="input-with-prefix">
+            <span class="prefix currency-symbol">$</span>
+            <input type="number" id="tax-gross-income" value="130000" min="0" max="10000000" step="1000" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="tax-deductions">Business Deductions <span class="hint">Expenses you can write off</span></label>
+          <div class="input-with-prefix">
+            <span class="prefix currency-symbol">$</span>
+            <input type="number" id="tax-deductions" value="16900" min="0" max="10000000" step="100">
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="tax-us-card">
+        <div class="card-title">US Tax Settings</div>
+        <div class="row">
+          <div class="form-group">
+            <label for="tax-filing-status">Filing Status</label>
+            <select id="tax-filing-status">
+              <option value="single" selected>Single</option>
+              <option value="married">Married Filing Jointly</option>
+              <option value="head">Head of Household</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="tax-state">State</label>
+            <select id="tax-state">
+              <option value="0">No state income tax (TX, FL, WA, etc.)</option>
+              <option value="3">~3% (PA, IN, MI)</option>
+              <option value="5" selected>~5% (Average state)</option>
+              <option value="7">~7% (MN, OR, WI)</option>
+              <option value="9">~9% (NJ, NY)</option>
+              <option value="11">~11% (CA top bracket)</option>
+              <option value="13">~13% (CA, NY metro)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="tax-quarterly">
+            <span class="hint">Self-employed in the US? You owe an additional 15.3% self-employment tax (Social Security + Medicare) on net earnings.</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="card" id="tax-intl-card" style="display:none">
+        <div class="card-title" id="tax-intl-title">Tax Settings</div>
+        <div class="form-group">
+          <label for="tax-intl-rate">Effective Tax Rate for Your Country <span class="hint">Combined income + social contributions</span></label>
+          <div class="input-with-suffix">
+            <input type="number" id="tax-intl-rate" value="30" min="0" max="70" step="1">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+        <div id="tax-intl-note" class="info-box" style="margin-top:0.75rem"></div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Calculate Taxes</button>
+    </form>
+
+    <!-- Tax Results -->
+    <div id="tax-results" class="result-section">
+      <div class="card">
+        <div class="card-title">Tax Summary</div>
+        <div class="stat-grid">
+          <div class="stat-box danger">
+            <div class="stat-value" id="tax-total-owed">$0</div>
+            <div class="stat-label">Total Tax</div>
+          </div>
+          <div class="stat-box success">
+            <div class="stat-value" id="tax-take-home">$0</div>
+            <div class="stat-label">Take-Home</div>
+          </div>
+          <div class="stat-box warning">
+            <div class="stat-value" id="tax-eff-rate">0%</div>
+            <div class="stat-label">Effective Rate</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value" id="tax-quarterly-amt">$0</div>
+            <div class="stat-label">Quarterly Payment</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="tax-us-breakdown" style="display:none">
+        <div class="card-title">US Tax Breakdown</div>
+        <div class="stacked-bar" id="tax-bar"></div>
+        <div class="stacked-legend" id="tax-legend"></div>
+        <table class="breakdown-table" style="margin-top:1rem">
+          <tr>
+            <td>Gross revenue</td>
+            <td id="tax-bd-gross">$0</td>
+          </tr>
+          <tr>
+            <td>&minus; Business deductions</td>
+            <td id="tax-bd-deductions">$0</td>
+          </tr>
+          <tr>
+            <td>= Taxable income</td>
+            <td id="tax-bd-taxable">$0</td>
+          </tr>
+          <tr>
+            <td>Federal income tax</td>
+            <td id="tax-bd-federal">$0</td>
+          </tr>
+          <tr>
+            <td>Self-employment tax (15.3%)</td>
+            <td id="tax-bd-se">$0</td>
+          </tr>
+          <tr>
+            <td>State income tax</td>
+            <td id="tax-bd-state">$0</td>
+          </tr>
+          <tr class="total">
+            <td>Total tax liability</td>
+            <td id="tax-bd-total">$0</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="card" id="tax-intl-breakdown" style="display:none">
+        <div class="card-title">Tax Breakdown</div>
+        <table class="breakdown-table">
+          <tr>
+            <td>Gross revenue</td>
+            <td id="tax-intl-bd-gross">$0</td>
+          </tr>
+          <tr>
+            <td>&minus; Business deductions</td>
+            <td id="tax-intl-bd-deductions">$0</td>
+          </tr>
+          <tr>
+            <td>= Taxable income</td>
+            <td id="tax-intl-bd-taxable">$0</td>
+          </tr>
+          <tr>
+            <td>Tax at <span id="tax-intl-bd-rate-label">0</span>%</td>
+            <td id="tax-intl-bd-tax">$0</td>
+          </tr>
+          <tr class="total">
+            <td>Take-home after tax</td>
+            <td id="tax-intl-bd-takehome">$0</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="info-box warning">
+        <strong>Disclaimer:</strong> This is a simplified estimate for planning purposes only. Tax laws are complex and vary by situation. Always consult a qualified tax professional for accurate tax advice. This does not account for all deductions, credits, or local taxes.
+      </div>
+
+      <div class="card">
+        <div class="card-title">Quarterly Estimated Tax Schedule</div>
+        <table class="breakdown-table">
+          <tr>
+            <td>Q1 &mdash; Due April 15</td>
+            <td id="tax-q1">$0</td>
+          </tr>
+          <tr>
+            <td>Q2 &mdash; Due June 15</td>
+            <td id="tax-q2">$0</td>
+          </tr>
+          <tr>
+            <td>Q3 &mdash; Due September 15</td>
+            <td id="tax-q3">$0</td>
+          </tr>
+          <tr>
+            <td>Q4 &mdash; Due January 15</td>
+            <td id="tax-q4">$0</td>
+          </tr>
+        </table>
+      </div>
+    </div>
   </div>
 
   <!-- SEO Content -->
@@ -282,49 +870,62 @@
     <h2>How to Calculate Your Freelance Hourly Rate</h2>
     <p>Setting the right hourly rate is the difference between a thriving freelance career and burning out for less than minimum wage. Most freelancers make the mistake of picking a number that "feels right" instead of calculating what they actually need to earn.</p>
     <p>This calculator works backwards from your goals: what do you want to take home, what are your real costs, and how many hours can you actually bill? The formula is straightforward:</p>
-    <p><strong>Hourly Rate = (Desired Income + Expenses) / (1 - Tax Rate) / Billable Hours Per Year</strong></p>
+    <p><strong>Hourly Rate = (Desired Income + Expenses) &divide; (1 - Tax Rate) &divide; Billable Hours Per Year</strong></p>
 
     <h2>Why Your Freelance Rate Should Be Higher Than You Think</h2>
     <p>Full-time employees get benefits that freelancers have to pay for out of pocket:</p>
     <ul>
       <li><strong>Health insurance:</strong> $6,000-$15,000/year that comes out of your rate</li>
-      <li><strong>Self-employment tax:</strong> An extra 15.3% on top of income tax (in the US)</li>
+      <li><strong>Self-employment tax:</strong> An extra 15.3% on top of income tax in the US</li>
       <li><strong>No paid time off:</strong> Every vacation day, sick day, and holiday is unpaid</li>
-      <li><strong>Non-billable time:</strong> Invoicing, marketing, admin, proposals - typically 20-40% of your work hours</li>
-      <li><strong>No employer 401k match:</strong> You fund your own retirement</li>
+      <li><strong>Non-billable time:</strong> Invoicing, marketing, admin, proposals &mdash; typically 20-40% of your work hours</li>
+      <li><strong>No employer retirement match:</strong> You fund your own retirement</li>
       <li><strong>Equipment and software:</strong> Your laptop, tools, and subscriptions are on you</li>
     </ul>
     <p>A common rule of thumb: a freelancer needs to charge roughly 2-3x the equivalent hourly wage of a full-time employee to end up with the same take-home pay and benefits.</p>
 
-    <h2>Freelance Rate by Experience Level</h2>
-    <p>While rates vary wildly by industry and specialization, here are rough benchmarks for US-based freelancers:</p>
+    <h2>Estimating Project Costs as a Freelancer</h2>
+    <p>Hourly billing is straightforward, but project-based pricing is where most freelancers earn more. The key is padding for complexity. Our project cost estimator uses a complexity multiplier to account for the reality that projects almost always take longer than estimated.</p>
     <ul>
-      <li><strong>Beginner (0-2 years):</strong> $25-$75/hour</li>
-      <li><strong>Intermediate (2-5 years):</strong> $50-$125/hour</li>
-      <li><strong>Expert (5-10 years):</strong> $100-$200/hour</li>
-      <li><strong>Specialist/Consultant (10+ years):</strong> $150-$400+/hour</li>
+      <li><strong>1.0x multiplier:</strong> Use only for work you've done many times before with a clear, fixed scope</li>
+      <li><strong>1.5x multiplier:</strong> The sweet spot for most projects &mdash; accounts for communication overhead and minor scope changes</li>
+      <li><strong>2.0x multiplier:</strong> Use for new technology, vague requirements, or clients who tend to change direction</li>
     </ul>
-    <p>These ranges vary significantly by field. A freelance developer or designer will typically command higher rates than a freelance writer, but a specialized technical writer or UX researcher may out-earn a generalist developer.</p>
 
-    <h2>The Billable Hours Trap</h2>
-    <p>The biggest mistake new freelancers make is assuming they can bill 40 hours a week. In reality, a significant portion of your time goes to:</p>
+    <h2>Understanding Freelance Profitability</h2>
+    <p>Revenue is vanity, profit is sanity. Many freelancers focus on their gross hourly rate without understanding what they actually keep. The profitability tab helps you see exactly where your money goes and how close you are to your financial goals.</p>
+    <p>A healthy freelance business should aim for a profit margin (take-home as a percentage of revenue) of at least 50%. Below 40%, you may be spending too much on expenses relative to your revenue, or your rate is too low.</p>
+
+    <h2>Freelance Taxes: What You Need to Know</h2>
+    <p>In most countries, freelancers pay more tax than employees because they're responsible for both the employer and employee portions of social contributions. In the US, this is the self-employment tax (15.3%), on top of federal and state income tax.</p>
+    <p>Key tips for managing freelance taxes:</p>
     <ul>
-      <li>Finding and pitching new clients</li>
-      <li>Writing proposals and scoping projects</li>
-      <li>Administrative work (invoicing, bookkeeping, emails)</li>
-      <li>Marketing and maintaining your online presence</li>
-      <li>Learning and skill development</li>
+      <li>Pay quarterly estimated taxes to avoid penalties</li>
+      <li>Track every business expense &mdash; they directly reduce your taxable income</li>
+      <li>Consider an S-Corp election if you earn over $80-100K (US) to reduce self-employment tax</li>
+      <li>Set aside 25-35% of every payment for taxes in a separate bank account</li>
     </ul>
-    <p>Most established freelancers bill 60-70% of their working hours. New freelancers often bill only 40-50%. This calculator accounts for this with the "billable percentage" input - be honest with yourself about how much time you actually spend on paid client work.</p>
+
+    <h2>Freelance Rate Benchmarks by Country</h2>
+    <p>Rates vary dramatically by location, industry, and experience. Here are rough median freelance rates by country for tech/creative professionals:</p>
+    <ul>
+      <li><strong>United States:</strong> $75-$150/hour</li>
+      <li><strong>United Kingdom:</strong> &pound;50-&pound;100/hour</li>
+      <li><strong>Canada:</strong> C$60-C$120/hour</li>
+      <li><strong>Germany:</strong> &euro;60-&euro;110/hour</li>
+      <li><strong>Australia:</strong> A$80-A$150/hour</li>
+      <li><strong>India:</strong> &#8377;1,500-&#8377;5,000/hour</li>
+    </ul>
+    <p>These are mid-career ranges. Specialists and senior consultants regularly exceed these ranges, while generalists and beginners may fall below.</p>
 
     <h2>Should You Charge Hourly or Project-Based?</h2>
-    <p>This calculator gives you an hourly rate, but many freelancers earn more by charging per project. Here's when to use each:</p>
+    <p>Both pricing models have their place:</p>
     <ul>
       <li><strong>Hourly:</strong> Best for ongoing work, maintenance, consulting calls, and when scope is unclear</li>
       <li><strong>Project-based:</strong> Best when you can estimate scope accurately and want to be rewarded for efficiency</li>
-      <li><strong>Value-based:</strong> Best for high-impact work where your deliverable has measurable business value (e.g., a landing page that generates leads)</li>
+      <li><strong>Value-based:</strong> Best for high-impact work where your deliverable has measurable business value</li>
     </ul>
-    <p>Even if you charge by the project, knowing your minimum hourly rate helps you estimate project prices. Divide your project quote by estimated hours to make sure you're not accidentally working below your floor rate.</p>
+    <p>Even if you charge by the project, knowing your minimum hourly rate helps you estimate project prices. Use our Project Cost tab to convert between the two.</p>
   </div>
 </main>
 
