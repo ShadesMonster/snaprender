@@ -100,12 +100,6 @@
     // Update global dropdown if present
     var sel = document.getElementById('country-select-global');
     if (sel) sel.value = code;
-    // Sync with freelance calc's own country selector
-    var freeSel = document.getElementById('country-select');
-    if (freeSel && freeSel !== sel) {
-      freeSel.value = code;
-      freeSel.dispatchEvent(new Event('change'));
-    }
     // Notify listeners
     for (var i = 0; i < callbacks.length; i++) callbacks[i](COUNTRIES[code], code);
   }

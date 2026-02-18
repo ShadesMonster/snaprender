@@ -1146,11 +1146,20 @@
   // ============================================================
   // INIT
   // ============================================================
+
   onCountryChange();
 
   // URL params take priority over localStorage
   var loadedFromURL = loadFromURL();
   if (!loadedFromURL) {
     loadFromStorage();
+  }
+
+  // After restoring saved data, sync the in-page country with the global
+  // header country. Changing the in-page dropdown won't update the header,
+  // but coming back to the page always resets to the global setting.
+  if (window.OneTab && COUNTRIES[OneTab.countryCode()]) {
+    countrySelect.value = OneTab.countryCode();
+    onCountryChange();
   }
 })();
