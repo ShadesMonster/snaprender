@@ -117,7 +117,6 @@
   // ============================================================
   function animateValue(el, targetText) {
     if (!el) return;
-    var c = COUNTRIES[currentCountry];
     // Extract number from target text
     var numMatch = targetText.replace(/[^0-9.-]/g, '');
     var targetNum = parseFloat(numMatch);
@@ -413,7 +412,6 @@
     currentCountry = countrySelect.value;
     var c = COUNTRIES[currentCountry];
 
-    setTextContent('currency-badge', c.currency + ' (' + c.symbol + ')');
     $('currency-badge').textContent = c.currency + ' (' + c.symbol + ')';
 
     var symbols = document.querySelectorAll('.currency-symbol');
@@ -1119,7 +1117,7 @@
   // ============================================================
   function loadFromURL() {
     var params = new URLSearchParams(window.location.search);
-    if (params.size === 0 && !params.has('income')) return false;
+    if (window.location.search.length <= 1) return false;
 
     var country = params.get('country');
     if (country && COUNTRIES[country]) {

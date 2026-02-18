@@ -6,16 +6,26 @@
   <title>OneTab - Free Calculators & Tools</title>
   <meta name="description" content="Free online calculators and tools. No signup required. Freelance rate calculator, meeting cost calculator, and more.">
   <link rel="stylesheet" href="css/style.css">
+  <script>
+    // Apply saved theme before paint to prevent flash
+    (function() {
+      var t = localStorage.getItem('onetab-theme');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+  </script>
 </head>
 <body>
 
 <header class="site-header">
   <a href="./">OneTab</a>
+  <div class="header-actions">
+    <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">Dark</button>
+  </div>
 </header>
 
 <main class="container">
   <h1>Free Calculators & Tools</h1>
-  <p class="subtitle">Simple, useful tools. No signup, no ads (yet), no nonsense.</p>
+  <p class="subtitle">Simple, useful tools. No signup, no nonsense.</p>
 
   <div class="card" style="cursor:pointer" onclick="window.location.href='freelance-rate-calculator/'">
     <h2 style="margin-bottom:0.25rem">Freelance Hourly Rate Calculator</h2>
@@ -29,5 +39,23 @@
   <p>Built for people who need quick answers.</p>
 </footer>
 
+<script>
+(function() {
+  var toggle = document.getElementById('theme-toggle');
+  if (localStorage.getItem('onetab-theme') === 'dark') toggle.textContent = 'Light';
+  toggle.addEventListener('click', function() {
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (isDark) {
+      document.documentElement.removeAttribute('data-theme');
+      toggle.textContent = 'Dark';
+      localStorage.setItem('onetab-theme', 'light');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      toggle.textContent = 'Light';
+      localStorage.setItem('onetab-theme', 'dark');
+    }
+  });
+})();
+</script>
 </body>
 </html>

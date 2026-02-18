@@ -20,6 +20,13 @@
 
   <link rel="canonical" href="https://onetab.tools/freelance-rate-calculator/">
   <link rel="stylesheet" href="../css/style.css">
+  <script>
+    // Apply saved theme before paint to prevent flash
+    (function() {
+      var t = localStorage.getItem('onetab-theme');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+  </script>
 
   <script type="application/ld+json">
   {
@@ -208,8 +215,11 @@
             <select id="billable-pct">
               <option value="40">40% &mdash; Just starting out</option>
               <option value="50">50% &mdash; Heavy admin/marketing</option>
+              <option value="55">55% &mdash; Lots of non-billable work</option>
               <option value="60">60% &mdash; Growing freelancer</option>
+              <option value="65">65% &mdash; Solid balance</option>
               <option value="70" selected>70% &mdash; Established</option>
+              <option value="75">75% &mdash; Highly productive</option>
               <option value="80">80% &mdash; Highly efficient</option>
               <option value="90">90% &mdash; Almost all client work</option>
             </select>
@@ -236,7 +246,6 @@
 
     <!-- Empty State -->
     <div class="empty-state" id="hourly-empty">
-      <div class="empty-state-icon">$</div>
       <div class="empty-state-title">Ready to find your ideal rate?</div>
       <div class="empty-state-desc">Fill in your details above and click "Calculate My Rate" to see your personalized results.</div>
     </div>
@@ -530,7 +539,6 @@
 
     <!-- Empty State -->
     <div class="empty-state" id="project-empty">
-      <div class="empty-state-icon">#</div>
       <div class="empty-state-title">Price your next project</div>
       <div class="empty-state-desc">Enter your rate and project details, then click "Estimate Project Cost" to see the breakdown.</div>
     </div>
@@ -703,7 +711,6 @@
 
     <!-- Empty State -->
     <div class="empty-state" id="profit-empty">
-      <div class="empty-state-icon">%</div>
       <div class="empty-state-title">See where your money goes</div>
       <div class="empty-state-desc">Enter your current rate and expenses, then click "Analyze Profitability" to see your full picture.</div>
     </div>
@@ -880,7 +887,6 @@
 
     <!-- Empty State -->
     <div class="empty-state" id="tax-empty">
-      <div class="empty-state-icon">&amp;</div>
       <div class="empty-state-title">Estimate your tax burden</div>
       <div class="empty-state-desc">Enter your income and deductions, then click "Calculate Taxes" to see your estimated tax liability.</div>
     </div>
