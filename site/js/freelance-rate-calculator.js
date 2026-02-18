@@ -1155,11 +1155,22 @@
     loadFromStorage();
   }
 
-  // After restoring saved data, sync the in-page country with the global
-  // header country. Changing the in-page dropdown won't update the header,
+  // Sync the in-page country with the global header country.
+  // This runs LAST so it always wins over localStorage/URL restore.
+  // Changing the in-page dropdown won't update the header,
   // but coming back to the page always resets to the global setting.
-  if (window.OneTab && COUNTRIES[OneTab.countryCode()]) {
-    countrySelect.value = OneTab.countryCode();
-    onCountryChange();
-  }
+  (function syncWithGlobal() {
+    if (!window.OneTab) return;
+    var globalCode = OneTab.countryCode();
+    // Only sync if the freelance calc knows this country
+    var opts = countrySelect.options;
+    for (var i = 0; i < opts.length; i++) {
+      if (opts[i].value === globalCode) {
+        countrySelect.value = globalCode;
+        currentCountry = globalCode;
+        onCountryChange();
+        return;
+      }
+    }
+  })();
 })();
