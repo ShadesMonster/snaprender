@@ -70,29 +70,30 @@
       letter-spacing: 0.03em;
     }
     .line-items-table td {
-      padding: 0.35rem 0.4rem;
+      padding: 0.4rem 0.4rem;
       border-bottom: 1px solid var(--color-border);
       vertical-align: middle;
     }
     .line-items-table input {
       width: 100%;
-      padding: 0.35rem 0.5rem;
+      padding: 0.5rem 0.6rem;
       border: 1px solid var(--color-border);
       border-radius: var(--radius);
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       background: var(--color-surface);
       color: var(--color-text);
       font-family: inherit;
+      box-sizing: border-box;
     }
     .line-items-table input:focus {
       outline: none;
       border-color: var(--color-primary);
     }
-    .line-items-table .col-desc { width: 40%; }
-    .line-items-table .col-qty { width: 14%; }
-    .line-items-table .col-rate { width: 20%; }
-    .line-items-table .col-amount { width: 20%; text-align: right; }
-    .line-items-table .col-remove { width: 6%; text-align: center; }
+    .line-items-table .col-desc { width: 44%; }
+    .line-items-table .col-qty { width: 15%; min-width: 75px; }
+    .line-items-table .col-rate { width: 19%; min-width: 90px; }
+    .line-items-table .col-amount { width: 17%; text-align: right; }
+    .line-items-table .col-remove { width: 5%; text-align: center; }
     .line-items-table .amount-cell {
       text-align: right;
       font-weight: 500;
