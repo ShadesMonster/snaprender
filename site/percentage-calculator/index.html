@@ -57,6 +57,7 @@
 <header class="site-header">
   <a href="../">OneTab</a>
   <div class="header-actions">
+    <select class="country-select-global" id="country-select-global" title="Your location"></select>
     <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">Dark</button>
   </div>
 </header>
@@ -150,24 +151,9 @@
   <p>Built for people who need quick answers. <a href="../" style="color:var(--color-primary);text-decoration:none">More tools →</a></p>
 </footer>
 
+<script src="../js/onetab-global.js"></script>
 <script>
 (function() {
-  // Theme toggle
-  var toggle = document.getElementById('theme-toggle');
-  if (localStorage.getItem('onetab-theme') === 'dark') toggle.textContent = 'Light';
-  toggle.addEventListener('click', function() {
-    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    if (isDark) {
-      document.documentElement.removeAttribute('data-theme');
-      toggle.textContent = 'Dark';
-      localStorage.setItem('onetab-theme', 'light');
-    } else {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      toggle.textContent = 'Light';
-      localStorage.setItem('onetab-theme', 'dark');
-    }
-  });
-
   function fmtNum(n) {
     if (Number.isInteger(n)) return n.toLocaleString('en-US');
     // Show up to 4 decimal places, trim trailing zeros

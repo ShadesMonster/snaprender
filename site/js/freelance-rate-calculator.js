@@ -354,33 +354,7 @@
     whatifSlider.addEventListener('input', updateWhatIf);
   }
 
-  // ============================================================
-  // DARK MODE
-  // ============================================================
-  function initDarkMode() {
-    var saved = localStorage.getItem('onetab-theme');
-    var toggle = $('theme-toggle');
-    if (saved === 'dark') {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      if (toggle) toggle.textContent = 'Light';
-    }
-    if (toggle) {
-      toggle.addEventListener('click', function () {
-        var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        if (isDark) {
-          document.documentElement.removeAttribute('data-theme');
-          toggle.textContent = 'Dark';
-          localStorage.setItem('onetab-theme', 'light');
-        } else {
-          document.documentElement.setAttribute('data-theme', 'dark');
-          toggle.textContent = 'Light';
-          localStorage.setItem('onetab-theme', 'dark');
-        }
-      });
-    }
-  }
-
-  initDarkMode();
+  // Dark mode is handled by onetab-global.js
 
   // ============================================================
   // TABS

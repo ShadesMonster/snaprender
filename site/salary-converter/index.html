@@ -44,6 +44,7 @@
 <header class="site-header">
   <a href="../">OneTab</a>
   <div class="header-actions">
+    <select class="country-select-global" id="country-select-global" title="Your location"></select>
     <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">Dark</button>
   </div>
 </header>
@@ -56,8 +57,8 @@
   <div class="card">
     <div class="card-title">I want to convert</div>
     <div class="row">
-      <button class="btn btn-primary" id="btn-salary-to-hourly" style="font-size:0.875rem">Salary → Hourly</button>
-      <button class="btn btn-outline" id="btn-hourly-to-salary" style="font-size:0.875rem">Hourly → Salary</button>
+      <button class="btn btn-primary" id="btn-salary-to-hourly" style="font-size:0.875rem">Salary &rarr; Hourly</button>
+      <button class="btn btn-outline" id="btn-hourly-to-salary" style="font-size:0.875rem">Hourly &rarr; Salary</button>
     </div>
   </div>
 
@@ -102,28 +103,28 @@
   <div class="result-section visible" id="results">
     <div class="card result-hero" id="hero-result">
       <div class="rate-label" id="hero-label">Your Hourly Rate</div>
-      <div class="rate-value" id="hero-value">—</div>
+      <div class="rate-value" id="hero-value">&mdash;</div>
       <div class="rate-sublabel" id="hero-sub">Enter your salary above</div>
     </div>
 
     <div class="card">
       <div class="card-title">Full Breakdown</div>
       <table class="breakdown-table">
-        <tr><td>Hourly</td><td id="r-hourly">—</td></tr>
-        <tr><td>Daily (8 hrs)</td><td id="r-daily">—</td></tr>
-        <tr><td>Weekly</td><td id="r-weekly">—</td></tr>
-        <tr><td>Biweekly</td><td id="r-biweekly">—</td></tr>
-        <tr><td>Monthly</td><td id="r-monthly">—</td></tr>
-        <tr class="total"><td>Annual</td><td id="r-annual">—</td></tr>
+        <tr><td>Hourly</td><td id="r-hourly">&mdash;</td></tr>
+        <tr><td>Daily (8 hrs)</td><td id="r-daily">&mdash;</td></tr>
+        <tr><td>Weekly</td><td id="r-weekly">&mdash;</td></tr>
+        <tr><td>Biweekly</td><td id="r-biweekly">&mdash;</td></tr>
+        <tr><td>Monthly</td><td id="r-monthly">&mdash;</td></tr>
+        <tr class="total"><td>Annual</td><td id="r-annual">&mdash;</td></tr>
       </table>
     </div>
 
     <div class="card">
       <div class="card-title">Working Time</div>
       <table class="breakdown-table">
-        <tr><td>Work hours per year</td><td id="r-work-hours">—</td></tr>
-        <tr><td>Work days per year</td><td id="r-work-days">—</td></tr>
-        <tr><td>Holiday / vacation days</td><td id="r-holidays">—</td></tr>
+        <tr><td>Work hours per year</td><td id="r-work-hours">&mdash;</td></tr>
+        <tr><td>Work days per year</td><td id="r-work-days">&mdash;</td></tr>
+        <tr><td>Holiday / vacation days</td><td id="r-holidays">&mdash;</td></tr>
       </table>
     </div>
 
@@ -136,51 +137,35 @@
   <div class="card" style="margin-top:1.5rem">
     <div class="card-title">Related Tools</div>
     <p style="font-size:0.9rem;color:var(--color-text-muted);margin-bottom:0.5rem">
-      <a href="../freelance-rate-calculator/" style="color:var(--color-primary);text-decoration:none;font-weight:600">Freelance Rate Calculator</a> — Figure out what to charge as a freelancer
+      <a href="../freelance-rate-calculator/" style="color:var(--color-primary);text-decoration:none;font-weight:600">Freelance Rate Calculator</a> &mdash; Figure out what to charge as a freelancer
     </p>
     <p style="font-size:0.9rem;color:var(--color-text-muted);margin-bottom:0.5rem">
-      <a href="../meeting-cost-calculator/" style="color:var(--color-primary);text-decoration:none;font-weight:600">Meeting Cost Calculator</a> — Find out how much that meeting really costs
+      <a href="../meeting-cost-calculator/" style="color:var(--color-primary);text-decoration:none;font-weight:600">Meeting Cost Calculator</a> &mdash; Find out how much that meeting really costs
     </p>
     <p style="font-size:0.9rem;color:var(--color-text-muted);margin:0">
-      <a href="../percentage-calculator/" style="color:var(--color-primary);text-decoration:none;font-weight:600">Percentage Calculator</a> — Quick percentage math
+      <a href="../percentage-calculator/" style="color:var(--color-primary);text-decoration:none;font-weight:600">Percentage Calculator</a> &mdash; Quick percentage math
     </p>
   </div>
 
-  <div class="content-section">
-    <h2>How the Salary to Hourly Conversion Works</h2>
+  <div class="content-section" id="content-section">
+    <h2 id="content-title">How the Salary to Hourly Conversion Works</h2>
     <p>To convert an annual salary to an hourly rate, divide the salary by the total number of working hours in a year. The standard formula is:</p>
-    <p><strong>Hourly Rate = Annual Salary ÷ (Hours per Week × Working Weeks per Year)</strong></p>
-    <p>Most full-time employees in the US work 40 hours per week for 52 weeks, giving 2,080 work hours per year. Subtracting paid holidays and vacation days reduces the actual hours worked, which increases the effective hourly rate.</p>
+    <p><strong>Hourly Rate = Annual Salary &divide; (Hours per Week &times; Working Weeks per Year)</strong></p>
+    <p id="content-details">Most full-time employees in the US work 40 hours per week for 52 weeks, giving 2,080 work hours per year. Subtracting paid holidays and vacation days reduces the actual hours worked, which increases the effective hourly rate.</p>
 
-    <h2>US Median Income Comparison</h2>
-    <p>The median household income in the United States is approximately $74,580 per year (2023 Census data), which works out to about $35.86/hour for a standard 40-hour work week. The median individual income is approximately $40,480, or about $19.46/hour.</p>
+    <h2 id="median-title">Median Income Comparison</h2>
+    <p id="median-details">The median individual income in the United States is approximately $40,480 per year (Census Bureau 2023), which works out to about $19.46/hour for a standard 40-hour work week.</p>
   </div>
 </main>
 
 <footer class="site-footer">
-  <p>Built for people who need quick answers. <a href="../" style="color:var(--color-primary);text-decoration:none">More tools →</a></p>
+  <p>Built for people who need quick answers. <a href="../" style="color:var(--color-primary);text-decoration:none">More tools &rarr;</a></p>
 </footer>
 
+<script src="../js/onetab-global.js"></script>
 <script>
 (function() {
-  // Theme toggle
-  var toggle = document.getElementById('theme-toggle');
-  if (localStorage.getItem('onetab-theme') === 'dark') toggle.textContent = 'Light';
-  toggle.addEventListener('click', function() {
-    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    if (isDark) {
-      document.documentElement.removeAttribute('data-theme');
-      toggle.textContent = 'Dark';
-      localStorage.setItem('onetab-theme', 'light');
-    } else {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      toggle.textContent = 'Light';
-      localStorage.setItem('onetab-theme', 'dark');
-    }
-  });
-
-  // State
-  var mode = 'salary-to-hourly'; // or 'hourly-to-salary'
+  var mode = 'salary-to-hourly';
 
   var btnS2H = document.getElementById('btn-salary-to-hourly');
   var btnH2S = document.getElementById('btn-hourly-to-salary');
@@ -191,6 +176,8 @@
   var inputHours = document.getElementById('input-hours');
   var inputWeeks = document.getElementById('input-weeks');
   var inputHolidays = document.getElementById('input-holidays');
+  var prefixSalary = document.getElementById('currency-prefix');
+  var prefixHourly = document.getElementById('currency-prefix-hr');
 
   btnS2H.addEventListener('click', function() {
     mode = 'salary-to-hourly';
@@ -211,14 +198,15 @@
   });
 
   function fmt(n) {
-    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return OneTab.fmt2(n);
   }
 
   function fmtInt(n) {
-    return n.toLocaleString('en-US', { maximumFractionDigits: 0 });
+    return n.toLocaleString(OneTab.country().locale, { maximumFractionDigits: 0 });
   }
 
   function calculate() {
+    var c = OneTab.country();
     var hoursPerWeek = parseFloat(inputHours.value) || 40;
     var weeksPerYear = parseFloat(inputWeeks.value) || 52;
     var holidays = parseFloat(inputHolidays.value) || 0;
@@ -255,7 +243,7 @@
     var heroVal = mode === 'salary-to-hourly' ? fmt(hourly) + '/hr' : fmt(annual);
     var heroSub = mode === 'salary-to-hourly'
       ? 'Based on ' + fmtInt(totalWorkHours) + ' working hours/year'
-      : 'Based on ' + fmt(hourly) + '/hr × ' + fmtInt(totalWorkHours) + ' hours';
+      : 'Based on ' + fmt(hourly) + '/hr \u00d7 ' + fmtInt(totalWorkHours) + ' hours';
 
     document.getElementById('hero-label').textContent = heroLabel;
     document.getElementById('hero-value').textContent = heroVal;
@@ -272,39 +260,62 @@
     document.getElementById('r-work-days').textContent = fmtInt(totalWorkDays) + ' days';
     document.getElementById('r-holidays').textContent = fmtInt(holidays) + ' days';
 
-    // Comparison to US median
-    var medianIndividual = 40480;
+    // Regional comparison
     var compBox = document.getElementById('comparison-box');
     var compText = document.getElementById('comparison-text');
-    var pct = ((annual / medianIndividual - 1) * 100);
+    var median = c.medianIncome;
+    var pct = ((annual / median - 1) * 100);
+    var medianFmt = OneTab.fmt(median);
+
     if (pct > 0) {
-      compText.textContent = 'Your equivalent annual pay of ' + fmt(annual) + ' is ' + Math.round(pct) + '% above the US median individual income of ' + fmt(medianIndividual) + '.';
+      compText.textContent = 'Your equivalent annual pay of ' + OneTab.fmt(annual) + ' is ' + Math.round(pct) + '% above the ' + c.medianLabel + ' of ' + medianFmt + ' (' + c.medianSource + ').';
     } else if (pct < 0) {
-      compText.textContent = 'Your equivalent annual pay of ' + fmt(annual) + ' is ' + Math.round(Math.abs(pct)) + '% below the US median individual income of ' + fmt(medianIndividual) + '.';
+      compText.textContent = 'Your equivalent annual pay of ' + OneTab.fmt(annual) + ' is ' + Math.round(Math.abs(pct)) + '% below the ' + c.medianLabel + ' of ' + medianFmt + ' (' + c.medianSource + ').';
     } else {
-      compText.textContent = 'Your equivalent annual pay matches the US median individual income.';
+      compText.textContent = 'Your equivalent annual pay matches the ' + c.medianLabel + '.';
     }
     compBox.style.display = '';
   }
 
   function setEmpty(label, sub) {
     document.getElementById('hero-label').textContent = label;
-    document.getElementById('hero-value').textContent = '—';
+    document.getElementById('hero-value').textContent = '\u2014';
     document.getElementById('hero-sub').textContent = sub;
     ['r-hourly','r-daily','r-weekly','r-biweekly','r-monthly','r-annual'].forEach(function(id) {
-      document.getElementById(id).textContent = '—';
+      document.getElementById(id).textContent = '\u2014';
     });
-    document.getElementById('r-work-hours').textContent = '—';
-    document.getElementById('r-work-days').textContent = '—';
-    document.getElementById('r-holidays').textContent = '—';
+    document.getElementById('r-work-hours').textContent = '\u2014';
+    document.getElementById('r-work-days').textContent = '\u2014';
+    document.getElementById('r-holidays').textContent = '\u2014';
     document.getElementById('comparison-box').style.display = 'none';
   }
+
+  function applyCountryDefaults(c) {
+    prefixSalary.textContent = c.currency;
+    prefixHourly.textContent = c.currency;
+    inputSalary.placeholder = c.defaultSalaryPlaceholder;
+    inputHourly.placeholder = c.defaultHourlyPlaceholder;
+    inputHolidays.value = c.defaultHolidays;
+
+    // Update content section
+    var medianHourly = c.medianIncome / c.workHoursYear;
+    document.getElementById('median-title').textContent = c.name + ' Median Income Comparison';
+    document.getElementById('median-details').textContent =
+      'The median individual income in ' + c.name + ' is approximately ' +
+      OneTab.fmt(c.medianIncome) + ' per year (' + c.medianSource + '), which works out to about ' +
+      OneTab.fmt2(medianHourly) + '/hour based on ' + c.workHoursYear.toLocaleString() + ' working hours per year.';
+
+    calculate();
+  }
+
+  // Listen for country changes
+  OneTab.onCountryChange(function(c) {
+    applyCountryDefaults(c);
+  });
 
   [inputSalary, inputHourly, inputHours, inputWeeks, inputHolidays].forEach(function(el) {
     el.addEventListener('input', calculate);
   });
-
-  calculate();
 })();
 </script>
 </body>
