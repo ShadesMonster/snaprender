@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meeting Cost Calculator — How Much Does Your Meeting Cost?</title>
+  <meta name="description" content="Find out how much your meetings really cost in dollars. Enter attendees, salaries, and duration to see the true price of that meeting.">
+  <meta name="keywords" content="meeting cost calculator, cost of meetings, meeting ROI, meeting expense, how much do meetings cost">
+
+  <meta property="og:title" content="Meeting Cost Calculator — What's That Meeting Really Costing?">
+  <meta property="og:description" content="Enter attendees, salaries, and duration to see the true dollar cost of your meeting.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://onetab.tools/meeting-cost-calculator/">
+  <meta property="og:site_name" content="OneTab">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Meeting Cost Calculator">
+  <meta name="twitter:description" content="Find out how much your meetings really cost in dollars.">
+
+  <link rel="canonical" href="https://onetab.tools/meeting-cost-calculator/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>
+    (function() {
+      var t = localStorage.getItem('onetab-theme');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Meeting Cost Calculator",
+    "description": "Calculate the true dollar cost of your meetings based on attendees, salaries, and duration.",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+
+  <style>
+    .fun-comparison { padding: 0.75rem 1rem; background: var(--color-bg); border-radius: var(--radius); border: 1px solid var(--color-border); font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .fun-comparison strong { color: var(--color-primary); }
+    .per-minute-badge { display: inline-block; font-size: 1.1rem; font-weight: 700; color: var(--color-warning); background: var(--color-warning-light); border: 1px solid var(--color-warning); padding: 0.375rem 0.75rem; border-radius: 6px; margin-top: 0.5rem; }
+    .recurring-warning { background: var(--color-danger-light); border-left-color: var(--color-danger); }
+    .recurring-warning strong { color: var(--color-danger); }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="../">OneTab</a>
+  <div class="header-actions">
+    <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">Dark</button>
+  </div>
+</header>
+
+<main class="container">
+  <h1>Meeting Cost Calculator</h1>
+  <p class="subtitle">Find out the true dollar cost of that meeting. You might be surprised.</p>
+
+  <div class="card">
+    <div class="card-title">Meeting Details</div>
+
+    <div class="row">
+      <div class="form-group">
+        <label for="input-attendees">Number of Attendees</label>
+        <input type="number" id="input-attendees" value="6" min="1" max="1000">
+      </div>
+      <div class="form-group">
+        <label for="input-duration">Duration <span class="hint">(minutes)</span></label>
+        <input type="number" id="input-duration" value="60" min="1" max="480">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="input-avg-salary">Average Annual Salary per Attendee</label>
+      <div class="input-with-prefix">
+        <span class="prefix">$</span>
+        <input type="number" id="input-avg-salary" value="85000" min="0" step="5000">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="input-frequency">How often does this meeting happen?</label>
+      <select id="input-frequency">
+        <option value="once">One-time</option>
+        <option value="daily">Daily</option>
+        <option value="weekly" selected>Weekly</option>
+        <option value="biweekly">Biweekly</option>
+        <option value="monthly">Monthly</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="result-section visible" id="results">
+    <div class="card result-hero">
+      <div class="rate-label">This Meeting Costs</div>
+      <div class="rate-value" id="hero-total">—</div>
+      <div class="rate-sublabel" id="hero-sub">per meeting</div>
+      <div class="per-minute-badge" id="per-minute-badge" style="display:none"></div>
+    </div>
+
+    <div class="card" id="recurring-card" style="display:none">
+      <div class="card-title">Recurring Cost</div>
+      <div class="stat-grid">
+        <div class="stat-box highlight">
+          <div class="stat-value" id="r-monthly">—</div>
+          <div class="stat-label">Per Month</div>
+        </div>
+        <div class="stat-box danger">
+          <div class="stat-value" id="r-annual">—</div>
+          <div class="stat-label">Per Year</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box recurring-warning" id="annual-warning" style="display:none">
+      <strong>Annual cost:</strong> <span id="annual-warning-text"></span>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Breakdown</div>
+      <table class="breakdown-table">
+        <tr><td>Attendees</td><td id="r-attendees">—</td></tr>
+        <tr><td>Duration</td><td id="r-duration">—</td></tr>
+        <tr><td>Avg salary</td><td id="r-salary">—</td></tr>
+        <tr><td>Hourly cost per person</td><td id="r-hourly">—</td></tr>
+        <tr><td>Total person-hours</td><td id="r-person-hours">—</td></tr>
+        <tr class="total"><td>Meeting cost</td><td id="r-total">—</td></tr>
+      </table>
+    </div>
+
+    <div class="card" id="comparisons-card">
+      <div class="card-title">That's Equivalent To...</div>
+      <div id="comparisons"></div>
+    </div>
+  </div>
+
+  <!-- Cross-links -->
+  <div class="card" style="margin-top:1.5rem">
+    <div class="card-title">Related Tools</div>
+    <p style="font-size:0.9rem;color:var(--color-text-muted);margin-bottom:0.5rem">
+      <a href="../salary-converter/" style="color:var(--color-primary);text-decoration:none;font-weight:600">Salary to Hourly Calculator</a> — Convert between salary and hourly rate
+    </p>
+    <p style="font-size:0.9rem;color:var(--color-text-muted);margin-bottom:0.5rem">
+      <a href="../freelance-rate-calculator/" style="color:var(--color-primary);text-decoration:none;font-weight:600">Freelance Rate Calculator</a> — Figure out what to charge as a freelancer
+    </p>
+    <p style="font-size:0.9rem;color:var(--color-text-muted);margin:0">
+      <a href="../percentage-calculator/" style="color:var(--color-primary);text-decoration:none;font-weight:600">Percentage Calculator</a> — Quick percentage math
+    </p>
+  </div>
+
+  <div class="content-section">
+    <h2>Why Calculate Meeting Costs?</h2>
+    <p>Meetings are one of the most expensive activities in any organization. A one-hour meeting with 8 people isn't one hour of cost — it's eight hours of highly-paid professionals' time. Understanding the true cost helps teams make better decisions about when a meeting is necessary versus when an email or async update would do.</p>
+
+    <h2>How We Calculate It</h2>
+    <p>We convert each attendee's annual salary to an hourly rate (assuming 2,080 working hours per year), multiply by the meeting duration, and sum across all attendees. The result is a conservative estimate — it doesn't include opportunity cost, context-switching time, or the cost of delayed work.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <p>Built for people who need quick answers. <a href="../" style="color:var(--color-primary);text-decoration:none">More tools →</a></p>
+</footer>
+
+<script>
+(function() {
+  // Theme toggle
+  var toggle = document.getElementById('theme-toggle');
+  if (localStorage.getItem('onetab-theme') === 'dark') toggle.textContent = 'Light';
+  toggle.addEventListener('click', function() {
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (isDark) {
+      document.documentElement.removeAttribute('data-theme');
+      toggle.textContent = 'Dark';
+      localStorage.setItem('onetab-theme', 'light');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      toggle.textContent = 'Light';
+      localStorage.setItem('onetab-theme', 'dark');
+    }
+  });
+
+  var inputAttendees = document.getElementById('input-attendees');
+  var inputDuration = document.getElementById('input-duration');
+  var inputSalary = document.getElementById('input-avg-salary');
+  var inputFrequency = document.getElementById('input-frequency');
+
+  function fmt(n) {
+    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  }
+
+  function fmt2(n) {
+    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function getComparisons(cost) {
+    var items = [];
+    if (cost >= 5) items.push({ text: Math.round(cost / 5) + ' fancy coffees', threshold: 5 });
+    if (cost >= 15) items.push({ text: Math.round(cost / 15) + ' Netflix monthly subscriptions', threshold: 15 });
+    if (cost >= 50) items.push({ text: Math.round(cost / 50) + ' Uber rides across town', threshold: 50 });
+    if (cost >= 200) items.push({ text: Math.round(cost / 200) + ' round-trip domestic flights', threshold: 200 });
+    if (cost >= 1000) items.push({ text: Math.round(cost / 1000) + ' iPhones', threshold: 1000 });
+    if (cost >= 2000) items.push({ text: (cost / 2000).toFixed(1) + ' months of the average American\'s rent', threshold: 2000 });
+    if (cost >= 40000) items.push({ text: Math.round(cost / 40000) + ' median US individual salaries', threshold: 40000 });
+    return items.slice(0, 4);
+  }
+
+  function calculate() {
+    var attendees = parseInt(inputAttendees.value) || 1;
+    var duration = parseInt(inputDuration.value) || 60;
+    var salary = parseFloat(inputSalary.value) || 85000;
+    var freq = inputFrequency.value;
+
+    var hourlyRate = salary / 2080;
+    var perPersonCost = hourlyRate * (duration / 60);
+    var totalCost = perPersonCost * attendees;
+    var perMinute = totalCost / duration;
+    var personHours = (attendees * duration) / 60;
+
+    document.getElementById('hero-total').textContent = fmt(totalCost);
+
+    var badge = document.getElementById('per-minute-badge');
+    badge.textContent = fmt2(perMinute) + '/minute';
+    badge.style.display = '';
+
+    document.getElementById('r-attendees').textContent = attendees + ' people';
+    document.getElementById('r-duration').textContent = duration + ' minutes';
+    document.getElementById('r-salary').textContent = fmt(salary) + '/year';
+    document.getElementById('r-hourly').textContent = fmt2(hourlyRate) + '/hr';
+    document.getElementById('r-person-hours').textContent = personHours.toFixed(1) + ' hours';
+    document.getElementById('r-total').textContent = fmt(totalCost);
+
+    // Recurring
+    var recurringCard = document.getElementById('recurring-card');
+    var annualWarning = document.getElementById('annual-warning');
+    var freqMultiplier = { once: 0, daily: 260, weekly: 52, biweekly: 26, monthly: 12 };
+    var annualMeetings = freqMultiplier[freq] || 0;
+
+    if (annualMeetings > 0) {
+      var annualCost = totalCost * annualMeetings;
+      var monthlyCost = annualCost / 12;
+      document.getElementById('r-monthly').textContent = fmt(monthlyCost);
+      document.getElementById('r-annual').textContent = fmt(annualCost);
+      recurringCard.style.display = '';
+
+      document.getElementById('annual-warning-text').textContent =
+        'This recurring meeting costs your organization ' + fmt(annualCost) + ' per year. That\'s ' + fmt(monthlyCost) + '/month across ' + annualMeetings + ' meetings.';
+      annualWarning.style.display = '';
+    } else {
+      recurringCard.style.display = 'none';
+      annualWarning.style.display = 'none';
+    }
+
+    // Comparisons
+    var comps = getComparisons(totalCost);
+    var compHtml = '';
+    for (var i = 0; i < comps.length; i++) {
+      compHtml += '<div class="fun-comparison"><strong>' + comps[i].text + '</strong></div>';
+    }
+    document.getElementById('comparisons').innerHTML = compHtml;
+  }
+
+  [inputAttendees, inputDuration, inputSalary, inputFrequency].forEach(function(el) {
+    el.addEventListener('input', calculate);
+    el.addEventListener('change', calculate);
+  });
+
+  calculate();
+})();
+</script>
+</body>
+</html>

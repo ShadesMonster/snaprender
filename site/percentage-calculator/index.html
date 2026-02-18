@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Percentage Calculator — What is X% of Y?</title>
+  <meta name="description" content="Free percentage calculator. What is X% of Y? X is what percent of Y? Percentage increase or decrease? Instant answers as you type.">
+  <meta name="keywords" content="percentage calculator, what is percent of, percentage increase, percentage decrease, percent change, calculate percentage">
+
+  <meta property="og:title" content="Percentage Calculator — Instant Answers">
+  <meta property="og:description" content="What is X% of Y? X is what percent of Y? Percentage change? Instant answers.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://onetab.tools/percentage-calculator/">
+  <meta property="og:site_name" content="OneTab">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Percentage Calculator">
+  <meta name="twitter:description" content="Instant percentage calculations. No signup required.">
+
+  <link rel="canonical" href="https://onetab.tools/percentage-calculator/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/style.css">
+  <script>
+    (function() {
+      var t = localStorage.getItem('onetab-theme');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Percentage Calculator",
+    "description": "Calculate percentages instantly. What is X% of Y? X is what percent of Y? Percentage increase/decrease.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+
+  <style>
+    .calc-card { margin-bottom: 1.25rem; }
+    .calc-card .card-title { margin-bottom: 0.75rem; }
+    .inline-form { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+    .inline-form span { font-size: 0.95rem; color: var(--color-text-muted); font-weight: 500; white-space: nowrap; }
+    .inline-form input { width: 120px; text-align: center; }
+    .inline-result { font-size: 1.75rem; font-weight: 800; color: var(--color-primary); margin-top: 0.75rem; min-height: 2.5rem; letter-spacing: -0.01em; }
+    @media (max-width: 480px) {
+      .inline-form input { width: 90px; }
+      .inline-result { font-size: 1.35rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="../">OneTab</a>
+  <div class="header-actions">
+    <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">Dark</button>
+  </div>
+</header>
+
+<main class="container">
+  <h1>Percentage Calculator</h1>
+  <p class="subtitle">Three calculators in one. Instant results as you type.</p>
+
+  <!-- Calc 1: What is X% of Y? -->
+  <div class="card calc-card">
+    <div class="card-title">What is X% of Y?</div>
+    <div class="inline-form">
+      <span>What is</span>
+      <input type="number" id="c1-pct" placeholder="10" step="any">
+      <span>% of</span>
+      <input type="number" id="c1-val" placeholder="200" step="any">
+      <span>?</span>
+    </div>
+    <div class="inline-result" id="c1-result">&nbsp;</div>
+  </div>
+
+  <!-- Calc 2: X is what % of Y? -->
+  <div class="card calc-card">
+    <div class="card-title">X is what percent of Y?</div>
+    <div class="inline-form">
+      <input type="number" id="c2-x" placeholder="25" step="any">
+      <span>is what % of</span>
+      <input type="number" id="c2-y" placeholder="200" step="any">
+      <span>?</span>
+    </div>
+    <div class="inline-result" id="c2-result">&nbsp;</div>
+  </div>
+
+  <!-- Calc 3: % change from X to Y -->
+  <div class="card calc-card">
+    <div class="card-title">Percentage Change</div>
+    <div class="inline-form">
+      <span>From</span>
+      <input type="number" id="c3-from" placeholder="80" step="any">
+      <span>to</span>
+      <input type="number" id="c3-to" placeholder="100" step="any">
+    </div>
+    <div class="inline-result" id="c3-result">&nbsp;</div>
+  </div>
+
+  <!-- Quick reference -->
+  <div class="card">
+    <div class="card-title">Common Percentages — Quick Reference</div>
+    <table class="breakdown-table" id="quick-ref">
+      <tr><td>10% of 100</td><td>10</td></tr>
+      <tr><td>15% of 100 (standard tip)</td><td>15</td></tr>
+      <tr><td>20% of 100 (generous tip)</td><td>20</td></tr>
+      <tr><td>25% of 200</td><td>50</td></tr>
+      <tr><td>33.3% of 300</td><td>100</td></tr>
+      <tr><td>50% of 1,000</td><td>500</td></tr>
+    </table>
+  </div>
+
+  <!-- Cross-links -->
+  <div class="card" style="margin-top:1.5rem">
+    <div class="card-title">Related Tools</div>
+    <p style="font-size:0.9rem;color:var(--color-text-muted);margin-bottom:0.5rem">
+      <a href="../salary-converter/" style="color:var(--color-primary);text-decoration:none;font-weight:600">Salary to Hourly Calculator</a> — Convert between salary and hourly rate
+    </p>
+    <p style="font-size:0.9rem;color:var(--color-text-muted);margin-bottom:0.5rem">
+      <a href="../meeting-cost-calculator/" style="color:var(--color-primary);text-decoration:none;font-weight:600">Meeting Cost Calculator</a> — Find out how much that meeting really costs
+    </p>
+    <p style="font-size:0.9rem;color:var(--color-text-muted);margin:0">
+      <a href="../freelance-rate-calculator/" style="color:var(--color-primary);text-decoration:none;font-weight:600">Freelance Rate Calculator</a> — Figure out what to charge as a freelancer
+    </p>
+  </div>
+
+  <div class="content-section">
+    <h2>How to Calculate Percentages</h2>
+    <p><strong>What is X% of Y?</strong> Multiply Y by X, then divide by 100. For example, 15% of 200 = 200 × 15 ÷ 100 = 30.</p>
+    <p><strong>X is what percent of Y?</strong> Divide X by Y, then multiply by 100. For example, 25 is what percent of 200? 25 ÷ 200 × 100 = 12.5%.</p>
+    <p><strong>Percentage change:</strong> Subtract the old value from the new value, divide by the old value, and multiply by 100. For example, from 80 to 100: (100 - 80) ÷ 80 × 100 = 25% increase.</p>
+
+    <h2>When Do You Need Percentage Calculations?</h2>
+    <ul>
+      <li>Calculating tips at restaurants (15%, 18%, 20%)</li>
+      <li>Figuring out discounts while shopping</li>
+      <li>Understanding tax rates and deductions</li>
+      <li>Reporting on growth or decline in business metrics</li>
+      <li>Calculating grades and test scores</li>
+    </ul>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <p>Built for people who need quick answers. <a href="../" style="color:var(--color-primary);text-decoration:none">More tools →</a></p>
+</footer>
+
+<script>
+(function() {
+  // Theme toggle
+  var toggle = document.getElementById('theme-toggle');
+  if (localStorage.getItem('onetab-theme') === 'dark') toggle.textContent = 'Light';
+  toggle.addEventListener('click', function() {
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (isDark) {
+      document.documentElement.removeAttribute('data-theme');
+      toggle.textContent = 'Dark';
+      localStorage.setItem('onetab-theme', 'light');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      toggle.textContent = 'Light';
+      localStorage.setItem('onetab-theme', 'dark');
+    }
+  });
+
+  function fmtNum(n) {
+    if (Number.isInteger(n)) return n.toLocaleString('en-US');
+    // Show up to 4 decimal places, trim trailing zeros
+    var s = n.toFixed(4).replace(/\.?0+$/, '');
+    // Add commas to integer part
+    var parts = s.split('.');
+    parts[0] = parseInt(parts[0]).toLocaleString('en-US');
+    return parts.join('.');
+  }
+
+  // Calc 1: What is X% of Y?
+  var c1Pct = document.getElementById('c1-pct');
+  var c1Val = document.getElementById('c1-val');
+  var c1Result = document.getElementById('c1-result');
+
+  function calc1() {
+    var pct = parseFloat(c1Pct.value);
+    var val = parseFloat(c1Val.value);
+    if (isNaN(pct) || isNaN(val)) { c1Result.innerHTML = '&nbsp;'; return; }
+    var result = val * pct / 100;
+    c1Result.textContent = fmtNum(result);
+  }
+
+  c1Pct.addEventListener('input', calc1);
+  c1Val.addEventListener('input', calc1);
+
+  // Calc 2: X is what % of Y?
+  var c2X = document.getElementById('c2-x');
+  var c2Y = document.getElementById('c2-y');
+  var c2Result = document.getElementById('c2-result');
+
+  function calc2() {
+    var x = parseFloat(c2X.value);
+    var y = parseFloat(c2Y.value);
+    if (isNaN(x) || isNaN(y) || y === 0) { c2Result.innerHTML = '&nbsp;'; return; }
+    var result = (x / y) * 100;
+    c2Result.textContent = fmtNum(result) + '%';
+  }
+
+  c2X.addEventListener('input', calc2);
+  c2Y.addEventListener('input', calc2);
+
+  // Calc 3: % change from X to Y
+  var c3From = document.getElementById('c3-from');
+  var c3To = document.getElementById('c3-to');
+  var c3Result = document.getElementById('c3-result');
+
+  function calc3() {
+    var from = parseFloat(c3From.value);
+    var to = parseFloat(c3To.value);
+    if (isNaN(from) || isNaN(to) || from === 0) { c3Result.innerHTML = '&nbsp;'; return; }
+    var change = ((to - from) / Math.abs(from)) * 100;
+    var prefix = change > 0 ? '+' : '';
+    var label = change > 0 ? ' increase' : change < 0 ? ' decrease' : '';
+    c3Result.textContent = prefix + fmtNum(change) + '%' + label;
+    c3Result.style.color = change > 0 ? 'var(--color-success)' : change < 0 ? 'var(--color-danger)' : 'var(--color-primary)';
+  }
+
+  c3From.addEventListener('input', calc3);
+  c3To.addEventListener('input', calc3);
+})();
+</script>
+</body>
+</html>
