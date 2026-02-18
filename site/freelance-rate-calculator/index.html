@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Freelance Hourly Rate Calculator - Find Your Ideal Rate</title>
+  <meta name="description" content="Calculate your ideal freelance hourly rate based on your desired income, expenses, taxes, and available working hours. Free, no signup required.">
+  <meta name="keywords" content="freelance rate calculator, freelance hourly rate, how much to charge freelance, freelance pricing, consulting rate calculator">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Freelance Hourly Rate Calculator">
+  <meta property="og:description" content="Find out exactly what hourly rate you need to charge as a freelancer. Factors in income goals, taxes, expenses, and time off.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://toolkitly.com/freelance-rate-calculator/">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Freelance Hourly Rate Calculator">
+  <meta name="twitter:description" content="Find out exactly what hourly rate you need to charge as a freelancer.">
+
+  <link rel="canonical" href="https://toolkitly.com/freelance-rate-calculator/">
+  <link rel="stylesheet" href="../css/style.css">
+
+  <!-- Schema.org structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Freelance Hourly Rate Calculator",
+    "description": "Calculate your ideal freelance hourly rate based on desired income, expenses, taxes, and available working hours.",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="../">Toolkitly</a>
+</header>
+
+<main class="container">
+  <h1>Freelance Hourly Rate Calculator</h1>
+  <p class="subtitle">Figure out exactly what to charge per hour so you hit your income goals after taxes, expenses, and time off.</p>
+
+  <!-- Calculator Form -->
+  <form id="calculator-form" autocomplete="off">
+
+    <div class="card">
+      <div class="card-title">Income Goal</div>
+      <div class="form-group">
+        <label for="desired-income">Desired Annual Income (take-home) <span class="hint">What you want in your pocket</span></label>
+        <div class="input-with-prefix">
+          <span class="prefix">$</span>
+          <input type="number" id="desired-income" value="80000" min="1000" max="10000000" step="1000" required>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Business Expenses</div>
+      <div class="row">
+        <div class="form-group">
+          <label for="software-costs">Software & Tools <span class="hint">/ year</span></label>
+          <div class="input-with-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="software-costs" value="2400" min="0" step="100">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="hardware-costs">Hardware & Equipment <span class="hint">/ year</span></label>
+          <div class="input-with-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="hardware-costs" value="1500" min="0" step="100">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group">
+          <label for="insurance-costs">Health Insurance <span class="hint">/ year</span></label>
+          <div class="input-with-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="insurance-costs" value="6000" min="0" step="100">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="other-expenses">Other Expenses <span class="hint">/ year</span></label>
+          <div class="input-with-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="other-expenses" value="2000" min="0" step="100">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Taxes</div>
+      <div class="form-group">
+        <label for="tax-rate">Estimated Tax Rate <span class="hint">Income + self-employment tax</span></label>
+        <div class="row">
+          <select id="tax-rate">
+            <option value="15">15% &mdash; Low bracket / lots of deductions</option>
+            <option value="20">20% &mdash; Low-to-moderate</option>
+            <option value="25">25% &mdash; Moderate (most common)</option>
+            <option value="30" selected>30% &mdash; Moderate-to-high (US default)</option>
+            <option value="35">35% &mdash; High bracket</option>
+            <option value="40">40% &mdash; High bracket + state tax</option>
+            <option value="45">45% &mdash; Very high (CA, NY, etc.)</option>
+          </select>
+          <div class="form-group" style="margin-bottom:0">
+            <label for="tax-rate-custom" class="hint" style="font-weight:400">Or enter custom %</label>
+            <input type="number" id="tax-rate-custom" placeholder="e.g. 28" min="0" max="70" step="1">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Working Time</div>
+      <div class="row">
+        <div class="form-group">
+          <label for="hours-per-week">Hours Worked / Week <span class="hint">Total hours</span></label>
+          <input type="number" id="hours-per-week" value="40" min="1" max="100" step="1" required>
+        </div>
+        <div class="form-group">
+          <label for="billable-pct">Billable Percentage <span class="hint">% of time on client work</span></label>
+          <select id="billable-pct">
+            <option value="50">50% &mdash; Heavy admin/marketing</option>
+            <option value="60">60% &mdash; Growing freelancer</option>
+            <option value="70" selected>70% &mdash; Established freelancer</option>
+            <option value="80">80% &mdash; Highly efficient</option>
+            <option value="90">90% &mdash; Almost all client work</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group">
+          <label for="vacation-days">Vacation Days / Year</label>
+          <input type="number" id="vacation-days" value="15" min="0" max="200" step="1">
+        </div>
+        <div class="form-group">
+          <label for="sick-days">Sick / Personal Days / Year</label>
+          <input type="number" id="sick-days" value="5" min="0" max="100" step="1">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="holidays">Public Holidays / Year</label>
+        <input type="number" id="holidays" value="10" min="0" max="30" step="1">
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Calculate My Rate</button>
+  </form>
+
+  <!-- Results -->
+  <div id="results" class="result-section">
+    <div class="card result-hero">
+      <div class="rate-label">Your Minimum Hourly Rate</div>
+      <div class="rate-value" id="result-rate">$0</div>
+      <div class="rate-sublabel">to hit <span id="result-income-goal">$0</span>/year take-home</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">At Other Rates</div>
+      <div class="alternative-rates">
+        <div class="alt-rate">
+          <div class="alt-label">Comfortable</div>
+          <div class="alt-value" id="rate-comfortable">$0</div>
+        </div>
+        <div class="alt-rate">
+          <div class="alt-label">Premium</div>
+          <div class="alt-value" id="rate-premium">$0</div>
+        </div>
+        <div class="alt-rate">
+          <div class="alt-label">Expert</div>
+          <div class="alt-value" id="rate-expert">$0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">How We Got There</div>
+      <table class="breakdown-table">
+        <tr>
+          <td>Desired take-home income</td>
+          <td id="bd-income">$0</td>
+        </tr>
+        <tr>
+          <td>+ Business expenses</td>
+          <td id="bd-expenses">$0</td>
+        </tr>
+        <tr>
+          <td>= Pre-tax income needed</td>
+          <td id="bd-pretax-subtotal">$0</td>
+        </tr>
+        <tr>
+          <td>+ Taxes (<span id="bd-tax-rate">0</span>%)</td>
+          <td id="bd-taxes">$0</td>
+        </tr>
+        <tr class="total">
+          <td>Gross revenue needed</td>
+          <td id="bd-gross">$0</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Working Time Breakdown</div>
+      <table class="breakdown-table">
+        <tr>
+          <td>Total weeks per year</td>
+          <td>52</td>
+        </tr>
+        <tr>
+          <td>&minus; Time off</td>
+          <td id="bd-weeks-off">0 weeks</td>
+        </tr>
+        <tr>
+          <td>= Working weeks</td>
+          <td id="bd-working-weeks">0</td>
+        </tr>
+        <tr>
+          <td>Hours per week</td>
+          <td id="bd-hours-week">0</td>
+        </tr>
+        <tr>
+          <td>Billable percentage</td>
+          <td id="bd-billable-pct">0%</td>
+        </tr>
+        <tr class="total">
+          <td>Billable hours per year</td>
+          <td id="bd-billable-hours">0</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Equivalent Salaries</div>
+      <table class="breakdown-table">
+        <tr>
+          <td>Equivalent annual salary (with benefits)</td>
+          <td id="bd-equiv-salary">$0</td>
+        </tr>
+        <tr>
+          <td>Monthly revenue needed</td>
+          <td id="bd-monthly">$0</td>
+        </tr>
+        <tr>
+          <td>Weekly revenue needed</td>
+          <td id="bd-weekly">$0</td>
+        </tr>
+        <tr>
+          <td>Daily rate (8hr day)</td>
+          <td id="bd-daily">$0</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="info-box">
+      <strong>Tip:</strong> Most successful freelancers charge 20-50% above their minimum rate to account for slow months, unexpected expenses, and building savings. The "Comfortable" rate above adds a 20% buffer.
+    </div>
+
+    <div class="card">
+      <div class="card-title">Share Your Result</div>
+      <div class="share-bar">
+        <button class="btn btn-outline" id="share-copy">Copy Link</button>
+        <button class="btn btn-outline" id="share-twitter">Share on X</button>
+        <button class="btn btn-outline" id="share-linkedin">Share on LinkedIn</button>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="recalculate-btn" style="margin-top:0.5rem">Recalculate</button>
+  </div>
+
+  <!-- SEO Content -->
+  <div class="content-section">
+    <h2>How to Calculate Your Freelance Hourly Rate</h2>
+    <p>Setting the right hourly rate is the difference between a thriving freelance career and burning out for less than minimum wage. Most freelancers make the mistake of picking a number that "feels right" instead of calculating what they actually need to earn.</p>
+    <p>This calculator works backwards from your goals: what do you want to take home, what are your real costs, and how many hours can you actually bill? The formula is straightforward:</p>
+    <p><strong>Hourly Rate = (Desired Income + Expenses) / (1 - Tax Rate) / Billable Hours Per Year</strong></p>
+
+    <h2>Why Your Freelance Rate Should Be Higher Than You Think</h2>
+    <p>Full-time employees get benefits that freelancers have to pay for out of pocket:</p>
+    <ul>
+      <li><strong>Health insurance:</strong> $6,000-$15,000/year that comes out of your rate</li>
+      <li><strong>Self-employment tax:</strong> An extra 15.3% on top of income tax (in the US)</li>
+      <li><strong>No paid time off:</strong> Every vacation day, sick day, and holiday is unpaid</li>
+      <li><strong>Non-billable time:</strong> Invoicing, marketing, admin, proposals - typically 20-40% of your work hours</li>
+      <li><strong>No employer 401k match:</strong> You fund your own retirement</li>
+      <li><strong>Equipment and software:</strong> Your laptop, tools, and subscriptions are on you</li>
+    </ul>
+    <p>A common rule of thumb: a freelancer needs to charge roughly 2-3x the equivalent hourly wage of a full-time employee to end up with the same take-home pay and benefits.</p>
+
+    <h2>Freelance Rate by Experience Level</h2>
+    <p>While rates vary wildly by industry and specialization, here are rough benchmarks for US-based freelancers:</p>
+    <ul>
+      <li><strong>Beginner (0-2 years):</strong> $25-$75/hour</li>
+      <li><strong>Intermediate (2-5 years):</strong> $50-$125/hour</li>
+      <li><strong>Expert (5-10 years):</strong> $100-$200/hour</li>
+      <li><strong>Specialist/Consultant (10+ years):</strong> $150-$400+/hour</li>
+    </ul>
+    <p>These ranges vary significantly by field. A freelance developer or designer will typically command higher rates than a freelance writer, but a specialized technical writer or UX researcher may out-earn a generalist developer.</p>
+
+    <h2>The Billable Hours Trap</h2>
+    <p>The biggest mistake new freelancers make is assuming they can bill 40 hours a week. In reality, a significant portion of your time goes to:</p>
+    <ul>
+      <li>Finding and pitching new clients</li>
+      <li>Writing proposals and scoping projects</li>
+      <li>Administrative work (invoicing, bookkeeping, emails)</li>
+      <li>Marketing and maintaining your online presence</li>
+      <li>Learning and skill development</li>
+    </ul>
+    <p>Most established freelancers bill 60-70% of their working hours. New freelancers often bill only 40-50%. This calculator accounts for this with the "billable percentage" input - be honest with yourself about how much time you actually spend on paid client work.</p>
+
+    <h2>Should You Charge Hourly or Project-Based?</h2>
+    <p>This calculator gives you an hourly rate, but many freelancers earn more by charging per project. Here's when to use each:</p>
+    <ul>
+      <li><strong>Hourly:</strong> Best for ongoing work, maintenance, consulting calls, and when scope is unclear</li>
+      <li><strong>Project-based:</strong> Best when you can estimate scope accurately and want to be rewarded for efficiency</li>
+      <li><strong>Value-based:</strong> Best for high-impact work where your deliverable has measurable business value (e.g., a landing page that generates leads)</li>
+    </ul>
+    <p>Even if you charge by the project, knowing your minimum hourly rate helps you estimate project prices. Divide your project quote by estimated hours to make sure you're not accidentally working below your floor rate.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <p>Built for freelancers who want to stop undercharging.</p>
+</footer>
+
+<script src="../js/freelance-rate-calculator.js"></script>
+</body>
+</html>
