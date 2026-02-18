@@ -41,6 +41,10 @@
 
 <header class="site-header">
   <a href="../">OneTab</a>
+  <div class="header-actions">
+    <span class="save-indicator" id="save-indicator">Saved</span>
+    <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">Dark</button>
+  </div>
 </header>
 
 <main class="container">
@@ -68,6 +72,27 @@
       <option value="NZ">New Zealand</option>
     </select>
     <span class="currency-badge" id="currency-badge">USD ($)</span>
+  </div>
+
+  <!-- Role / Industry Preset -->
+  <div class="preset-bar">
+    <label for="role-preset">Quick start</label>
+    <select id="role-preset">
+      <option value="">Choose your role...</option>
+      <option value="web-dev">Web Developer</option>
+      <option value="designer">Designer</option>
+      <option value="writer">Writer / Content Creator</option>
+      <option value="consultant">Business Consultant</option>
+      <option value="photographer">Photographer / Videographer</option>
+      <option value="marketer">Marketing Consultant</option>
+    </select>
+    <span class="preset-applied" id="preset-applied">Defaults applied</span>
+  </div>
+
+  <!-- Ad: Leaderboard -->
+  <div class="ad-placeholder" data-size="leaderboard">
+    <span class="ad-label">Advertisement</span>
+    <span class="ad-size">728 x 90</span>
   </div>
 
   <!-- Tabs -->
@@ -209,6 +234,13 @@
       <button type="submit" class="btn btn-primary">Calculate My Rate</button>
     </form>
 
+    <!-- Empty State -->
+    <div class="empty-state" id="hourly-empty">
+      <div class="empty-state-icon">$</div>
+      <div class="empty-state-title">Ready to find your ideal rate?</div>
+      <div class="empty-state-desc">Fill in your details above and click "Calculate My Rate" to see your personalized results.</div>
+    </div>
+
     <!-- Hourly Rate Results -->
     <div id="hourly-results" class="result-section">
       <div class="card result-hero">
@@ -235,8 +267,40 @@
         </div>
       </div>
 
+      <!-- Confidence Meter -->
+      <div class="card" id="confidence-card">
+        <div class="card-title">How Your Rate Compares</div>
+        <div class="confidence-meter">
+          <div class="confidence-track">
+            <div class="confidence-marker" id="confidence-marker" style="left:50%"></div>
+          </div>
+          <div class="confidence-labels">
+            <span id="confidence-low">$0</span>
+            <span>Market Average</span>
+            <span id="confidence-high">$0</span>
+          </div>
+        </div>
+        <div class="confidence-note" id="confidence-note"></div>
+      </div>
+
+      <!-- Ad: Rectangle -->
+      <div class="ad-placeholder" data-size="rectangle">
+        <span class="ad-label">Advertisement</span>
+        <span class="ad-size">300 x 250</span>
+      </div>
+
       <div class="card">
         <div class="card-title">Revenue Breakdown</div>
+        <div class="donut-container">
+          <div class="donut-canvas-wrap">
+            <canvas id="donut-chart" width="360" height="360"></canvas>
+            <div class="donut-center">
+              <div class="donut-center-label">Gross</div>
+              <div class="donut-center-value" id="donut-center-value">$0</div>
+            </div>
+          </div>
+          <div class="donut-legend" id="donut-legend"></div>
+        </div>
         <div class="stacked-bar" id="revenue-bar"></div>
         <div class="stacked-legend" id="revenue-legend"></div>
         <table class="breakdown-table" style="margin-top:1rem">
@@ -311,6 +375,42 @@
         </div>
       </div>
 
+      <!-- What-If Interactive -->
+      <div class="card" id="whatif-card">
+        <div class="card-title">What If You Changed Your Rate?</div>
+        <div class="whatif-interactive">
+          <div class="whatif-slider-group">
+            <label>Adjust: <span class="whatif-amount-display" id="whatif-amount">+$0</span>/hr</label>
+            <input type="range" id="whatif-slider" min="-50" max="100" value="0" step="5">
+          </div>
+          <div class="whatif-results-grid">
+            <div class="whatif-item">
+              <div class="whatif-item-label">New Rate</div>
+              <div class="whatif-item-value" id="whatif-new-rate">$0/hr</div>
+            </div>
+            <div class="whatif-item">
+              <div class="whatif-item-label">Annual Diff</div>
+              <div class="whatif-item-value" id="whatif-annual-diff">$0</div>
+            </div>
+            <div class="whatif-item">
+              <div class="whatif-item-label">Monthly Diff</div>
+              <div class="whatif-item-value" id="whatif-monthly-diff">$0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inflation Adjustment -->
+      <div class="inflation-note" id="inflation-note">
+        <span class="inflation-badge" id="inflation-badge">+3%</span>
+        <span class="inflation-text" id="inflation-text">
+          To keep pace with inflation, raise your rate to <strong id="inflation-rate">$0</strong>/hr next year.
+        </span>
+      </div>
+
+      <!-- Smart Tips -->
+      <div class="smart-tips" id="smart-tips"></div>
+
       <div class="info-box">
         <strong>Tip:</strong> Most successful freelancers charge 20-50% above their minimum rate. This accounts for slow months, unexpected costs, and savings. Use the "Comfortable" rate as your starting point, not the minimum.
       </div>
@@ -349,6 +449,7 @@
           <button class="btn btn-outline" id="share-copy">Copy Link</button>
           <button class="btn btn-outline" id="share-twitter">Share on X</button>
           <button class="btn btn-outline" id="share-linkedin">Share on LinkedIn</button>
+          <button class="print-btn" id="print-btn">Print Results</button>
         </div>
       </div>
     </div>
@@ -427,6 +528,13 @@
       <button type="submit" class="btn btn-primary">Estimate Project Cost</button>
     </form>
 
+    <!-- Empty State -->
+    <div class="empty-state" id="project-empty">
+      <div class="empty-state-icon">#</div>
+      <div class="empty-state-title">Price your next project</div>
+      <div class="empty-state-desc">Enter your rate and project details, then click "Estimate Project Cost" to see the breakdown.</div>
+    </div>
+
     <!-- Project Cost Results -->
     <div id="project-results" class="result-section">
       <div class="card result-hero">
@@ -451,6 +559,12 @@
             <div class="alt-value" id="proj-price-high">$0</div>
           </div>
         </div>
+      </div>
+
+      <!-- Ad: In-article -->
+      <div class="ad-placeholder" data-size="in-article">
+        <span class="ad-label">Advertisement</span>
+        <span class="ad-size">In-article</span>
       </div>
 
       <div class="card">
@@ -587,6 +701,13 @@
       <button type="submit" class="btn btn-primary">Analyze Profitability</button>
     </form>
 
+    <!-- Empty State -->
+    <div class="empty-state" id="profit-empty">
+      <div class="empty-state-icon">%</div>
+      <div class="empty-state-title">See where your money goes</div>
+      <div class="empty-state-desc">Enter your current rate and expenses, then click "Analyze Profitability" to see your full picture.</div>
+    </div>
+
     <!-- Profitability Results -->
     <div id="profit-results" class="result-section">
       <div class="card">
@@ -633,6 +754,12 @@
             <td id="profit-bd-takehome">$0</td>
           </tr>
         </table>
+      </div>
+
+      <!-- Ad: Rectangle -->
+      <div class="ad-placeholder" data-size="rectangle">
+        <span class="ad-label">Advertisement</span>
+        <span class="ad-size">300 x 250</span>
       </div>
 
       <div class="card">
@@ -751,6 +878,13 @@
       <button type="submit" class="btn btn-primary">Calculate Taxes</button>
     </form>
 
+    <!-- Empty State -->
+    <div class="empty-state" id="tax-empty">
+      <div class="empty-state-icon">&amp;</div>
+      <div class="empty-state-title">Estimate your tax burden</div>
+      <div class="empty-state-desc">Enter your income and deductions, then click "Calculate Taxes" to see your estimated tax liability.</div>
+    </div>
+
     <!-- Tax Results -->
     <div id="tax-results" class="result-section">
       <div class="card">
@@ -837,6 +971,12 @@
         </table>
       </div>
 
+      <!-- Ad: In-article -->
+      <div class="ad-placeholder" data-size="in-article">
+        <span class="ad-label">Advertisement</span>
+        <span class="ad-size">In-article</span>
+      </div>
+
       <div class="info-box warning">
         <strong>Disclaimer:</strong> This is a simplified estimate for planning purposes only. Tax laws are complex and vary by situation. Always consult a qualified tax professional for accurate tax advice. This does not account for all deductions, credits, or local taxes.
       </div>
@@ -865,6 +1005,12 @@
     </div>
   </div>
 
+  <!-- Ad: Large Rectangle before SEO content -->
+  <div class="ad-placeholder" data-size="large-rectangle">
+    <span class="ad-label">Advertisement</span>
+    <span class="ad-size">336 x 280</span>
+  </div>
+
   <!-- SEO Content -->
   <div class="content-section">
     <h2>How to Calculate Your Freelance Hourly Rate</h2>
@@ -883,6 +1029,12 @@
       <li><strong>Equipment and software:</strong> Your laptop, tools, and subscriptions are on you</li>
     </ul>
     <p>A common rule of thumb: a freelancer needs to charge roughly 2-3x the equivalent hourly wage of a full-time employee to end up with the same take-home pay and benefits.</p>
+
+    <!-- Ad: In-article within SEO content -->
+    <div class="ad-placeholder" data-size="in-article">
+      <span class="ad-label">Advertisement</span>
+      <span class="ad-size">In-article</span>
+    </div>
 
     <h2>Estimating Project Costs as a Freelancer</h2>
     <p>Hourly billing is straightforward, but project-based pricing is where most freelancers earn more. The key is padding for complexity. Our project cost estimator uses a complexity multiplier to account for the reality that projects almost always take longer than estimated.</p>

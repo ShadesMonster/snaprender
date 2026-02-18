@@ -7,21 +7,33 @@
   // COUNTRY DATA
   // ============================================================
   var COUNTRIES = {
-    US: { name: 'United States', currency: 'USD', symbol: '$', defaultTax: 30, holidays: 10, seTax: true, note: '' },
-    UK: { name: 'United Kingdom', currency: 'GBP', symbol: '\u00A3', defaultTax: 32, holidays: 8, seTax: false, note: 'UK freelancers pay Income Tax + Class 2/4 National Insurance. Basic rate: 20% income + 9% NI = ~29%. Higher rate: 40% income + 2% NI.' },
-    CA: { name: 'Canada', currency: 'CAD', symbol: 'C$', defaultTax: 30, holidays: 10, seTax: false, note: 'Canadian self-employed pay both employee and employer CPP contributions (~11.9% combined). Federal + provincial income tax varies by province.' },
-    AU: { name: 'Australia', currency: 'AUD', symbol: 'A$', defaultTax: 32, holidays: 8, seTax: false, note: 'Australian freelancers pay income tax at marginal rates (19-45%). GST of 10% applies if revenue exceeds $75,000. Super contributions are not mandatory for sole traders but recommended.' },
-    DE: { name: 'Germany', currency: 'EUR', symbol: '\u20AC', defaultTax: 42, holidays: 10, seTax: false, note: 'German Freiberufler pay income tax (14-45%), solidarity surcharge (~5.5% of tax), and optional health/pension insurance. VAT (Umsatzsteuer) of 19% applies unless you use the Kleinunternehmerregelung.' },
-    FR: { name: 'France', currency: 'EUR', symbol: '\u20AC', defaultTax: 45, holidays: 11, seTax: false, note: 'French auto-entrepreneurs pay social charges (~22% for services) + income tax. Micro-enterprise regime offers simplified flat-rate deductions.' },
-    NL: { name: 'Netherlands', currency: 'EUR', symbol: '\u20AC', defaultTax: 40, holidays: 8, seTax: false, note: 'Dutch ZZP-ers pay income tax (37-49.5%) but benefit from zelfstandigenaftrek (self-employment deduction) and MKB-winstvrijstelling (14% profit exemption).' },
-    SE: { name: 'Sweden', currency: 'SEK', symbol: 'kr', defaultTax: 50, holidays: 12, seTax: false, note: 'Swedish freelancers pay income tax (~30-57%) plus egenavgifter (self-employment contributions ~28.97%). High taxes but includes healthcare and pension.' },
-    ES: { name: 'Spain', currency: 'EUR', symbol: '\u20AC', defaultTax: 35, holidays: 14, seTax: false, note: 'Spanish aut\u00F3nomos pay IRPF income tax (19-47%) plus monthly social security quota (~300\u20AC/month minimum). New freelancers get a reduced rate for the first year.' },
-    IT: { name: 'Italy', currency: 'EUR', symbol: '\u20AC', defaultTax: 40, holidays: 12, seTax: false, note: 'Italian partita IVA holders can use the regime forfettario (flat 15% tax, 5% for first 5 years) if revenue is under \u20AC85,000. INPS contributions apply.' },
-    BR: { name: 'Brazil', currency: 'BRL', symbol: 'R$', defaultTax: 27, holidays: 12, seTax: false, note: 'Brazilian freelancers (MEI or individual) pay Simples Nacional or IRPF (7.5-27.5%). MEI has a very low monthly fee but caps at R$81,000/year.' },
-    IN: { name: 'India', currency: 'INR', symbol: '\u20B9', defaultTax: 30, holidays: 15, seTax: false, note: 'Indian freelancers pay income tax (5-30%) + 4% cess. The presumptive taxation scheme (Section 44ADA) allows claiming 50% of gross receipts as expenses automatically.' },
-    JP: { name: 'Japan', currency: 'JPY', symbol: '\u00A5', defaultTax: 33, holidays: 16, seTax: false, note: 'Japanese freelancers pay income tax (5-45%), resident tax (~10%), and National Health Insurance + Pension. Filing a blue tax return (aoiro shinkoku) provides a \u00A5650,000 deduction.' },
-    SG: { name: 'Singapore', currency: 'SGD', symbol: 'S$', defaultTax: 15, holidays: 11, seTax: false, note: 'Singapore has low personal tax rates (0-22%). Self-employed must contribute to CPF MediSave. No capital gains tax. GST of 9% if revenue exceeds S$1M.' },
-    NZ: { name: 'New Zealand', currency: 'NZD', symbol: 'NZ$', defaultTax: 30, holidays: 11, seTax: false, note: 'NZ sole traders pay income tax at marginal rates (10.5-39%). ACC levies apply. GST of 15% if revenue exceeds NZ$60,000.' }
+    US: { name: 'United States', currency: 'USD', symbol: '$', defaultTax: 30, holidays: 10, seTax: true, note: '', benchLow: 75, benchHigh: 150 },
+    UK: { name: 'United Kingdom', currency: 'GBP', symbol: '\u00A3', defaultTax: 32, holidays: 8, seTax: false, note: 'UK freelancers pay Income Tax + Class 2/4 National Insurance. Basic rate: 20% income + 9% NI = ~29%. Higher rate: 40% income + 2% NI.', benchLow: 50, benchHigh: 100 },
+    CA: { name: 'Canada', currency: 'CAD', symbol: 'C$', defaultTax: 30, holidays: 10, seTax: false, note: 'Canadian self-employed pay both employee and employer CPP contributions (~11.9% combined). Federal + provincial income tax varies by province.', benchLow: 60, benchHigh: 120 },
+    AU: { name: 'Australia', currency: 'AUD', symbol: 'A$', defaultTax: 32, holidays: 8, seTax: false, note: 'Australian freelancers pay income tax at marginal rates (19-45%). GST of 10% applies if revenue exceeds $75,000. Super contributions are not mandatory for sole traders but recommended.', benchLow: 80, benchHigh: 150 },
+    DE: { name: 'Germany', currency: 'EUR', symbol: '\u20AC', defaultTax: 42, holidays: 10, seTax: false, note: 'German Freiberufler pay income tax (14-45%), solidarity surcharge (~5.5% of tax), and optional health/pension insurance. VAT (Umsatzsteuer) of 19% applies unless you use the Kleinunternehmerregelung.', benchLow: 60, benchHigh: 110 },
+    FR: { name: 'France', currency: 'EUR', symbol: '\u20AC', defaultTax: 45, holidays: 11, seTax: false, note: 'French auto-entrepreneurs pay social charges (~22% for services) + income tax. Micro-enterprise regime offers simplified flat-rate deductions.', benchLow: 50, benchHigh: 100 },
+    NL: { name: 'Netherlands', currency: 'EUR', symbol: '\u20AC', defaultTax: 40, holidays: 8, seTax: false, note: 'Dutch ZZP-ers pay income tax (37-49.5%) but benefit from zelfstandigenaftrek (self-employment deduction) and MKB-winstvrijstelling (14% profit exemption).', benchLow: 55, benchHigh: 110 },
+    SE: { name: 'Sweden', currency: 'SEK', symbol: 'kr', defaultTax: 50, holidays: 12, seTax: false, note: 'Swedish freelancers pay income tax (~30-57%) plus egenavgifter (self-employment contributions ~28.97%). High taxes but includes healthcare and pension.', benchLow: 500, benchHigh: 1200 },
+    ES: { name: 'Spain', currency: 'EUR', symbol: '\u20AC', defaultTax: 35, holidays: 14, seTax: false, note: 'Spanish aut\u00F3nomos pay IRPF income tax (19-47%) plus monthly social security quota (~300\u20AC/month minimum). New freelancers get a reduced rate for the first year.', benchLow: 40, benchHigh: 80 },
+    IT: { name: 'Italy', currency: 'EUR', symbol: '\u20AC', defaultTax: 40, holidays: 12, seTax: false, note: 'Italian partita IVA holders can use the regime forfettario (flat 15% tax, 5% for first 5 years) if revenue is under \u20AC85,000. INPS contributions apply.', benchLow: 40, benchHigh: 85 },
+    BR: { name: 'Brazil', currency: 'BRL', symbol: 'R$', defaultTax: 27, holidays: 12, seTax: false, note: 'Brazilian freelancers (MEI or individual) pay Simples Nacional or IRPF (7.5-27.5%). MEI has a very low monthly fee but caps at R$81,000/year.', benchLow: 100, benchHigh: 350 },
+    IN: { name: 'India', currency: 'INR', symbol: '\u20B9', defaultTax: 30, holidays: 15, seTax: false, note: 'Indian freelancers pay income tax (5-30%) + 4% cess. The presumptive taxation scheme (Section 44ADA) allows claiming 50% of gross receipts as expenses automatically.', benchLow: 1500, benchHigh: 5000 },
+    JP: { name: 'Japan', currency: 'JPY', symbol: '\u00A5', defaultTax: 33, holidays: 16, seTax: false, note: 'Japanese freelancers pay income tax (5-45%), resident tax (~10%), and National Health Insurance + Pension. Filing a blue tax return (aoiro shinkoku) provides a \u00A5650,000 deduction.', benchLow: 5000, benchHigh: 15000 },
+    SG: { name: 'Singapore', currency: 'SGD', symbol: 'S$', defaultTax: 15, holidays: 11, seTax: false, note: 'Singapore has low personal tax rates (0-22%). Self-employed must contribute to CPF MediSave. No capital gains tax. GST of 9% if revenue exceeds S$1M.', benchLow: 80, benchHigh: 180 },
+    NZ: { name: 'New Zealand', currency: 'NZD', symbol: 'NZ$', defaultTax: 30, holidays: 11, seTax: false, note: 'NZ sole traders pay income tax at marginal rates (10.5-39%). ACC levies apply. GST of 15% if revenue exceeds NZ$60,000.', benchLow: 70, benchHigh: 140 }
+  };
+
+  // ============================================================
+  // ROLE PRESETS
+  // ============================================================
+  var PRESETS = {
+    'web-dev': { income: 90000, software: 3000, hardware: 2000, insurance: 6000, office: 0, retirement: 5000, other: 2000, billable: '70', hours: 40 },
+    'designer': { income: 80000, software: 4000, hardware: 2500, insurance: 6000, office: 0, retirement: 5000, other: 1500, billable: '65', hours: 40 },
+    'writer': { income: 65000, software: 1200, hardware: 1500, insurance: 6000, office: 0, retirement: 3000, other: 1000, billable: '75', hours: 35 },
+    'consultant': { income: 120000, software: 2000, hardware: 1500, insurance: 6000, office: 2400, retirement: 6000, other: 4000, billable: '60', hours: 45 },
+    'photographer': { income: 70000, software: 2400, hardware: 5000, insurance: 6000, office: 1200, retirement: 4000, other: 3000, billable: '55', hours: 40 },
+    'marketer': { income: 85000, software: 3000, hardware: 1500, insurance: 6000, office: 0, retirement: 5000, other: 3000, billable: '60', hours: 40 }
   };
 
   // US federal tax brackets 2024 (simplified)
@@ -56,14 +68,17 @@
   };
 
   var US_STANDARD_DEDUCTION = { single: 14600, married: 29200, head: 21900 };
-  var SE_TAX_RATE = 0.153; // Social Security 12.4% + Medicare 2.9%
-  var SE_TAX_INCOME_FACTOR = 0.9235; // 92.35% of net earnings subject to SE tax
+  var SE_TAX_RATE = 0.153;
+  var SE_TAX_INCOME_FACTOR = 0.9235;
+  var INFLATION_RATE = 0.03; // 3% default
 
   // ============================================================
   // STATE
   // ============================================================
   var currentCountry = 'US';
-  var lastHourlyRate = null; // Pass between tabs
+  var lastHourlyRate = null;
+  var lastBillableHoursPerYear = null;
+  var saveTimer = null;
 
   // ============================================================
   // HELPERS
@@ -71,9 +86,6 @@
   function formatCurrency(num) {
     var c = COUNTRIES[currentCountry];
     var rounded = Math.round(num);
-    if (c.currency === 'JPY') {
-      return c.symbol + rounded.toLocaleString('en-US');
-    }
     return c.symbol + rounded.toLocaleString('en-US');
   }
 
@@ -100,6 +112,58 @@
     return tax;
   }
 
+  // ============================================================
+  // NUMBER ANIMATION
+  // ============================================================
+  function animateValue(el, targetText) {
+    if (!el) return;
+    var c = COUNTRIES[currentCountry];
+    // Extract number from target text
+    var numMatch = targetText.replace(/[^0-9.-]/g, '');
+    var targetNum = parseFloat(numMatch);
+    if (isNaN(targetNum)) {
+      el.textContent = targetText;
+      return;
+    }
+    // Extract number from current text
+    var currentMatch = el.textContent.replace(/[^0-9.-]/g, '');
+    var startNum = parseFloat(currentMatch);
+    if (isNaN(startNum)) startNum = 0;
+
+    // If numbers are the same, just set text
+    if (Math.round(startNum) === Math.round(targetNum)) {
+      el.textContent = targetText;
+      return;
+    }
+
+    var duration = 400;
+    var startTime = null;
+    // Figure out prefix and suffix from target text
+    var prefix = targetText.substring(0, targetText.indexOf(numMatch.charAt(0)));
+    var numEndIdx = targetText.lastIndexOf(numMatch.charAt(numMatch.length - 1));
+    var suffix = targetText.substring(numEndIdx + 1);
+
+    function step(timestamp) {
+      if (!startTime) startTime = timestamp;
+      var progress = Math.min((timestamp - startTime) / duration, 1);
+      // Ease out
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var current = Math.round(startNum + (targetNum - startNum) * eased);
+      el.textContent = prefix + current.toLocaleString('en-US') + suffix;
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        el.textContent = targetText;
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
+  function setAnimated(id, text) {
+    var el = $(id);
+    if (el) animateValue(el, text);
+  }
+
   function buildStackedBar(containerId, legendId, segments) {
     var bar = $(containerId);
     var legend = $(legendId);
@@ -124,6 +188,200 @@
       legend.appendChild(item);
     }
   }
+
+  // ============================================================
+  // DONUT CHART
+  // ============================================================
+  function drawDonutChart(segments, totalLabel) {
+    var canvas = $('donut-chart');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var w = canvas.width;
+    var h = canvas.height;
+    var cx = w / 2;
+    var cy = h / 2;
+    var outerR = Math.min(cx, cy) - 10;
+    var innerR = outerR * 0.62;
+
+    ctx.clearRect(0, 0, w, h);
+
+    var total = 0;
+    for (var i = 0; i < segments.length; i++) total += segments[i].value;
+    if (total <= 0) return;
+
+    var startAngle = -Math.PI / 2;
+    for (var j = 0; j < segments.length; j++) {
+      var seg = segments[j];
+      var sliceAngle = (seg.value / total) * Math.PI * 2;
+      ctx.beginPath();
+      ctx.arc(cx, cy, outerR, startAngle, startAngle + sliceAngle);
+      ctx.arc(cx, cy, innerR, startAngle + sliceAngle, startAngle, true);
+      ctx.closePath();
+      ctx.fillStyle = seg.color;
+      ctx.fill();
+      startAngle += sliceAngle;
+    }
+
+    // Center value
+    setTextContent('donut-center-value', totalLabel);
+
+    // Legend
+    var legend = $('donut-legend');
+    if (legend) {
+      legend.innerHTML = '';
+      for (var k = 0; k < segments.length; k++) {
+        var s = segments[k];
+        var pct = (s.value / total * 100).toFixed(0);
+        var item = document.createElement('div');
+        item.className = 'donut-legend-item';
+        item.innerHTML = '<span class="donut-legend-dot" style="background:' + s.color + '"></span>' +
+          '<span class="donut-legend-label">' + s.label + '</span>' +
+          '<span class="donut-legend-value">' + formatCurrency(s.value) + ' (' + pct + '%)</span>';
+        legend.appendChild(item);
+      }
+    }
+  }
+
+  // ============================================================
+  // CONFIDENCE METER
+  // ============================================================
+  function updateConfidenceMeter(hourlyRate) {
+    var c = COUNTRIES[currentCountry];
+    var low = c.benchLow;
+    var high = c.benchHigh;
+    var range = high - low;
+    // Extend range slightly beyond benchmarks
+    var displayLow = Math.round(low * 0.5);
+    var displayHigh = Math.round(high * 1.3);
+    var displayRange = displayHigh - displayLow;
+
+    setTextContent('confidence-low', c.symbol + displayLow);
+    setTextContent('confidence-high', c.symbol + displayHigh);
+
+    var position = displayRange > 0 ? ((hourlyRate - displayLow) / displayRange * 100) : 50;
+    position = Math.max(2, Math.min(98, position));
+    $('confidence-marker').style.left = position + '%';
+
+    var note = $('confidence-note');
+    if (hourlyRate < low) {
+      note.innerHTML = '<strong>Below market range.</strong> Your calculated rate of ' + formatCurrency(hourlyRate) + '/hr is below the typical ' + c.symbol + low + '-' + c.symbol + high + '/hr range for ' + c.name + '. Consider whether you\'re undervaluing your work.';
+    } else if (hourlyRate > high) {
+      note.innerHTML = '<strong>Premium rate.</strong> Your rate of ' + formatCurrency(hourlyRate) + '/hr is above the ' + c.symbol + low + '-' + c.symbol + high + '/hr market range. This is common for specialists and senior professionals in ' + c.name + '.';
+    } else {
+      note.innerHTML = '<strong>Within market range.</strong> Your rate of ' + formatCurrency(hourlyRate) + '/hr falls within the typical ' + c.symbol + low + '-' + c.symbol + high + '/hr range for tech/creative freelancers in ' + c.name + '.';
+    }
+  }
+
+  // ============================================================
+  // SMART TIPS
+  // ============================================================
+  function generateSmartTips(v, hourlyRate, grossRevenue) {
+    var tips = [];
+    var c = COUNTRIES[currentCountry];
+
+    if (v.billablePct < 0.5) {
+      tips.push({ type: 'warn', text: '<strong>Low billable percentage (' + Math.round(v.billablePct * 100) + '%).</strong> Most established freelancers bill 60-70% of their time. Consider streamlining admin work or using automation tools.' });
+    }
+    if (v.billablePct > 0.85) {
+      tips.push({ type: 'warn', text: '<strong>Very high billable percentage (' + Math.round(v.billablePct * 100) + '%).</strong> Make sure you\'re leaving time for invoicing, marketing, and professional development. Burnout risk is real.' });
+    }
+    if (v.vacationDays < 10) {
+      tips.push({ type: 'info', text: '<strong>Only ' + v.vacationDays + ' vacation days?</strong> Burnout is the #1 freelancer risk. Most successful freelancers take 3-4 weeks off per year to maintain quality work.' });
+    }
+    var totalExpenses = v.softwareCosts + v.hardwareCosts + v.insuranceCosts + v.officeCosts + v.retirementCosts + v.otherExpenses;
+    if (totalExpenses > v.desiredIncome * 0.3) {
+      tips.push({ type: 'warn', text: '<strong>High expenses.</strong> Your business costs (' + formatCurrency(totalExpenses) + ') are over 30% of your income goal. Review whether all expenses are essential.' });
+    }
+    if (v.retirementCosts === 0) {
+      tips.push({ type: 'info', text: '<strong>No retirement savings?</strong> Unlike employees, you won\'t get an employer match. Even ' + formatCurrency(5000) + '/year now compounds significantly over time.' });
+    }
+    if (v.insuranceCosts === 0 && c.seTax) {
+      tips.push({ type: 'warn', text: '<strong>No health insurance cost?</strong> If you\'re in the US without employer coverage, factor in $300-$800/month for marketplace insurance.' });
+    }
+    if (hourlyRate < c.benchLow * 0.7) {
+      tips.push({ type: 'warn', text: '<strong>Rate significantly below market.</strong> At ' + formatCurrency(hourlyRate) + '/hr, you may be undercharging. The market range in ' + c.name + ' is ' + c.symbol + c.benchLow + '-' + c.symbol + c.benchHigh + '/hr.' });
+    }
+    if (hourlyRate >= c.benchHigh) {
+      tips.push({ type: 'good', text: '<strong>Premium rate.</strong> At ' + formatCurrency(hourlyRate) + '/hr, you\'re at the high end. Consider value-based pricing for even more leverage.' });
+    }
+    if (v.hoursPerWeek > 50) {
+      tips.push({ type: 'warn', text: '<strong>Working ' + v.hoursPerWeek + ' hours/week.</strong> Studies show productivity drops significantly past 50 hours. You may get more done in fewer, more focused hours.' });
+    }
+
+    var container = $('smart-tips');
+    if (!container) return;
+    container.innerHTML = '';
+    // Show max 3 tips
+    var shown = Math.min(tips.length, 3);
+    for (var i = 0; i < shown; i++) {
+      var tip = tips[i];
+      var div = document.createElement('div');
+      div.className = 'smart-tip';
+      var iconClass = tip.type === 'warn' ? 'warn' : (tip.type === 'good' ? 'good' : 'info');
+      var iconChar = tip.type === 'warn' ? '!' : (tip.type === 'good' ? '*' : 'i');
+      div.innerHTML = '<span class="smart-tip-icon ' + iconClass + '">' + iconChar + '</span><span class="smart-tip-text">' + tip.text + '</span>';
+      container.appendChild(div);
+    }
+  }
+
+  // ============================================================
+  // WHAT-IF SLIDER
+  // ============================================================
+  function updateWhatIf() {
+    if (!lastHourlyRate || !lastBillableHoursPerYear) return;
+    var adjustment = Number($('whatif-slider').value) || 0;
+    var c = COUNTRIES[currentCountry];
+    var newRate = lastHourlyRate + adjustment;
+    var annualDiff = adjustment * lastBillableHoursPerYear;
+    var monthlyDiff = annualDiff / 12;
+
+    var sign = adjustment >= 0 ? '+' : '';
+    setTextContent('whatif-amount', sign + c.symbol + adjustment);
+    setTextContent('whatif-new-rate', formatCurrency(newRate) + '/hr');
+
+    var annualEl = $('whatif-annual-diff');
+    var monthlyEl = $('whatif-monthly-diff');
+
+    setTextContent('whatif-annual-diff', sign + formatCurrency(annualDiff));
+    setTextContent('whatif-monthly-diff', sign + formatCurrency(monthlyDiff));
+
+    // Color code
+    annualEl.className = 'whatif-item-value' + (annualDiff >= 0 ? ' positive' : ' negative');
+    monthlyEl.className = 'whatif-item-value' + (monthlyDiff >= 0 ? ' positive' : ' negative');
+  }
+
+  var whatifSlider = $('whatif-slider');
+  if (whatifSlider) {
+    whatifSlider.addEventListener('input', updateWhatIf);
+  }
+
+  // ============================================================
+  // DARK MODE
+  // ============================================================
+  function initDarkMode() {
+    var saved = localStorage.getItem('onetab-theme');
+    var toggle = $('theme-toggle');
+    if (saved === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      if (toggle) toggle.textContent = 'Light';
+    }
+    if (toggle) {
+      toggle.addEventListener('click', function () {
+        var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+          document.documentElement.removeAttribute('data-theme');
+          toggle.textContent = 'Dark';
+          localStorage.setItem('onetab-theme', 'light');
+        } else {
+          document.documentElement.setAttribute('data-theme', 'dark');
+          toggle.textContent = 'Light';
+          localStorage.setItem('onetab-theme', 'dark');
+        }
+      });
+    }
+  }
+
+  initDarkMode();
 
   // ============================================================
   // TABS
@@ -155,24 +413,18 @@
     currentCountry = countrySelect.value;
     var c = COUNTRIES[currentCountry];
 
-    // Update currency badge
     setTextContent('currency-badge', c.currency + ' (' + c.symbol + ')');
     $('currency-badge').textContent = c.currency + ' (' + c.symbol + ')';
 
-    // Update all currency symbols
     var symbols = document.querySelectorAll('.currency-symbol');
     for (var i = 0; i < symbols.length; i++) {
       symbols[i].textContent = c.symbol;
     }
 
-    // Update tax rate slider default
     $('tax-rate').value = c.defaultTax;
     $('tax-rate-display').textContent = c.defaultTax + '%';
-
-    // Update holidays default
     $('holidays').value = c.holidays;
 
-    // Tax tab: toggle US vs international
     var isUS = currentCountry === 'US';
     $('tax-us-card').style.display = isUS ? '' : 'none';
     $('tax-intl-card').style.display = isUS ? 'none' : '';
@@ -192,6 +444,49 @@
   countrySelect.addEventListener('change', onCountryChange);
 
   // ============================================================
+  // ROLE PRESETS
+  // ============================================================
+  var presetSelect = $('role-preset');
+  if (presetSelect) {
+    presetSelect.addEventListener('change', function () {
+      var preset = PRESETS[this.value];
+      if (!preset) return;
+
+      $('desired-income').value = preset.income;
+      $('software-costs').value = preset.software;
+      $('hardware-costs').value = preset.hardware;
+      $('insurance-costs').value = preset.insurance;
+      $('office-costs').value = preset.office;
+      $('retirement-costs').value = preset.retirement;
+      $('other-expenses').value = preset.other;
+      $('hours-per-week').value = preset.hours;
+
+      var billSelect = $('billable-pct');
+      var option = billSelect.querySelector('option[value="' + preset.billable + '"]');
+      if (option) billSelect.value = preset.billable;
+      // If no exact match, find closest
+      if (!option) {
+        var opts = billSelect.options;
+        for (var i = 0; i < opts.length; i++) {
+          if (Number(opts[i].value) >= Number(preset.billable)) {
+            billSelect.value = opts[i].value;
+            break;
+          }
+        }
+      }
+
+      // Flash "applied" indicator
+      var applied = $('preset-applied');
+      if (applied) {
+        applied.classList.add('show');
+        setTimeout(function () { applied.classList.remove('show'); }, 2000);
+      }
+
+      scheduleSave();
+    });
+  }
+
+  // ============================================================
   // TAX RATE SLIDER SYNC
   // ============================================================
   $('tax-rate').addEventListener('input', function () {
@@ -205,6 +500,14 @@
       $('tax-rate-display').textContent = this.value + '%';
     }
   });
+
+  // ============================================================
+  // EMPTY STATES
+  // ============================================================
+  function hideEmptyState(tabId) {
+    var empty = $(tabId);
+    if (empty) empty.style.display = 'none';
+  }
 
   // ============================================================
   // TAB 1: HOURLY RATE
@@ -260,6 +563,7 @@
 
     var hourlyRate = grossRevenue / billableHoursPerYear;
     lastHourlyRate = hourlyRate;
+    lastBillableHoursPerYear = billableHoursPerYear;
 
     // Update project cost tab rate
     $('proj-hourly-rate').value = Math.round(hourlyRate);
@@ -275,13 +579,13 @@
     var dailyRate = hourlyRate * 8;
     var equivSalary = v.desiredIncome + totalExpenses;
 
-    // Update DOM
-    setTextContent('result-rate', formatCurrency(hourlyRate));
+    // Update DOM with animations
+    setAnimated('result-rate', formatCurrency(hourlyRate));
     setTextContent('result-income-goal', formatCurrency(v.desiredIncome));
 
-    setTextContent('rate-comfortable', formatCurrency(comfortableRate));
-    setTextContent('rate-premium', formatCurrency(premiumRate));
-    setTextContent('rate-expert', formatCurrency(expertRate));
+    setAnimated('rate-comfortable', formatCurrency(comfortableRate));
+    setAnimated('rate-premium', formatCurrency(premiumRate));
+    setAnimated('rate-expert', formatCurrency(expertRate));
 
     setTextContent('bd-income', formatCurrency(v.desiredIncome));
     setTextContent('bd-expenses', formatCurrency(totalExpenses));
@@ -295,21 +599,43 @@
     setTextContent('bd-billable-calc', v.hoursPerWeek + 'hr \u00D7 ' + Math.round(v.billablePct * 100) + '% = ' + billableHoursPerWeek.toFixed(1) + 'hr');
     setTextContent('bd-billable-hours', Math.round(billableHoursPerYear).toString());
 
-    setTextContent('bd-daily', formatCurrency(dailyRate));
-    setTextContent('bd-weekly', formatCurrency(weeklyRevenue));
-    setTextContent('bd-monthly', formatCurrency(monthlyRevenue));
-    setTextContent('bd-equiv-salary', formatCurrency(equivSalary));
+    setAnimated('bd-daily', formatCurrency(dailyRate));
+    setAnimated('bd-weekly', formatCurrency(weeklyRevenue));
+    setAnimated('bd-monthly', formatCurrency(monthlyRevenue));
+    setAnimated('bd-equiv-salary', formatCurrency(equivSalary));
 
     // Stacked bar
-    buildStackedBar('revenue-bar', 'revenue-legend', [
+    var barSegments = [
       { label: 'Take-home', value: v.desiredIncome, color: '#059669' },
       { label: 'Expenses', value: totalExpenses, color: '#d97706' },
       { label: 'Taxes', value: taxAmount, color: '#dc2626' }
-    ]);
+    ];
+    buildStackedBar('revenue-bar', 'revenue-legend', barSegments);
 
-    // Show results
+    // Donut chart
+    drawDonutChart(barSegments, formatCurrency(grossRevenue));
+
+    // Confidence meter
+    updateConfidenceMeter(hourlyRate);
+
+    // What-if slider
+    $('whatif-slider').value = 0;
+    updateWhatIf();
+
+    // Inflation
+    var inflatedRate = hourlyRate * (1 + INFLATION_RATE);
+    setTextContent('inflation-badge', '+' + Math.round(INFLATION_RATE * 100) + '%');
+    setTextContent('inflation-rate', formatCurrency(inflatedRate));
+
+    // Smart tips
+    generateSmartTips(v, hourlyRate, grossRevenue);
+
+    // Hide empty state, show results
+    hideEmptyState('hourly-empty');
     $('hourly-results').classList.add('visible');
     $('hourly-results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    scheduleSave();
   }
 
   $('hourly-form').addEventListener('submit', function (e) {
@@ -338,25 +664,23 @@
 
     var totalHours = hours * complexity + (revisions * revisionHours);
 
-    // Price estimates
-    var lowPrice = baseCost + revisionCost; // no complexity buffer
+    var lowPrice = baseCost + revisionCost;
     var midPrice = totalCost;
-    var highPrice = totalCost * 1.3; // 30% premium
+    var highPrice = totalCost * 1.3;
 
     var deposit = totalCost * depositPct;
     var finalPayment = totalCost - deposit;
 
-    // Effective rates
     var effRateEst = totalCost / totalHours;
     var effRateOver = totalCost / (totalHours * 1.5);
     var effRateUnder = totalCost / (totalHours * 0.75);
 
-    setTextContent('proj-result-price', formatCurrency(totalCost));
+    setAnimated('proj-result-price', formatCurrency(totalCost));
     setTextContent('proj-result-hours', Math.round(totalHours).toString());
 
-    setTextContent('proj-price-low', formatCurrency(lowPrice));
-    setTextContent('proj-price-mid', formatCurrency(midPrice));
-    setTextContent('proj-price-high', formatCurrency(highPrice));
+    setAnimated('proj-price-low', formatCurrency(lowPrice));
+    setAnimated('proj-price-mid', formatCurrency(midPrice));
+    setAnimated('proj-price-high', formatCurrency(highPrice));
 
     setTextContent('proj-bd-base', formatCurrency(baseCost));
     setTextContent('proj-bd-complexity-label', complexity + 'x');
@@ -373,8 +697,11 @@
     setTextContent('proj-eff-rate-over', formatCurrency(effRateOver) + '/hr');
     setTextContent('proj-eff-rate-under', formatCurrency(effRateUnder) + '/hr');
 
+    hideEmptyState('project-empty');
     $('project-results').classList.add('visible');
     $('project-results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    scheduleSave();
   }
 
   $('project-form').addEventListener('submit', function (e) {
@@ -399,17 +726,14 @@
     var takeHome = grossRevenue - taxes - bizExpenses;
     var profitMargin = grossRevenue > 0 ? (takeHome / grossRevenue * 100) : 0;
 
-    // Effective hourly rate = take-home / total hours worked (not just billable)
-    var totalHoursYear = hoursWeek * weeksYear; // using billable hours since that's what they input
+    var totalHoursYear = hoursWeek * weeksYear;
     var effRate = totalHoursYear > 0 ? takeHome / totalHoursYear : 0;
 
-    // Update stat boxes
-    setTextContent('profit-gross-revenue', formatCurrency(grossRevenue));
-    setTextContent('profit-take-home', formatCurrency(takeHome));
-    setTextContent('profit-eff-rate', formatCurrency(effRate));
+    setAnimated('profit-gross-revenue', formatCurrency(grossRevenue));
+    setAnimated('profit-take-home', formatCurrency(takeHome));
+    setAnimated('profit-eff-rate', formatCurrency(effRate));
     setTextContent('profit-margin', formatPct(profitMargin));
 
-    // Color code take-home box
     var takeHomeBox = $('profit-take-home-box');
     takeHomeBox.className = 'stat-box';
     if (takeHome >= incomeGoal && incomeGoal > 0) {
@@ -420,14 +744,12 @@
       takeHomeBox.classList.add('danger');
     }
 
-    // Color code margin box
     var marginBox = $('profit-margin-box');
     marginBox.className = 'stat-box';
     if (profitMargin >= 50) marginBox.classList.add('success');
     else if (profitMargin >= 35) marginBox.classList.add('warning');
     else marginBox.classList.add('danger');
 
-    // Stacked bar
     buildStackedBar('profit-revenue-bar', 'profit-revenue-legend', [
       { label: 'Take-home', value: Math.max(takeHome, 0), color: '#059669' },
       { label: 'Expenses', value: bizExpenses, color: '#d97706' },
@@ -439,7 +761,6 @@
     setTextContent('profit-bd-expenses', formatCurrency(bizExpenses));
     setTextContent('profit-bd-takehome', formatCurrency(takeHome));
 
-    // Goal tracking - income
     var incomeProgress = incomeGoal > 0 ? Math.min(takeHome / incomeGoal * 100, 100) : 0;
     var incomeProgressBar = $('profit-income-progress');
     incomeProgressBar.style.width = Math.max(incomeProgress, 0) + '%';
@@ -451,7 +772,6 @@
     setTextContent('profit-income-current', formatCurrency(takeHome));
     setTextContent('profit-income-target', 'Goal: ' + formatCurrency(incomeGoal));
 
-    // Goal tracking - savings
     var surplus = takeHome - incomeGoal;
     var savingsProgress = savingsGoal > 0 ? Math.min(Math.max(surplus, 0) / savingsGoal * 100, 100) : 0;
     var savingsProgressBar = $('profit-savings-progress');
@@ -464,7 +784,6 @@
     setTextContent('profit-savings-current', formatCurrency(Math.max(surplus, 0)));
     setTextContent('profit-savings-target', 'Goal: ' + formatCurrency(savingsGoal));
 
-    // Advice
     var advice = $('profit-advice');
     if (takeHome >= incomeGoal + savingsGoal && incomeGoal > 0) {
       advice.className = 'info-box success';
@@ -483,7 +802,6 @@
     }
     advice.style.display = '';
 
-    // What-if scenarios
     var takeHome10 = (rate * 1.1 * hoursWeek * weeksYear) * (1 - taxRatePct / 100) - bizExpenses;
     var takeHome5hrs = (rate * (hoursWeek + 5) * weeksYear) * (1 - taxRatePct / 100) - bizExpenses;
     var takeHomeLessExp = grossRevenue * (1 - taxRatePct / 100) - bizExpenses * 0.8;
@@ -492,8 +810,11 @@
     setTextContent('profit-whatif-hours', '+' + formatCurrency(takeHome5hrs - takeHome) + '/yr');
     setTextContent('profit-whatif-expenses', '+' + formatCurrency(takeHomeLessExp - takeHome) + '/yr');
 
+    hideEmptyState('profit-empty');
     $('profit-results').classList.add('visible');
     $('profit-results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    scheduleSave();
   }
 
   $('profit-form').addEventListener('submit', function (e) {
@@ -518,11 +839,9 @@
       var netEarnings = grossIncome - deductions;
       var standardDeduction = US_STANDARD_DEDUCTION[filingStatus] || US_STANDARD_DEDUCTION.single;
 
-      // Self-employment tax (on 92.35% of net earnings)
       var seIncome = netEarnings * SE_TAX_INCOME_FACTOR;
       var seTax = Math.max(seIncome * SE_TAX_RATE, 0);
 
-      // Half of SE tax is deductible for income tax purposes
       var seDeduction = seTax / 2;
       var taxableIncome = Math.max(netEarnings - standardDeduction - seDeduction, 0);
 
@@ -532,7 +851,6 @@
       totalTax = federalTax + seTax + stateTax;
       takeHome = grossIncome - deductions - totalTax;
 
-      // Show US breakdown
       $('tax-us-breakdown').style.display = '';
       $('tax-intl-breakdown').style.display = 'none';
 
@@ -557,7 +875,6 @@
       totalTax = taxableIncomeIntl * intlRate;
       takeHome = grossIncome - deductions - totalTax;
 
-      // Show intl breakdown
       $('tax-us-breakdown').style.display = 'none';
       $('tax-intl-breakdown').style.display = '';
 
@@ -572,18 +889,21 @@
     var effRate = grossIncome > 0 ? (totalTax / grossIncome * 100) : 0;
     var quarterly = totalTax / 4;
 
-    setTextContent('tax-total-owed', formatCurrency(totalTax));
-    setTextContent('tax-take-home', formatCurrency(takeHome));
+    setAnimated('tax-total-owed', formatCurrency(totalTax));
+    setAnimated('tax-take-home', formatCurrency(takeHome));
     setTextContent('tax-eff-rate', formatPct(effRate));
-    setTextContent('tax-quarterly-amt', formatCurrency(quarterly));
+    setAnimated('tax-quarterly-amt', formatCurrency(quarterly));
 
     setTextContent('tax-q1', formatCurrency(quarterly));
     setTextContent('tax-q2', formatCurrency(quarterly));
     setTextContent('tax-q3', formatCurrency(quarterly));
     setTextContent('tax-q4', formatCurrency(quarterly));
 
+    hideEmptyState('tax-empty');
     $('tax-results').classList.add('visible');
     $('tax-results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    scheduleSave();
   }
 
   $('tax-form').addEventListener('submit', function (e) {
@@ -643,11 +963,163 @@
   });
 
   // ============================================================
+  // PRINT
+  // ============================================================
+  var printBtn = $('print-btn');
+  if (printBtn) {
+    printBtn.addEventListener('click', function () {
+      window.print();
+    });
+  }
+
+  // ============================================================
+  // LOCAL STORAGE SAVE / RESTORE
+  // ============================================================
+  var STORAGE_KEY = 'onetab-freelance-calc';
+
+  function saveToStorage() {
+    try {
+      var data = {
+        country: currentCountry,
+        hourly: {
+          income: $('desired-income').value,
+          software: $('software-costs').value,
+          hardware: $('hardware-costs').value,
+          insurance: $('insurance-costs').value,
+          office: $('office-costs').value,
+          retirement: $('retirement-costs').value,
+          other: $('other-expenses').value,
+          taxRate: $('tax-rate').value,
+          taxExact: $('tax-rate-exact').value,
+          hours: $('hours-per-week').value,
+          billable: $('billable-pct').value,
+          vacation: $('vacation-days').value,
+          sick: $('sick-days').value,
+          holidays: $('holidays').value
+        },
+        project: {
+          rate: $('proj-hourly-rate').value,
+          hours: $('proj-hours').value,
+          complexity: $('proj-complexity').value,
+          revisions: $('proj-revisions').value,
+          revisionHours: $('proj-revision-hours').value,
+          deposit: $('proj-deposit').value,
+          rush: $('proj-rush').value
+        },
+        profit: {
+          rate: $('profit-rate').value,
+          hours: $('profit-hours-week').value,
+          weeks: $('profit-weeks-year').value,
+          expenses: $('profit-biz-expenses').value,
+          tax: $('profit-tax-rate').value,
+          incomeGoal: $('profit-income-goal').value,
+          savingsGoal: $('profit-savings-goal').value
+        },
+        tax: {
+          gross: $('tax-gross-income').value,
+          deductions: $('tax-deductions').value,
+          filing: $('tax-filing-status').value,
+          state: $('tax-state').value,
+          intlRate: $('tax-intl-rate').value
+        },
+        timestamp: Date.now()
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+
+      // Show save indicator
+      var indicator = $('save-indicator');
+      if (indicator) {
+        indicator.classList.add('show');
+        setTimeout(function () { indicator.classList.remove('show'); }, 1500);
+      }
+    } catch (e) {
+      // localStorage might be unavailable
+    }
+  }
+
+  function scheduleSave() {
+    if (saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(saveToStorage, 500);
+  }
+
+  function loadFromStorage() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return false;
+      var data = JSON.parse(raw);
+
+      // Don't restore if data is very old (30 days)
+      if (data.timestamp && Date.now() - data.timestamp > 30 * 24 * 60 * 60 * 1000) return false;
+
+      if (data.country && COUNTRIES[data.country]) {
+        countrySelect.value = data.country;
+        onCountryChange();
+      }
+
+      if (data.hourly) {
+        var h = data.hourly;
+        if (h.income) $('desired-income').value = h.income;
+        if (h.software) $('software-costs').value = h.software;
+        if (h.hardware) $('hardware-costs').value = h.hardware;
+        if (h.insurance) $('insurance-costs').value = h.insurance;
+        if (h.office !== undefined) $('office-costs').value = h.office;
+        if (h.retirement) $('retirement-costs').value = h.retirement;
+        if (h.other) $('other-expenses').value = h.other;
+        if (h.taxRate) {
+          $('tax-rate').value = h.taxRate;
+          $('tax-rate-display').textContent = h.taxRate + '%';
+        }
+        if (h.taxExact) $('tax-rate-exact').value = h.taxExact;
+        if (h.hours) $('hours-per-week').value = h.hours;
+        if (h.billable) $('billable-pct').value = h.billable;
+        if (h.vacation !== undefined) $('vacation-days').value = h.vacation;
+        if (h.sick !== undefined) $('sick-days').value = h.sick;
+        if (h.holidays !== undefined) $('holidays').value = h.holidays;
+      }
+
+      if (data.project) {
+        var p = data.project;
+        if (p.rate) $('proj-hourly-rate').value = p.rate;
+        if (p.hours) $('proj-hours').value = p.hours;
+        if (p.complexity) $('proj-complexity').value = p.complexity;
+        if (p.revisions !== undefined) $('proj-revisions').value = p.revisions;
+        if (p.revisionHours !== undefined) $('proj-revision-hours').value = p.revisionHours;
+        if (p.deposit) $('proj-deposit').value = p.deposit;
+        if (p.rush !== undefined) $('proj-rush').value = p.rush;
+      }
+
+      if (data.profit) {
+        var pr = data.profit;
+        if (pr.rate) $('profit-rate').value = pr.rate;
+        if (pr.hours) $('profit-hours-week').value = pr.hours;
+        if (pr.weeks) $('profit-weeks-year').value = pr.weeks;
+        if (pr.expenses) $('profit-biz-expenses').value = pr.expenses;
+        if (pr.tax) $('profit-tax-rate').value = pr.tax;
+        if (pr.incomeGoal) $('profit-income-goal').value = pr.incomeGoal;
+        if (pr.savingsGoal) $('profit-savings-goal').value = pr.savingsGoal;
+      }
+
+      if (data.tax) {
+        var tx = data.tax;
+        if (tx.gross) $('tax-gross-income').value = tx.gross;
+        if (tx.deductions) $('tax-deductions').value = tx.deductions;
+        if (tx.filing) $('tax-filing-status').value = tx.filing;
+        if (tx.state) $('tax-state').value = tx.state;
+        if (tx.intlRate) $('tax-intl-rate').value = tx.intlRate;
+      }
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // ============================================================
   // URL PARAMS (restore shared calculations)
   // ============================================================
   function loadFromURL() {
     var params = new URLSearchParams(window.location.search);
-    if (params.size === 0 && !params.has('income')) return;
+    if (params.size === 0 && !params.has('income')) return false;
 
     var country = params.get('country');
     if (country && COUNTRIES[country]) {
@@ -696,11 +1168,17 @@
     if (hasParams) {
       calculateHourlyRate();
     }
+    return hasParams;
   }
 
   // ============================================================
   // INIT
   // ============================================================
   onCountryChange();
-  loadFromURL();
+
+  // URL params take priority over localStorage
+  var loadedFromURL = loadFromURL();
+  if (!loadedFromURL) {
+    loadFromStorage();
+  }
 })();
