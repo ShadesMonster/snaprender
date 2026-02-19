@@ -77,10 +77,6 @@
 
   <div class="ad-placeholder" data-size="leaderboard"><span class="ad-label">Ad</span><span class="ad-size">728 × 90</span></div>
 
-  <div id="non-us-notice" class="info-box warning" style="display:none;">
-    <strong>Note:</strong> This calculator uses US federal and state tax rules. For other countries, consult your local tax authority.
-  </div>
-
   <!-- Income -->
   <div class="card">
     <div class="card-title">Your Income</div>
@@ -221,27 +217,6 @@
       <a href="../quarterly-tax-estimator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Quarterly Tax Estimator (Freelancers)</a>
       <a href="../freelance-rate-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Freelance Hourly Rate Calculator</a>
       <a href="../compound-interest-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Compound Interest Calculator</a>
-    </div>
-  </div>
-
-  <!-- Country Pages -->
-  <div class="card" style="margin-top:1rem;">
-    <div class="card-title">Take-Home Pay by Country</div>
-    <div class="state-links">
-      <a href="united-kingdom/">United Kingdom</a>
-      <a href="canada/">Canada</a>
-      <a href="australia/">Australia</a>
-      <a href="germany/">Germany</a>
-      <a href="france/">France</a>
-      <a href="netherlands/">Netherlands</a>
-      <a href="sweden/">Sweden</a>
-      <a href="spain/">Spain</a>
-      <a href="italy/">Italy</a>
-      <a href="brazil/">Brazil</a>
-      <a href="india/">India</a>
-      <a href="japan/">Japan</a>
-      <a href="singapore/">Singapore</a>
-      <a href="new-zealand/">New Zealand</a>
     </div>
   </div>
 
@@ -632,12 +607,21 @@
     inputs[i].addEventListener('change', calculate);
   }
 
-  // ── Country change ──
+  // ── Country change — redirect to country-specific page ──
+  var COUNTRY_SLUGS = {
+    UK:'united-kingdom', CA:'canada', AU:'australia', DE:'germany',
+    FR:'france', NL:'netherlands', SE:'sweden', ES:'spain',
+    IT:'italy', BR:'brazil', IN:'india', JP:'japan',
+    SG:'singapore', NZ:'new-zealand'
+  };
   OneTab.onCountryChange(function(c) {
+    var code = OneTab.countryCode();
+    if (code !== 'US' && COUNTRY_SLUGS[code]) {
+      window.location.href = '/take-home-pay-calculator/' + COUNTRY_SLUGS[code] + '/';
+      return;
+    }
     var pfxs = document.querySelectorAll('[id^="pfx"]');
     for (var i = 0; i < pfxs.length; i++) pfxs[i].textContent = c.currency;
-    var notice = document.getElementById('non-us-notice');
-    if (notice) notice.style.display = (OneTab.countryCode() !== 'US') ? 'block' : 'none';
     calculate();
   });
 
