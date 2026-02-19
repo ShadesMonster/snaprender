@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UK Take-Home Pay Calculator — See Your Salary After Tax | OneTab</title>
+  <meta name="description" content="Free UK take-home pay calculator. Enter your salary and see your pay after income tax, National Insurance, student loan deductions, and pension contributions. Updated for 2024/25.">
+  <meta name="keywords" content="uk take home pay calculator, uk salary calculator, uk income tax calculator, national insurance calculator, student loan repayment calculator, uk net pay calculator">
+
+  <meta property="og:title" content="UK Take-Home Pay Calculator — See Your Salary After Tax | OneTab">
+  <meta property="og:description" content="Calculate your UK take-home pay after income tax, National Insurance, and student loan deductions. England, Wales, and Scotland supported.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://onetab.tools/take-home-pay-calculator/united-kingdom/">
+  <meta property="og:site_name" content="OneTab">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="UK Take-Home Pay Calculator | OneTab">
+  <meta name="twitter:description" content="Calculate your UK take-home pay after income tax, National Insurance, and student loan deductions.">
+
+  <link rel="canonical" href="https://onetab.tools/take-home-pay-calculator/united-kingdom/">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../css/style.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "UK Take-Home Pay Calculator",
+    "url": "https://onetab.tools/take-home-pay-calculator/united-kingdom/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" },
+    "description": "Free UK take-home pay calculator. See your salary after income tax, National Insurance, student loan deductions, and pension contributions. Updated for 2024/25."
+  }
+  </script>
+
+  <script>
+    (function() {
+      var t = localStorage.getItem('onetab-theme');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+  </script>
+
+  <style>
+    .period-table { width:100%; border-collapse:collapse; }
+    .period-table th, .period-table td { padding:0.6rem 0.75rem; text-align:right; font-variant-numeric:tabular-nums; }
+    .period-table th:first-child, .period-table td:first-child { text-align:left; }
+    .period-table th { font-size:0.8rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--color-text-muted); border-bottom:2px solid var(--color-border); }
+    .period-table td { border-bottom:1px solid var(--color-border); font-size:0.9rem; }
+    .period-table tr:last-child td { border-bottom:none; }
+    .period-table .row-highlight td { font-weight:700; color:var(--color-success); background:rgba(5,150,105,0.05); }
+    .country-links { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.75rem; }
+    .country-links a { font-size:0.8rem; padding:0.25rem 0.5rem; border-radius:4px; background:var(--color-bg); border:1px solid var(--color-border); color:var(--color-text); text-decoration:none; transition:border-color 0.15s; }
+    .country-links a:hover { border-color:var(--color-primary); color:var(--color-primary); }
+    .deduction-row { display:flex; gap:0.75rem; align-items:end; }
+    .deduction-row .form-group { flex:1; }
+    .deduction-row .form-group:last-child { flex:0 0 100px; }
+    @media (max-width:600px) {
+      .deduction-row { flex-direction:column; gap:0; }
+      .deduction-row .form-group:last-child { flex:1; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="../../">OneTab</a>
+  <div class="header-actions">
+    <select class="country-select-global" id="country-select-global" title="Your location"></select>
+    <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">Dark</button>
+  </div>
+</header>
+
+<main class="container">
+  <h1>UK Take-Home Pay Calculator</h1>
+  <p class="subtitle">See your salary after income tax, National Insurance, and student loan deductions.</p>
+
+  <div class="ad-placeholder" data-size="leaderboard"><span class="ad-label">Ad</span><span class="ad-size">728 × 90</span></div>
+
+  <!-- Income -->
+  <div class="card">
+    <div class="card-title">Your Income</div>
+    <div class="form-group">
+      <label>Annual gross salary</label>
+      <div class="input-with-prefix">
+        <span class="prefix" id="pfxSalary">&pound;</span>
+        <input type="number" id="grossSalary" value="45000" min="0" step="1000">
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <label>Region</label>
+        <select id="region">
+          <option value="england" selected>England / Wales</option>
+          <option value="scotland">Scotland</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Pay frequency</label>
+        <select id="payFrequency">
+          <option value="12" selected>Monthly (12 paychecks/yr)</option>
+          <option value="26">Biweekly (26 paychecks/yr)</option>
+          <option value="24">Semi-monthly (24 paychecks/yr)</option>
+          <option value="52">Weekly (52 paychecks/yr)</option>
+          <option value="1">Annual</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Student loan plan</label>
+      <select id="studentLoan">
+        <option value="none" selected>None</option>
+        <option value="plan1">Plan 1 (9% over &pound;22,015/yr)</option>
+        <option value="plan2">Plan 2 (9% over &pound;27,295/yr)</option>
+        <option value="plan4">Plan 4 (9% over &pound;27,660/yr)</option>
+        <option value="postgrad">Postgraduate (6% over &pound;21,000/yr)</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Pension -->
+  <div class="card">
+    <div class="card-title">Pension Contribution <span style="font-weight:400;font-size:0.85rem;color:var(--color-text-muted);">(optional)</span></div>
+    <div class="deduction-row">
+      <div class="form-group">
+        <label>Pension contribution <span class="hint">(% of gross salary)</span></label>
+        <div class="input-with-prefix">
+          <span class="prefix" id="pfxPension">%</span>
+          <input type="number" id="pensionPct" value="0" min="0" max="100" step="1">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="results" class="result-section visible">
+
+    <div class="card result-hero" style="border-radius:var(--radius);">
+      <div class="rate-label">Your Take-Home Pay</div>
+      <div class="rate-value" id="heroTakeHome">&pound;0</div>
+      <div class="rate-sublabel" id="heroSublabel">per month</div>
+    </div>
+
+    <div class="stat-grid" style="margin-bottom:1.5rem;">
+      <div class="stat-box success">
+        <div class="stat-value" id="statAnnual">&pound;0</div>
+        <div class="stat-label">Annual Take-Home</div>
+      </div>
+      <div class="stat-box highlight">
+        <div class="stat-value" id="statEffective">0%</div>
+        <div class="stat-label">Effective Tax Rate</div>
+      </div>
+      <div class="stat-box warning">
+        <div class="stat-value" id="statTotalTax">&pound;0</div>
+        <div class="stat-label">Total Deductions</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="statMarginal">0%</div>
+        <div class="stat-label">Marginal Rate</div>
+      </div>
+    </div>
+
+    <div class="ad-placeholder" data-size="rectangle"><span class="ad-label">Ad</span><span class="ad-size">300 × 250</span></div>
+
+    <!-- Tax Breakdown -->
+    <div class="card">
+      <h2>Tax Breakdown</h2>
+      <table class="breakdown-table" id="breakdownTable">
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Pay Period Comparison -->
+    <div class="card">
+      <h2>Pay Period Breakdown</h2>
+      <table class="period-table" id="periodTable">
+        <thead>
+          <tr><th>Period</th><th>Gross</th><th>Deductions</th><th>Take-Home</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Stacked Bar -->
+    <div class="card">
+      <h2>Where Your Money Goes</h2>
+      <div class="stacked-bar" id="stackedBar"></div>
+      <div class="stacked-legend" id="stackedLegend"></div>
+    </div>
+
+    <div class="ad-placeholder" data-size="large-rectangle"><span class="ad-label">Ad</span><span class="ad-size">336 × 280</span></div>
+  </div>
+
+  <!-- Related Tools -->
+  <div class="card" style="margin-top:1.5rem;">
+    <div class="card-title">Related Tools</div>
+    <div style="display:flex;flex-direction:column;gap:0.5rem;">
+      <a href="../../salary-converter/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Salary to Hourly Calculator</a>
+      <a href="../../quarterly-tax-estimator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Quarterly Tax Estimator (Freelancers)</a>
+      <a href="../../freelance-rate-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Freelance Hourly Rate Calculator</a>
+      <a href="../../compound-interest-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Compound Interest Calculator</a>
+    </div>
+  </div>
+
+  <!-- Country Pages -->
+  <div class="card" style="margin-top:1rem;">
+    <div class="card-title">Take-Home Pay by Country</div>
+    <div class="country-links">
+      <a href="../">United States</a>
+      <a href="./" style="border-color:var(--color-primary);color:var(--color-primary);font-weight:600;">United Kingdom</a>
+    </div>
+  </div>
+
+  <div class="ad-placeholder" data-size="in-article"><span class="ad-label">Ad</span><span class="ad-size">Responsive</span></div>
+
+  <!-- SEO Content -->
+  <div class="content-section">
+    <h2>How UK Take-Home Pay Is Calculated</h2>
+    <p>Your take-home pay is what remains of your gross salary after income tax, National Insurance contributions (NICs), student loan repayments, and pension contributions are deducted. The UK uses a Pay As You Earn (PAYE) system where your employer deducts these amounts from your pay before you receive it.</p>
+
+    <h2>UK Income Tax (2024/25)</h2>
+    <p>The UK uses a progressive income tax system. Everyone receives a tax-free Personal Allowance of &pound;12,570 per year. Income above this threshold is taxed in bands: the basic rate of 20% applies to income from &pound;12,571 to &pound;50,270, the higher rate of 40% applies from &pound;50,271 to &pound;125,140, and the additional rate of 45% applies to income above &pound;125,140. For those earning over &pound;100,000, the Personal Allowance tapers away at a rate of &pound;1 for every &pound;2 of income above &pound;100,000, meaning it is fully eliminated at &pound;125,140.</p>
+
+    <h2>Scottish Income Tax</h2>
+    <p>If you live in Scotland, different income tax rates and bands apply. Scotland has six tax bands: a starter rate of 19% (&pound;12,571&ndash;&pound;14,876), basic rate of 20% (&pound;14,877&ndash;&pound;26,561), intermediate rate of 21% (&pound;26,562&ndash;&pound;43,662), higher rate of 42% (&pound;43,663&ndash;&pound;75,000), advanced rate of 45% (&pound;75,001&ndash;&pound;125,140), and a top rate of 48% on income above &pound;125,140. The same Personal Allowance of &pound;12,570 applies, and the same tapering rules for income above &pound;100,000.</p>
+
+    <h2>National Insurance Contributions (NICs)</h2>
+    <p>Employee Class 1 National Insurance is charged at 8% on earnings between &pound;12,570 and &pound;50,270 per year, and 2% on earnings above &pound;50,270. NI is calculated on your gross earnings (before pension deductions if using a net pay arrangement) and funds the state pension, NHS, and other benefits. Unlike income tax, National Insurance does not have a personal allowance that tapers &mdash; the thresholds are fixed.</p>
+
+    <h2>Student Loan Repayments</h2>
+    <p>If you have a student loan, repayments are deducted automatically through PAYE. The amount depends on your plan type: Plan 1 (pre-2012 England/Wales, or Northern Ireland/Scotland) charges 9% on income above &pound;22,015; Plan 2 (post-2012 England/Wales) charges 9% on income above &pound;27,295; Plan 4 (Scotland post-1998) charges 9% above &pound;27,660; and the Postgraduate Loan charges 6% above &pound;21,000. If you have both an undergraduate and postgraduate loan, both are deducted simultaneously.</p>
+
+    <h2>Pension Tax Relief</h2>
+    <p>Contributions to a workplace pension reduce your taxable income, which means you pay less income tax. Most workplace pensions operate on a &ldquo;relief at source&rdquo; or &ldquo;net pay&rdquo; basis. This calculator assumes a net pay arrangement where your pension contribution is deducted from your gross salary before income tax is calculated. Pension contributions also reduce the income used to calculate student loan repayments. The annual allowance for pension contributions is &pound;60,000 for most people in 2024/25.</p>
+
+    <h2>Tips to Increase Your Take-Home Pay</h2>
+    <ul>
+      <li><strong>Salary sacrifice for pension:</strong> By sacrificing salary into your pension, you save both income tax and National Insurance, increasing the overall value of your pension contributions.</li>
+      <li><strong>Check your tax code:</strong> An incorrect tax code can mean you overpay or underpay tax. Check your payslip and contact HMRC if it looks wrong.</li>
+      <li><strong>Claim Marriage Allowance:</strong> If your partner earns less than &pound;12,570 and you are a basic rate taxpayer, you can transfer &pound;1,260 of their allowance to reduce your tax by up to &pound;252 per year.</li>
+      <li><strong>Use your ISA allowance:</strong> While not a salary deduction, the &pound;20,000 annual ISA allowance lets you earn investment income and gains tax-free.</li>
+      <li><strong>Childcare vouchers or Tax-Free Childcare:</strong> If you have children, government schemes can reduce your childcare costs, effectively increasing your disposable income.</li>
+    </ul>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <a href="../../" style="color:var(--color-text-muted);text-decoration:none;">&larr; Back to all tools</a>
+  <p style="margin-top:0.5rem;">Built for people who need quick answers.</p>
+</footer>
+
+<script src="../../js/onetab-global.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  // ── UK Income Tax Brackets 2024/25 (England/Wales) ──
+  var PERSONAL_ALLOWANCE = 12570;
+  var PA_TAPER_THRESHOLD = 100000;
+
+  var ENGLAND_BRACKETS = [
+    [12570, 0],       // Personal Allowance
+    [50270, 0.20],    // Basic rate
+    [125140, 0.40],   // Higher rate
+    [Infinity, 0.45]  // Additional rate
+  ];
+
+  var SCOTLAND_BRACKETS = [
+    [12570, 0],        // Personal Allowance
+    [14876, 0.19],     // Starter rate
+    [26561, 0.20],     // Basic rate
+    [43662, 0.21],     // Intermediate rate
+    [75000, 0.42],     // Higher rate
+    [125140, 0.45],    // Advanced rate
+    [Infinity, 0.48]   // Top rate
+  ];
+
+  // ── National Insurance (Employee Class 1) 2024/25 ──
+  var NI_PRIMARY_THRESHOLD = 12570;
+  var NI_UPPER_EARNINGS_LIMIT = 50270;
+  var NI_MAIN_RATE = 0.08;
+  var NI_UPPER_RATE = 0.02;
+
+  // ── Student Loan Thresholds 2024/25 ──
+  var STUDENT_LOANS = {
+    none:     { rate: 0,    threshold: 0 },
+    plan1:    { rate: 0.09, threshold: 22015 },
+    plan2:    { rate: 0.09, threshold: 27295 },
+    plan4:    { rate: 0.09, threshold: 27660 },
+    postgrad: { rate: 0.06, threshold: 21000 }
+  };
+
+  // ── DOM elements ──
+  var grossInput     = document.getElementById('grossSalary');
+  var regionSelect   = document.getElementById('region');
+  var freqSelect     = document.getElementById('payFrequency');
+  var loanSelect     = document.getElementById('studentLoan');
+  var pensionInput   = document.getElementById('pensionPct');
+
+  // ── Frequency labels ──
+  var FREQ_LABELS = { '1':'annually', '12':'per month', '24':'semi-monthly', '26':'per paycheck', '52':'per week' };
+  var FREQ_NAMES  = { '1':'Annual', '12':'Monthly', '24':'Semi-Monthly', '26':'Biweekly', '52':'Weekly' };
+
+  // ── Helpers ──
+  function fmtGBP(v) {
+    return OneTab.fmt(v).replace(/^\$/, '\u00a3');
+  }
+
+  function calcPersonalAllowance(gross) {
+    if (gross <= PA_TAPER_THRESHOLD) return PERSONAL_ALLOWANCE;
+    var reduction = Math.floor((gross - PA_TAPER_THRESHOLD) / 2);
+    return Math.max(0, PERSONAL_ALLOWANCE - reduction);
+  }
+
+  function calcIncomeTax(gross, pensionDeduction, region) {
+    var pa = calcPersonalAllowance(gross);
+    var taxableIncome = Math.max(0, gross - pensionDeduction - pa);
+
+    var brackets;
+    if (region === 'scotland') {
+      // Scotland brackets are relative to personal allowance
+      var scotlandBands = [
+        [Math.max(0, 14876 - pa), 0.19],
+        [Math.max(0, 26561 - pa), 0.20],
+        [Math.max(0, 43662 - pa), 0.21],
+        [Math.max(0, 75000 - pa), 0.42],
+        [Math.max(0, 125140 - pa), 0.45],
+        [Infinity, 0.48]
+      ];
+      // But if PA is tapered, we need to recalculate
+      var adjustedPA = pa;
+      scotlandBands = [
+        [Math.max(0, 14876 - adjustedPA), 0.19],
+        [Math.max(0, 26561 - adjustedPA), 0.20],
+        [Math.max(0, 43662 - adjustedPA), 0.21],
+        [Math.max(0, 75000 - adjustedPA), 0.42],
+        [Math.max(0, 125140 - adjustedPA), 0.45],
+        [Infinity, 0.48]
+      ];
+      brackets = scotlandBands;
+    } else {
+      // England/Wales bands relative to personal allowance
+      brackets = [
+        [Math.max(0, 50270 - pa), 0.20],
+        [Math.max(0, 125140 - pa), 0.40],
+        [Infinity, 0.45]
+      ];
+    }
+
+    var tax = 0, prev = 0;
+    for (var i = 0; i < brackets.length; i++) {
+      var limit = brackets[i][0], rate = brackets[i][1];
+      if (taxableIncome <= prev) break;
+      tax += (Math.min(taxableIncome, limit) - prev) * rate;
+      prev = limit;
+    }
+    return Math.max(0, tax);
+  }
+
+  function getIncomeTaxMarginal(gross, pensionDeduction, region) {
+    var pa = calcPersonalAllowance(gross);
+    var taxableIncome = Math.max(0, gross - pensionDeduction - pa);
+
+    // If in the PA taper zone, effective marginal includes taper effect
+    var inTaperZone = gross > PA_TAPER_THRESHOLD && gross <= 125140;
+
+    if (region === 'scotland') {
+      var adjustedPA = pa;
+      var scotlandBands = [
+        [Math.max(0, 14876 - adjustedPA), 0.19],
+        [Math.max(0, 26561 - adjustedPA), 0.20],
+        [Math.max(0, 43662 - adjustedPA), 0.21],
+        [Math.max(0, 75000 - adjustedPA), 0.42],
+        [Math.max(0, 125140 - adjustedPA), 0.45],
+        [Infinity, 0.48]
+      ];
+      var prev = 0;
+      var marginal = 0.48;
+      for (var i = 0; i < scotlandBands.length; i++) {
+        if (taxableIncome <= scotlandBands[i][0]) { marginal = scotlandBands[i][1]; break; }
+        prev = scotlandBands[i][0];
+      }
+      if (inTaperZone) marginal = Math.min(1, marginal + marginal * 0.5);
+      return marginal;
+    } else {
+      var engBands = [
+        [Math.max(0, 50270 - pa), 0.20],
+        [Math.max(0, 125140 - pa), 0.40],
+        [Infinity, 0.45]
+      ];
+      var marginal = 0.45;
+      for (var i = 0; i < engBands.length; i++) {
+        if (taxableIncome <= engBands[i][0]) { marginal = engBands[i][1]; break; }
+      }
+      // In the taper zone (100k-125,140), effective marginal is 60% (40% + 20% on lost PA)
+      if (inTaperZone && marginal === 0.40) marginal = 0.60;
+      return marginal;
+    }
+  }
+
+  function calcNI(gross) {
+    var ni = 0;
+    if (gross > NI_PRIMARY_THRESHOLD) {
+      var mainBand = Math.min(gross, NI_UPPER_EARNINGS_LIMIT) - NI_PRIMARY_THRESHOLD;
+      ni += Math.max(0, mainBand) * NI_MAIN_RATE;
+    }
+    if (gross > NI_UPPER_EARNINGS_LIMIT) {
+      ni += (gross - NI_UPPER_EARNINGS_LIMIT) * NI_UPPER_RATE;
+    }
+    return ni;
+  }
+
+  function getNIMarginal(gross) {
+    if (gross <= NI_PRIMARY_THRESHOLD) return 0;
+    if (gross <= NI_UPPER_EARNINGS_LIMIT) return NI_MAIN_RATE;
+    return NI_UPPER_RATE;
+  }
+
+  function calcStudentLoan(gross, pensionDeduction, plan) {
+    var loan = STUDENT_LOANS[plan];
+    if (!loan || loan.rate === 0) return 0;
+    var repayableIncome = Math.max(0, gross - pensionDeduction - loan.threshold);
+    return repayableIncome * loan.rate;
+  }
+
+  // ── Main calculation ──
+  function calculate() {
+    var gross = parseFloat(grossInput.value) || 0;
+    var region = regionSelect.value;
+    var freq = parseInt(freqSelect.value);
+    var loanPlan = loanSelect.value;
+    var pensionPct = parseFloat(pensionInput.value) || 0;
+
+    // Pension deduction (annual)
+    var pensionDeduction = gross * (pensionPct / 100);
+
+    // Personal allowance (for display)
+    var pa = calcPersonalAllowance(gross);
+
+    // Income tax (calculated on gross minus pension minus PA)
+    var incomeTax = calcIncomeTax(gross, pensionDeduction, region);
+
+    // National Insurance (on gross earnings, not reduced by pension in net pay)
+    var ni = calcNI(gross);
+
+    // Student loan (on gross minus pension)
+    var studentLoan = calcStudentLoan(gross, pensionDeduction, loanPlan);
+
+    // Totals
+    var totalDeductions = incomeTax + ni + studentLoan + pensionDeduction;
+    var totalTax = incomeTax + ni + studentLoan;
+    var annualTakeHome = gross - totalDeductions;
+    var perPeriod = annualTakeHome / freq;
+
+    var effectiveRate = gross > 0 ? (totalTax / gross * 100) : 0;
+    var marginalIT = getIncomeTaxMarginal(gross, pensionDeduction, region);
+    var marginalNI = getNIMarginal(gross);
+    var combinedMarginal = (marginalIT + marginalNI) * 100;
+
+    // ── Update hero ──
+    document.getElementById('heroTakeHome').textContent = fmtGBP(Math.round(perPeriod));
+    document.getElementById('heroSublabel').textContent = FREQ_LABELS[freq] || 'per month';
+
+    // ── Stats ──
+    document.getElementById('statAnnual').textContent = fmtGBP(Math.round(annualTakeHome));
+    document.getElementById('statEffective').textContent = effectiveRate.toFixed(1) + '%';
+    document.getElementById('statTotalTax').textContent = fmtGBP(Math.round(totalTax));
+    document.getElementById('statMarginal').textContent = combinedMarginal.toFixed(1) + '%';
+
+    // ── Breakdown table ──
+    var regionLabel = region === 'scotland' ? 'Scotland' : 'England/Wales';
+    var rows = [
+      ['Gross salary', fmtGBP(Math.round(gross))],
+      ['Pension contribution (' + pensionPct + '%)', '\u2212 ' + fmtGBP(Math.round(pensionDeduction))],
+      ['Personal Allowance', '\u2212 ' + fmtGBP(Math.round(pa))],
+      ['Taxable income', fmtGBP(Math.round(Math.max(0, gross - pensionDeduction - pa)))],
+      ['', ''],
+      ['Income tax (' + regionLabel + ')', fmtGBP(Math.round(incomeTax))],
+      ['National Insurance (Class 1)', fmtGBP(Math.round(ni))]
+    ];
+
+    if (studentLoan > 0) {
+      var planLabel = loanPlan.replace('plan', 'Plan ').replace('postgrad', 'Postgraduate');
+      rows.push(['Student loan (' + planLabel + ')', fmtGBP(Math.round(studentLoan))]);
+    }
+
+    rows.push(['total', fmtGBP(Math.round(totalTax))]);
+    rows.push(['', '']);
+    rows.push(['Pension contribution', '\u2212 ' + fmtGBP(Math.round(pensionDeduction))]);
+    rows.push(['total', fmtGBP(Math.round(annualTakeHome))]);
+
+    var tbody = document.getElementById('breakdownTable').querySelector('tbody');
+    tbody.innerHTML = '';
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i][0] === '' && rows[i][1] === '') continue;
+      var tr = document.createElement('tr');
+      if (rows[i][0] === 'total') {
+        tr.className = 'total';
+        var td1 = document.createElement('td');
+        td1.textContent = (i === rows.length - 1) ? 'Annual take-home pay' : 'Total taxes & student loan';
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      } else {
+        var td1 = document.createElement('td');
+        td1.textContent = rows[i][0];
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      }
+      tbody.appendChild(tr);
+    }
+
+    // ── Period comparison table ──
+    var periods = [
+      { name:'Annual', div:1 },
+      { name:'Monthly', div:12 },
+      { name:'Semi-Monthly', div:24 },
+      { name:'Biweekly', div:26 },
+      { name:'Weekly', div:52 }
+    ];
+    var ptbody = document.getElementById('periodTable').querySelector('tbody');
+    ptbody.innerHTML = '';
+    for (var i = 0; i < periods.length; i++) {
+      var tr = document.createElement('tr');
+      var d = periods[i].div;
+      if (FREQ_NAMES[freq] === periods[i].name) tr.className = 'row-highlight';
+      tr.innerHTML = '<td>' + periods[i].name + '</td><td>' + fmtGBP(Math.round(gross / d)) +
+        '</td><td>' + fmtGBP(Math.round(totalDeductions / d)) + '</td><td>' + fmtGBP(Math.round(annualTakeHome / d)) + '</td>';
+      ptbody.appendChild(tr);
+    }
+
+    // ── Stacked bar ──
+    var barDiv = document.getElementById('stackedBar');
+    var legDiv = document.getElementById('stackedLegend');
+    barDiv.innerHTML = '';
+    legDiv.innerHTML = '';
+
+    if (gross > 0) {
+      var segments = [
+        { label:'Take Home', value:annualTakeHome, color:'#059669' },
+        { label:'Income Tax', value:incomeTax, color:'#2563eb' },
+        { label:'National Insurance', value:ni, color:'#d97706' }
+      ];
+      if (studentLoan > 0) {
+        segments.push({ label:'Student Loan', value:studentLoan, color:'#dc2626' });
+      }
+      if (pensionDeduction > 0) {
+        segments.push({ label:'Pension', value:pensionDeduction, color:'#6b7280' });
+      }
+      for (var i = 0; i < segments.length; i++) {
+        var pct = segments[i].value / gross * 100;
+        if (pct < 0.3) continue;
+        var seg = document.createElement('div');
+        seg.className = 'segment';
+        seg.style.width = pct + '%';
+        seg.style.background = segments[i].color;
+        if (pct > 8) seg.textContent = pct.toFixed(0) + '%';
+        barDiv.appendChild(seg);
+
+        var li = document.createElement('div');
+        li.className = 'legend-item';
+        li.innerHTML = '<span class="legend-dot" style="background:' + segments[i].color + '"></span>' +
+          segments[i].label + ': ' + fmtGBP(Math.round(segments[i].value)) + ' (' + pct.toFixed(1) + '%)';
+        legDiv.appendChild(li);
+      }
+    }
+  }
+
+  // ── Bind all inputs ──
+  var inputs = document.querySelectorAll('#grossSalary,#region,#payFrequency,#studentLoan,#pensionPct');
+  for (var i = 0; i < inputs.length; i++) {
+    inputs[i].addEventListener('input', calculate);
+    inputs[i].addEventListener('change', calculate);
+  }
+
+  calculate();
+})();
+</script>
+</body>
+</html>

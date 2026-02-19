@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Australia Take-Home Pay Calculator — See Your Salary After Tax | OneTab</title>
+  <meta name="description" content="Calculate your take-home pay in Australia. See your net salary after income tax, Medicare levy, HECS/HELP repayments, and superannuation. Updated for 2024-25 tax year.">
+  <meta name="keywords" content="australia take home pay calculator, australian salary calculator, income tax calculator australia, net pay australia, medicare levy, HECS HELP repayment, superannuation calculator">
+
+  <meta property="og:title" content="Australia Take-Home Pay Calculator | OneTab">
+  <meta property="og:description" content="Calculate your take-home pay in Australia after income tax, Medicare levy, and HECS/HELP repayments. 2024-25 tax rates.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://onetab.tools/take-home-pay-calculator/australia/">
+  <meta property="og:site_name" content="OneTab">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Australia Take-Home Pay Calculator | OneTab">
+  <meta name="twitter:description" content="Calculate your take-home pay in Australia after income tax, Medicare levy, and HECS/HELP repayments.">
+
+  <link rel="canonical" href="https://onetab.tools/take-home-pay-calculator/australia/">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../css/style.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Australia Take-Home Pay Calculator",
+    "url": "https://onetab.tools/take-home-pay-calculator/australia/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "AUD" },
+    "description": "Calculate your take-home pay in Australia after income tax, Medicare levy, HECS/HELP repayments, and superannuation. Updated for 2024-25 tax year."
+  }
+  </script>
+
+  <script>
+    (function() {
+      var t = localStorage.getItem('onetab-theme');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+  </script>
+
+  <style>
+    .period-table { width:100%; border-collapse:collapse; }
+    .period-table th, .period-table td { padding:0.6rem 0.75rem; text-align:right; font-variant-numeric:tabular-nums; }
+    .period-table th:first-child, .period-table td:first-child { text-align:left; }
+    .period-table th { font-size:0.8rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--color-text-muted); border-bottom:2px solid var(--color-border); }
+    .period-table td { border-bottom:1px solid var(--color-border); font-size:0.9rem; }
+    .period-table tr:last-child td { border-bottom:none; }
+    .period-table .row-highlight td { font-weight:700; color:var(--color-success); background:rgba(5,150,105,0.05); }
+    .country-links { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.75rem; }
+    .country-links a { font-size:0.8rem; padding:0.25rem 0.5rem; border-radius:4px; background:var(--color-bg); border:1px solid var(--color-border); color:var(--color-text); text-decoration:none; transition:border-color 0.15s; }
+    .country-links a:hover { border-color:var(--color-primary); color:var(--color-primary); }
+    .checkbox-row { display:flex; align-items:center; gap:0.5rem; margin-top:0.25rem; }
+    .checkbox-row input[type="checkbox"] { width:1.1rem; height:1.1rem; accent-color:var(--color-primary); cursor:pointer; }
+    .checkbox-row label { font-size:0.9rem; cursor:pointer; margin:0; }
+    .info-note { font-size:0.8rem; color:var(--color-text-muted); margin-top:0.25rem; }
+    .super-info { background:rgba(37,99,235,0.06); border:1px solid rgba(37,99,235,0.15); border-radius:var(--radius); padding:0.75rem 1rem; margin-top:1rem; }
+    .super-info strong { color:var(--color-primary); }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="../../">OneTab</a>
+  <div class="header-actions">
+    <select class="country-select-global" id="country-select-global" title="Your location"></select>
+    <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">Dark</button>
+  </div>
+</header>
+
+<main class="container">
+  <h1>Australia Take-Home Pay Calculator</h1>
+  <p class="subtitle">Calculate your net pay after income tax, Medicare levy, and superannuation.</p>
+
+  <div class="ad-placeholder" data-size="leaderboard"><span class="ad-label">Ad</span><span class="ad-size">728 × 90</span></div>
+
+  <!-- Income -->
+  <div class="card">
+    <div class="card-title">Your Income</div>
+    <div class="form-group">
+      <label>Annual gross salary</label>
+      <div class="input-with-prefix">
+        <span class="prefix">A$</span>
+        <input type="number" id="grossSalary" value="90000" min="0" step="1000">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Pay frequency</label>
+      <select id="payFrequency">
+        <option value="26" selected>Fortnightly (26 paychecks/yr)</option>
+        <option value="24">Semi-monthly (24 paychecks/yr)</option>
+        <option value="52">Weekly (52 paychecks/yr)</option>
+        <option value="12">Monthly (12 paychecks/yr)</option>
+        <option value="1">Annual</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Options -->
+  <div class="card">
+    <div class="card-title">Options</div>
+    <div class="form-group">
+      <div class="checkbox-row">
+        <input type="checkbox" id="hasHecs">
+        <label for="hasHecs">I have a HECS/HELP debt</label>
+      </div>
+      <div class="info-note">If checked, a compulsory repayment will be deducted based on your repayment income.</div>
+    </div>
+    <div class="form-group">
+      <div class="checkbox-row">
+        <input type="checkbox" id="hasPrivateHealth" checked>
+        <label for="hasPrivateHealth">I have private health insurance</label>
+      </div>
+      <div class="info-note">Without private health insurance, a Medicare levy surcharge (1%–1.5%) applies for incomes over A$93,000.</div>
+    </div>
+  </div>
+
+  <!-- Pre-Tax Deductions -->
+  <div class="card">
+    <div class="card-title">Pre-Tax Deductions <span style="font-weight:400;font-size:0.85rem;color:var(--color-text-muted);">(optional)</span></div>
+    <div class="form-group">
+      <label>Salary sacrifice / pre-tax deductions <span class="hint">(annual)</span></label>
+      <div class="input-with-prefix">
+        <span class="prefix">A$</span>
+        <input type="number" id="salarySacrifice" value="0" min="0" step="500">
+      </div>
+      <div class="info-note">Salary sacrifice into super or other pre-tax arrangements reduces your taxable income.</div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="results" class="result-section visible">
+
+    <div class="card result-hero" style="border-radius:var(--radius);">
+      <div class="rate-label">Your Take-Home Pay</div>
+      <div class="rate-value" id="heroTakeHome">A$0</div>
+      <div class="rate-sublabel" id="heroSublabel">per fortnight</div>
+    </div>
+
+    <div class="stat-grid" style="margin-bottom:1.5rem;">
+      <div class="stat-box success">
+        <div class="stat-value" id="statAnnual">A$0</div>
+        <div class="stat-label">Annual Take-Home</div>
+      </div>
+      <div class="stat-box highlight">
+        <div class="stat-value" id="statEffective">0%</div>
+        <div class="stat-label">Effective Tax Rate</div>
+      </div>
+      <div class="stat-box warning">
+        <div class="stat-value" id="statTotalTax">A$0</div>
+        <div class="stat-label">Total Deductions</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="statMarginal">0%</div>
+        <div class="stat-label">Marginal Rate</div>
+      </div>
+    </div>
+
+    <div class="ad-placeholder" data-size="rectangle"><span class="ad-label">Ad</span><span class="ad-size">300 × 250</span></div>
+
+    <!-- Tax Breakdown -->
+    <div class="card">
+      <h2>Tax Breakdown</h2>
+      <table class="breakdown-table" id="breakdownTable">
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Superannuation Info -->
+    <div class="card">
+      <h2>Superannuation (Employer-Paid)</h2>
+      <div class="super-info">
+        <p style="margin:0;"><strong>Superannuation guarantee:</strong> Your employer contributes <strong id="superRate">11.5%</strong> on top of your salary.</p>
+        <p style="margin:0.5rem 0 0;font-size:0.95rem;">Estimated employer super contribution: <strong id="superAmount">A$0</strong> per year.</p>
+        <p style="margin:0.5rem 0 0;font-size:0.85rem;color:var(--color-text-muted);">Super is paid by your employer into your super fund. It is not deducted from your pay.</p>
+      </div>
+    </div>
+
+    <!-- Pay Period Comparison -->
+    <div class="card">
+      <h2>Pay Period Breakdown</h2>
+      <table class="period-table" id="periodTable">
+        <thead>
+          <tr><th>Period</th><th>Gross</th><th>Deductions</th><th>Take-Home</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Stacked Bar -->
+    <div class="card">
+      <h2>Where Your Money Goes</h2>
+      <div class="stacked-bar" id="stackedBar"></div>
+      <div class="stacked-legend" id="stackedLegend"></div>
+    </div>
+
+    <div class="ad-placeholder" data-size="large-rectangle"><span class="ad-label">Ad</span><span class="ad-size">336 × 280</span></div>
+  </div>
+
+  <!-- Related Tools -->
+  <div class="card" style="margin-top:1.5rem;">
+    <div class="card-title">Related Tools</div>
+    <div style="display:flex;flex-direction:column;gap:0.5rem;">
+      <a href="../../salary-converter/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Salary to Hourly Calculator</a>
+      <a href="../../freelance-rate-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Freelance Hourly Rate Calculator</a>
+      <a href="../../compound-interest-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Compound Interest Calculator</a>
+      <a href="../../percentage-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Percentage Calculator</a>
+    </div>
+  </div>
+
+  <!-- Country Links -->
+  <div class="card" style="margin-top:1rem;">
+    <div class="card-title">Take-Home Pay by Country</div>
+    <div class="country-links">
+      <a href="../">United States</a>
+      <a href="../california/">California</a>
+      <a href="../new-york/">New York</a>
+      <a href="../texas/">Texas</a>
+      <a href="../florida/">Florida</a>
+      <a href="../washington/">Washington</a>
+      <a href="../illinois/">Illinois</a>
+      <a href="../pennsylvania/">Pennsylvania</a>
+      <a href="../ohio/">Ohio</a>
+      <a href="../georgia/">Georgia</a>
+      <a href="../north-carolina/">North Carolina</a>
+    </div>
+  </div>
+
+  <div class="ad-placeholder" data-size="in-article"><span class="ad-label">Ad</span><span class="ad-size">Responsive</span></div>
+
+  <!-- SEO Content -->
+  <div class="content-section">
+    <h2>How Take-Home Pay Is Calculated in Australia</h2>
+    <p>Your take-home pay in Australia is your gross salary minus income tax, the Medicare levy, any Medicare levy surcharge, and any compulsory HECS/HELP repayments. Unlike the US, Australia has no state or territory income taxes — all income tax is levied at the federal level by the Australian Taxation Office (ATO). There is also no separate Social Security or payroll tax deducted from employees.</p>
+
+    <h2>Australian Income Tax (2024–25 Resident Rates)</h2>
+    <p>Australia uses a progressive income tax system. For the 2024–25 financial year (1 July 2024 to 30 June 2025), the individual resident tax rates are:</p>
+    <ul>
+      <li><strong>$0 – $18,200:</strong> Nil (tax-free threshold)</li>
+      <li><strong>$18,201 – $45,000:</strong> 16 cents for each $1 over $18,200</li>
+      <li><strong>$45,001 – $135,000:</strong> $4,288 plus 30 cents for each $1 over $45,000</li>
+      <li><strong>$135,001 – $190,000:</strong> $31,288 plus 37 cents for each $1 over $135,000</li>
+      <li><strong>$190,001 and over:</strong> $51,638 plus 45 cents for each $1 over $190,000</li>
+    </ul>
+    <p>The tax-free threshold of $18,200 means that Australians earning below this amount pay no income tax at all. Tax is calculated progressively — you only pay the higher rate on the portion of income within each bracket, not on your entire salary.</p>
+
+    <h2>Medicare Levy</h2>
+    <p>The Medicare levy is a flat 2% of your taxable income, which funds Australia's public healthcare system (Medicare). Most Australian taxpayers pay this levy. Low-income earners may receive a reduction or exemption. The Medicare levy is separate from private health insurance — even if you have private cover, you still pay the 2% levy.</p>
+
+    <h2>Medicare Levy Surcharge (MLS)</h2>
+    <p>If you earn above $93,000 (singles) or $186,000 (families) and do not hold an appropriate level of private patient hospital cover, you must pay the Medicare levy surcharge in addition to the standard 2% Medicare levy. The surcharge rates for 2024–25 are:</p>
+    <ul>
+      <li><strong>$93,001 – $108,000:</strong> 1.0%</li>
+      <li><strong>$108,001 – $144,000:</strong> 1.25%</li>
+      <li><strong>$144,001 and over:</strong> 1.5%</li>
+    </ul>
+    <p>The MLS is designed to encourage higher-income earners to take out private health insurance and reduce demand on the public system.</p>
+
+    <h2>HECS/HELP Repayments</h2>
+    <p>If you have an outstanding Higher Education Loan Program (HELP) debt — formerly known as HECS — compulsory repayments are deducted through the tax system once your repayment income exceeds the minimum threshold. For 2024–25, the repayment thresholds and rates are progressive, starting at 1% for incomes over $54,435 and increasing to 10% for incomes over $151,201. HECS/HELP repayments are not a tax but are deducted from your pay via PAYG withholding if you notify your employer.</p>
+
+    <h2>Superannuation</h2>
+    <p>Superannuation (super) is Australia's compulsory retirement savings system. For 2024–25, employers must contribute 11.5% of an employee's ordinary time earnings into a super fund. This is paid on top of your salary and is not deducted from your pay. The super guarantee rate is legislated to increase to 12% from 1 July 2025. Super contributions are taxed at a concessional rate of 15% within the fund.</p>
+
+    <h2>Salary Sacrifice</h2>
+    <p>Salary sacrifice (also called salary packaging) allows you to redirect a portion of your pre-tax salary into benefits such as additional super contributions, a novated car lease, or other approved items. Because the sacrificed amount is deducted before income tax is calculated, it can reduce your taxable income and overall tax liability. However, salary sacrifice into super is subject to concessional contribution caps ($30,000 per year for 2024–25, including employer contributions).</p>
+
+    <h2>Tips to Increase Your Take-Home Pay in Australia</h2>
+    <ul>
+      <li><strong>Salary sacrifice into super:</strong> Contributions up to the concessional cap reduce your taxable income and are taxed at only 15% in the fund.</li>
+      <li><strong>Claim work-related deductions:</strong> Expenses like home office costs, uniforms, tools, and travel can reduce your taxable income at tax time.</li>
+      <li><strong>Get private health insurance:</strong> If you earn over $93,000, holding hospital cover avoids the Medicare levy surcharge (1%–1.5%).</li>
+      <li><strong>Review your PAYG withholding:</strong> If you consistently receive large tax refunds, you may be able to apply for a withholding variation to increase your regular take-home pay.</li>
+      <li><strong>Use the low-income tax offset:</strong> If eligible, LITO can reduce your tax payable by up to $700 — it is automatically applied when you lodge your tax return.</li>
+    </ul>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <a href="../../" style="color:var(--color-text-muted);text-decoration:none;">← Back to all tools</a>
+  <p style="margin-top:0.5rem;">Built for people who need quick answers.</p>
+</footer>
+
+<script src="../../js/onetab-global.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  // ── Australian Income Tax Brackets 2024-25 (Resident) ──
+  var TAX_BRACKETS = [
+    [18200, 0],
+    [45000, 0.16],
+    [135000, 0.30],
+    [190000, 0.37],
+    [Infinity, 0.45]
+  ];
+
+  // ── Medicare levy: 2% of taxable income ──
+  var MEDICARE_LEVY_RATE = 0.02;
+
+  // ── Medicare Levy Surcharge (no private health insurance) ──
+  var MLS_TIERS = [
+    [93000, 0],
+    [108000, 0.01],
+    [144000, 0.0125],
+    [Infinity, 0.015]
+  ];
+
+  // ── HECS/HELP Repayment Thresholds 2024-25 ──
+  var HECS_THRESHOLDS = [
+    [54435, 0],
+    [62850, 0.01],
+    [66620, 0.02],
+    [70618, 0.025],
+    [74855, 0.03],
+    [79346, 0.035],
+    [84107, 0.04],
+    [89154, 0.045],
+    [94503, 0.05],
+    [100174, 0.055],
+    [106185, 0.06],
+    [112556, 0.065],
+    [119309, 0.07],
+    [126467, 0.075],
+    [134056, 0.08],
+    [142100, 0.085],
+    [150626, 0.09],
+    [159663, 0.095],
+    [Infinity, 0.10]
+  ];
+
+  // ── Superannuation guarantee rate 2024-25 ──
+  var SUPER_RATE = 0.115;
+
+  // ── DOM elements ──
+  var grossInput = document.getElementById('grossSalary');
+  var freqSelect = document.getElementById('payFrequency');
+  var hecsCheckbox = document.getElementById('hasHecs');
+  var healthCheckbox = document.getElementById('hasPrivateHealth');
+  var sacrificeInput = document.getElementById('salarySacrifice');
+
+  // ── Frequency labels ──
+  var FREQ_LABELS = { '1':'annually', '12':'per month', '24':'semi-monthly', '26':'per fortnight', '52':'per week' };
+  var FREQ_NAMES = { '1':'Annual', '12':'Monthly', '24':'Semi-Monthly', '26':'Fortnightly', '52':'Weekly' };
+
+  // ── Calculation helpers ──
+  function calcBracketTax(income, brackets) {
+    var tax = 0, prev = 0;
+    for (var i = 0; i < brackets.length; i++) {
+      var limit = brackets[i][0], rate = brackets[i][1];
+      if (income <= prev) break;
+      tax += (Math.min(income, limit) - prev) * rate;
+      prev = limit;
+    }
+    return Math.max(0, tax);
+  }
+
+  function getMarginalRate(income, brackets) {
+    var prev = 0;
+    for (var i = 0; i < brackets.length; i++) {
+      if (income <= brackets[i][0]) return brackets[i][1];
+      prev = brackets[i][0];
+    }
+    return brackets[brackets.length - 1][1];
+  }
+
+  function calcMedicareLevySurcharge(taxableIncome) {
+    for (var i = 0; i < MLS_TIERS.length; i++) {
+      if (taxableIncome <= MLS_TIERS[i][0]) return taxableIncome * MLS_TIERS[i][1];
+    }
+    return taxableIncome * MLS_TIERS[MLS_TIERS.length - 1][1];
+  }
+
+  function calcHecsRepayment(repaymentIncome) {
+    for (var i = HECS_THRESHOLDS.length - 1; i >= 0; i--) {
+      if (i === 0) return 0;
+      if (repaymentIncome > HECS_THRESHOLDS[i - 1][0]) {
+        return repaymentIncome * HECS_THRESHOLDS[i][1];
+      }
+    }
+    return 0;
+  }
+
+  function fmt(n) {
+    return OneTab.fmt(n);
+  }
+
+  // ── Main calculation ──
+  function calculate() {
+    var gross = parseFloat(grossInput.value) || 0;
+    var freq = parseInt(freqSelect.value);
+    var hasHecs = hecsCheckbox.checked;
+    var hasPrivateHealth = healthCheckbox.checked;
+    var sacrifice = parseFloat(sacrificeInput.value) || 0;
+
+    // Taxable income
+    var taxableIncome = Math.max(0, gross - sacrifice);
+
+    // Income tax
+    var incomeTax = calcBracketTax(taxableIncome, TAX_BRACKETS);
+    var marginalRate = getMarginalRate(taxableIncome, TAX_BRACKETS);
+
+    // Medicare levy (2%)
+    var medicareLevy = taxableIncome * MEDICARE_LEVY_RATE;
+
+    // Medicare levy surcharge (only if no private health insurance and income > $93,000)
+    var medicareSurcharge = 0;
+    if (!hasPrivateHealth && taxableIncome > 93000) {
+      medicareSurcharge = calcMedicareLevySurcharge(taxableIncome);
+    }
+
+    // HECS/HELP repayment
+    var hecsRepayment = 0;
+    if (hasHecs) {
+      // Repayment income includes taxable income + any reportable fringe benefits + super contributions etc.
+      // Simplified: use taxable income
+      hecsRepayment = calcHecsRepayment(taxableIncome);
+    }
+
+    // Total deductions
+    var totalDeductions = incomeTax + medicareLevy + medicareSurcharge + hecsRepayment;
+    var annualTakeHome = gross - sacrifice - totalDeductions;
+    var perPeriod = annualTakeHome / freq;
+
+    var effectiveRate = gross > 0 ? (totalDeductions / gross * 100) : 0;
+    var combinedMarginal = (marginalRate + MEDICARE_LEVY_RATE) * 100;
+
+    // Superannuation (employer-paid, not deducted)
+    var superContribution = gross * SUPER_RATE;
+
+    // ── Update hero ──
+    document.getElementById('heroTakeHome').textContent = fmt(Math.round(perPeriod));
+    document.getElementById('heroSublabel').textContent = FREQ_LABELS[freq] || 'per fortnight';
+
+    // ── Stats ──
+    document.getElementById('statAnnual').textContent = fmt(Math.round(annualTakeHome));
+    document.getElementById('statEffective').textContent = effectiveRate.toFixed(1) + '%';
+    document.getElementById('statTotalTax').textContent = fmt(Math.round(totalDeductions));
+    document.getElementById('statMarginal').textContent = combinedMarginal.toFixed(1) + '%';
+
+    // ── Super info ──
+    document.getElementById('superAmount').textContent = fmt(Math.round(superContribution));
+
+    // ── Breakdown table ──
+    var rows = [
+      ['Gross salary', fmt(Math.round(gross))]
+    ];
+
+    if (sacrifice > 0) {
+      rows.push(['Salary sacrifice (pre-tax)', '\u2212 ' + fmt(Math.round(sacrifice))]);
+      rows.push(['Taxable income', fmt(Math.round(taxableIncome))]);
+    } else {
+      rows.push(['Taxable income', fmt(Math.round(taxableIncome))]);
+    }
+
+    rows.push(['', '']);
+    rows.push(['Income tax', fmt(Math.round(incomeTax))]);
+    rows.push(['Medicare levy (2%)', fmt(Math.round(medicareLevy))]);
+
+    if (medicareSurcharge > 0) {
+      var mlsRate = medicareSurcharge / taxableIncome * 100;
+      rows.push(['Medicare levy surcharge (' + mlsRate.toFixed(2) + '%)', fmt(Math.round(medicareSurcharge))]);
+    }
+
+    if (hecsRepayment > 0) {
+      var hecsRate = hecsRepayment / taxableIncome * 100;
+      rows.push(['HECS/HELP repayment (' + hecsRate.toFixed(1) + '%)', fmt(Math.round(hecsRepayment))]);
+    }
+
+    rows.push(['total', fmt(Math.round(totalDeductions))]);
+    rows.push(['', '']);
+    rows.push(['total', fmt(Math.round(annualTakeHome))]);
+
+    var tbody = document.getElementById('breakdownTable').querySelector('tbody');
+    tbody.innerHTML = '';
+    var totalCount = 0;
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i][0] === '' && rows[i][1] === '') continue;
+      var tr = document.createElement('tr');
+      if (rows[i][0] === 'total') {
+        totalCount++;
+        tr.className = 'total';
+        var td1 = document.createElement('td');
+        td1.textContent = (totalCount === 1) ? 'Total deductions' : 'Annual take-home pay';
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      } else {
+        var td1 = document.createElement('td');
+        td1.textContent = rows[i][0];
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      }
+      tbody.appendChild(tr);
+    }
+
+    // ── Period comparison table ──
+    var periods = [
+      { name:'Annual', div:1 },
+      { name:'Monthly', div:12 },
+      { name:'Fortnightly', div:26 },
+      { name:'Weekly', div:52 }
+    ];
+    var ptbody = document.getElementById('periodTable').querySelector('tbody');
+    ptbody.innerHTML = '';
+    for (var i = 0; i < periods.length; i++) {
+      var tr = document.createElement('tr');
+      var d = periods[i].div;
+      if (FREQ_NAMES[freq] === periods[i].name) tr.className = 'row-highlight';
+      tr.innerHTML = '<td>' + periods[i].name + '</td><td>' + fmt(Math.round(gross / d)) +
+        '</td><td>' + fmt(Math.round(totalDeductions / d)) + '</td><td>' + fmt(Math.round(annualTakeHome / d)) + '</td>';
+      ptbody.appendChild(tr);
+    }
+
+    // ── Stacked bar ──
+    var barDiv = document.getElementById('stackedBar');
+    var legDiv = document.getElementById('stackedLegend');
+    barDiv.innerHTML = '';
+    legDiv.innerHTML = '';
+
+    if (gross > 0) {
+      var segments = [
+        { label:'Take Home', value:annualTakeHome, color:'#059669' },
+        { label:'Income Tax', value:incomeTax, color:'#2563eb' },
+        { label:'Medicare Levy', value:medicareLevy, color:'#d97706' }
+      ];
+      if (medicareSurcharge > 0) {
+        segments.push({ label:'Medicare Surcharge', value:medicareSurcharge, color:'#dc2626' });
+      }
+      if (hecsRepayment > 0) {
+        segments.push({ label:'HECS/HELP', value:hecsRepayment, color:'#7c3aed' });
+      }
+      if (sacrifice > 0) {
+        segments.push({ label:'Salary Sacrifice', value:sacrifice, color:'#6b7280' });
+      }
+
+      for (var i = 0; i < segments.length; i++) {
+        var pct = segments[i].value / gross * 100;
+        if (pct < 0.3) continue;
+        var seg = document.createElement('div');
+        seg.className = 'segment';
+        seg.style.width = pct + '%';
+        seg.style.background = segments[i].color;
+        if (pct > 8) seg.textContent = pct.toFixed(0) + '%';
+        barDiv.appendChild(seg);
+
+        var li = document.createElement('div');
+        li.className = 'legend-item';
+        li.innerHTML = '<span class="legend-dot" style="background:' + segments[i].color + '"></span>' +
+          segments[i].label + ': ' + fmt(Math.round(segments[i].value)) + ' (' + pct.toFixed(1) + '%)';
+        legDiv.appendChild(li);
+      }
+    }
+  }
+
+  // ── Bind all inputs ──
+  var inputs = document.querySelectorAll('#grossSalary,#payFrequency,#hasHecs,#hasPrivateHealth,#salarySacrifice');
+  for (var i = 0; i < inputs.length; i++) {
+    inputs[i].addEventListener('input', calculate);
+    inputs[i].addEventListener('change', calculate);
+  }
+
+  calculate();
+})();
+</script>
+</body>
+</html>

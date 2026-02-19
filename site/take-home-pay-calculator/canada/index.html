@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canada Take-Home Pay Calculator — See Your Salary After Tax | OneTab</title>
+  <meta name="description" content="Calculate your take-home pay in Canada. See your net salary after federal tax, provincial tax, CPP, and EI deductions. All 13 provinces and territories supported. Updated for 2024.">
+  <meta name="keywords" content="canada take home pay calculator, canadian paycheck calculator, canada income tax calculator, canada salary after taxes, canadian net pay, CPP, EI, RRSP">
+
+  <meta property="og:title" content="Canada Take-Home Pay Calculator | OneTab">
+  <meta property="og:description" content="Calculate your take-home pay in Canada after federal tax, provincial tax, CPP, and EI deductions. All 13 provinces and territories supported.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://onetab.tools/take-home-pay-calculator/canada/">
+  <meta property="og:site_name" content="OneTab">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Canada Take-Home Pay Calculator | OneTab">
+  <meta name="twitter:description" content="Calculate your take-home pay in Canada after federal tax, provincial tax, CPP, and EI deductions.">
+
+  <link rel="canonical" href="https://onetab.tools/take-home-pay-calculator/canada/">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../css/style.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Canada Take-Home Pay Calculator",
+    "url": "https://onetab.tools/take-home-pay-calculator/canada/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CAD" },
+    "description": "Calculate your take-home pay in Canada after federal tax, provincial tax, CPP, and EI deductions. All 13 provinces and territories supported."
+  }
+  </script>
+
+  <script>
+    (function() {
+      var t = localStorage.getItem('onetab-theme');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+  </script>
+
+  <style>
+    .period-table { width:100%; border-collapse:collapse; }
+    .period-table th, .period-table td { padding:0.6rem 0.75rem; text-align:right; font-variant-numeric:tabular-nums; }
+    .period-table th:first-child, .period-table td:first-child { text-align:left; }
+    .period-table th { font-size:0.8rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--color-text-muted); border-bottom:2px solid var(--color-border); }
+    .period-table td { border-bottom:1px solid var(--color-border); font-size:0.9rem; }
+    .period-table tr:last-child td { border-bottom:none; }
+    .period-table .row-highlight td { font-weight:700; color:var(--color-success); background:rgba(5,150,105,0.05); }
+    .state-links { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.75rem; }
+    .state-links a { font-size:0.8rem; padding:0.25rem 0.5rem; border-radius:4px; background:var(--color-bg); border:1px solid var(--color-border); color:var(--color-text); text-decoration:none; transition:border-color 0.15s; }
+    .state-links a:hover { border-color:var(--color-primary); color:var(--color-primary); }
+    .deduction-row { display:flex; gap:0.75rem; align-items:end; }
+    .deduction-row .form-group { flex:1; }
+    .deduction-row .form-group:last-child { flex:0 0 100px; }
+    @media (max-width:600px) {
+      .deduction-row { flex-direction:column; gap:0; }
+      .deduction-row .form-group:last-child { flex:1; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="../../">OneTab</a>
+  <div class="header-actions">
+    <select class="country-select-global" id="country-select-global" title="Your location"></select>
+    <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">Dark</button>
+  </div>
+</header>
+
+<main class="container">
+  <h1>Canada Take-Home Pay Calculator</h1>
+  <p class="subtitle">Calculate your net pay after federal tax, provincial tax, CPP, and EI deductions.</p>
+
+  <div class="ad-placeholder" data-size="leaderboard"><span class="ad-label">Ad</span><span class="ad-size">728 × 90</span></div>
+
+  <!-- Income -->
+  <div class="card">
+    <div class="card-title">Your Income</div>
+    <div class="form-group">
+      <label>Annual gross salary</label>
+      <div class="input-with-prefix">
+        <span class="prefix" id="pfx1">C$</span>
+        <input type="number" id="grossSalary" value="70000" min="0" step="1000">
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <label>Province / Territory</label>
+        <select id="province"></select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Pay frequency</label>
+      <select id="payFrequency">
+        <option value="26">Biweekly (26 paychecks/yr)</option>
+        <option value="24">Semi-monthly (24 paychecks/yr)</option>
+        <option value="52">Weekly (52 paychecks/yr)</option>
+        <option value="12">Monthly (12 paychecks/yr)</option>
+        <option value="1">Annual</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Pre-Tax Deductions -->
+  <div class="card">
+    <div class="card-title">Deductions <span style="font-weight:400;font-size:0.85rem;color:var(--color-text-muted);">(optional)</span></div>
+    <div class="deduction-row">
+      <div class="form-group">
+        <label>RRSP contribution <span class="hint">(annual)</span></label>
+        <div class="input-with-prefix">
+          <span class="prefix" id="pfxRRSP">C$</span>
+          <input type="number" id="rrsp" value="0" min="0" step="100">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Per</label>
+        <select id="rrspPer">
+          <option value="year">Year</option>
+          <option value="paycheck">Paycheck</option>
+          <option value="percent">% of salary</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Other deductions <span class="hint">(union dues, etc. — annual)</span></label>
+      <div class="input-with-prefix">
+        <span class="prefix" id="pfx2">C$</span>
+        <input type="number" id="otherDeductions" value="0" min="0" step="100">
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="results" class="result-section visible">
+
+    <div class="card result-hero" style="border-radius:var(--radius);">
+      <div class="rate-label">Your Take-Home Pay</div>
+      <div class="rate-value" id="heroTakeHome">C$0</div>
+      <div class="rate-sublabel" id="heroSublabel">per paycheck (biweekly)</div>
+    </div>
+
+    <div class="stat-grid" style="margin-bottom:1.5rem;">
+      <div class="stat-box success">
+        <div class="stat-value" id="statAnnual">C$0</div>
+        <div class="stat-label">Annual Take-Home</div>
+      </div>
+      <div class="stat-box highlight">
+        <div class="stat-value" id="statEffective">0%</div>
+        <div class="stat-label">Effective Tax Rate</div>
+      </div>
+      <div class="stat-box warning">
+        <div class="stat-value" id="statTotalTax">C$0</div>
+        <div class="stat-label">Total Deductions</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="statMarginal">0%</div>
+        <div class="stat-label">Marginal Rate</div>
+      </div>
+    </div>
+
+    <div class="ad-placeholder" data-size="rectangle"><span class="ad-label">Ad</span><span class="ad-size">300 × 250</span></div>
+
+    <!-- Tax Breakdown -->
+    <div class="card">
+      <h2>Tax Breakdown</h2>
+      <table class="breakdown-table" id="breakdownTable">
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Pay Period Comparison -->
+    <div class="card">
+      <h2>Pay Period Breakdown</h2>
+      <table class="period-table" id="periodTable">
+        <thead>
+          <tr><th>Period</th><th>Gross</th><th>Deductions</th><th>Take-Home</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Stacked Bar -->
+    <div class="card">
+      <h2>Where Your Money Goes</h2>
+      <div class="stacked-bar" id="stackedBar"></div>
+      <div class="stacked-legend" id="stackedLegend"></div>
+    </div>
+
+    <div class="ad-placeholder" data-size="large-rectangle"><span class="ad-label">Ad</span><span class="ad-size">336 × 280</span></div>
+  </div>
+
+  <!-- Related Tools -->
+  <div class="card" style="margin-top:1.5rem;">
+    <div class="card-title">Related Tools</div>
+    <div style="display:flex;flex-direction:column;gap:0.5rem;">
+      <a href="../../salary-converter/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Salary to Hourly Calculator</a>
+      <a href="../../quarterly-tax-estimator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Quarterly Tax Estimator (Freelancers)</a>
+      <a href="../../freelance-rate-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Freelance Hourly Rate Calculator</a>
+      <a href="../../compound-interest-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Compound Interest Calculator</a>
+    </div>
+  </div>
+
+  <!-- Country Links -->
+  <div class="card" style="margin-top:1rem;">
+    <div class="card-title">Take-Home Pay by Country</div>
+    <div class="state-links">
+      <a href="../">United States</a>
+      <a href="../canada/" style="border-color:var(--color-primary);color:var(--color-primary);font-weight:600;">Canada</a>
+    </div>
+  </div>
+
+  <!-- US State Links -->
+  <div class="card" style="margin-top:1rem;">
+    <div class="card-title">Take-Home Pay by US State</div>
+    <div class="state-links" id="stateLinks"></div>
+  </div>
+
+  <div class="ad-placeholder" data-size="in-article"><span class="ad-label">Ad</span><span class="ad-size">Responsive</span></div>
+
+  <!-- SEO Content -->
+  <div class="content-section">
+    <h2>How Canadian Take-Home Pay Is Calculated</h2>
+    <p>Your take-home pay in Canada is your gross salary minus federal income tax, provincial or territorial income tax, Canada Pension Plan (CPP) contributions, and Employment Insurance (EI) premiums. Unlike the US, Canada does not have a filing status system — individual income is taxed independently regardless of marital status.</p>
+
+    <h2>Federal Income Tax</h2>
+    <p>Canada uses a progressive federal income tax system with five brackets for 2024: 15% on the first $55,867, 20.5% on the next $55,866, 26% on the next $43,173, 29% on the next $65,094, and 33% on income above $220,000. The Basic Personal Amount (BPA) of $15,705 is a non-refundable tax credit — effectively, the first $15,705 of income is tax-free at the federal level. This credit is calculated as 15% of the BPA, reducing your federal tax by approximately $2,356.</p>
+
+    <h2>Provincial and Territorial Income Tax</h2>
+    <p>Each of Canada's 10 provinces and 3 territories levies its own income tax with separate brackets and rates. Provincial rates range from as low as 4% (Nunavut's first bracket) to as high as 25.75% (Quebec's top bracket). Most provinces also offer their own basic personal amount credit. Quebec is unique in that it administers its own income tax system separately from the federal government, and Quebec residents pay into the Quebec Pension Plan (QPP) and Quebec Parental Insurance Plan (QPIP) instead of federal CPP and EI.</p>
+
+    <h2>Canada Pension Plan (CPP)</h2>
+    <p>CPP is a mandatory contribution for employed Canadians. In 2024, the employee contribution rate is 5.95% on pensionable earnings between $3,500 (the basic exemption) and $68,500 (the first ceiling). This means the maximum CPP contribution is approximately $3,867. Additionally, CPP2 applies a 4% rate on earnings between $68,500 and $73,200 (the second ceiling), adding up to a further $188. Your employer matches these contributions. In Quebec, the QPP replaces CPP with slightly different rates.</p>
+
+    <h2>Employment Insurance (EI)</h2>
+    <p>EI premiums fund unemployment benefits and parental leave. In 2024, employees pay 1.66% on insurable earnings up to $63,200, for a maximum annual premium of approximately $1,049. Quebec residents pay a reduced EI rate because they separately contribute to the Quebec Parental Insurance Plan (QPIP), which covers parental and maternity benefits that EI covers in other provinces.</p>
+
+    <h2>RRSP Tax Savings</h2>
+    <p>Registered Retirement Savings Plan (RRSP) contributions reduce your taxable income dollar-for-dollar, similar to a 401(k) in the United States. For 2024, the RRSP contribution limit is 18% of your previous year's earned income, up to a maximum of $31,560. Contributing to your RRSP lowers both your federal and provincial taxable income, which can significantly increase your take-home pay. The tax on RRSP withdrawals is deferred until retirement, when you may be in a lower tax bracket.</p>
+
+    <h2>Tips to Increase Your Take-Home Pay in Canada</h2>
+    <ul>
+      <li><strong>Maximize RRSP contributions:</strong> Contributions reduce your taxable income at your marginal rate. A $10,000 RRSP contribution at a 30% marginal rate saves $3,000 in taxes.</li>
+      <li><strong>Use your TFSA:</strong> While Tax-Free Savings Account contributions are not tax-deductible, investment growth and withdrawals are completely tax-free, making it an excellent savings vehicle.</li>
+      <li><strong>Claim all deductions:</strong> Union dues, professional fees, childcare expenses, and moving expenses for work can all reduce your taxable income.</li>
+      <li><strong>Consider your province:</strong> Provincial tax rates vary widely. Alberta has the lowest provincial rates for most income levels, while Quebec and Nova Scotia have among the highest.</li>
+      <li><strong>Split pension income:</strong> If you are retired, pension income splitting with your spouse can reduce your combined tax burden.</li>
+    </ul>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <a href="../../" style="color:var(--color-text-muted);text-decoration:none;">&larr; Back to all tools</a>
+  <p style="margin-top:0.5rem;">Built for people who need quick answers.</p>
+</footer>
+
+<script src="../../js/onetab-global.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  // ── Provincial / territorial tax data (2024 rates) ──
+  // Brackets are [limit, rate] — progressive brackets
+  var PROVINCES = {
+    'ON': { name:'Ontario', brackets:[[51446,0.0505],[102894,0.0915],[150000,0.1116],[220000,0.1216],[Infinity,0.1316]], bpa:11865 },
+    'QC': { name:'Quebec', brackets:[[51780,0.14],[103545,0.19],[126000,0.24],[Infinity,0.2575]], bpa:17183, isQuebec:true },
+    'BC': { name:'British Columbia', brackets:[[45654,0.0506],[91310,0.077],[104835,0.105],[127299,0.1229],[172602,0.147],[240716,0.168],[Infinity,0.205]], bpa:11981 },
+    'AB': { name:'Alberta', brackets:[[142292,0.10],[170751,0.12],[227668,0.13],[341502,0.14],[Infinity,0.15]], bpa:21003 },
+    'SK': { name:'Saskatchewan', brackets:[[49720,0.105],[142058,0.125],[Infinity,0.145]], bpa:17661 },
+    'MB': { name:'Manitoba', brackets:[[47000,0.108],[100000,0.1275],[Infinity,0.174]], bpa:15780 },
+    'NB': { name:'New Brunswick', brackets:[[47715,0.094],[95431,0.14],[176756,0.16],[Infinity,0.195]], bpa:12458 },
+    'NS': { name:'Nova Scotia', brackets:[[29590,0.0879],[59180,0.1495],[93000,0.1667],[150000,0.175],[Infinity,0.21]], bpa:8481 },
+    'PE': { name:'Prince Edward Island', brackets:[[32656,0.0965],[64313,0.1363],[Infinity,0.1665]], bpa:12000 },
+    'NL': { name:'Newfoundland and Labrador', brackets:[[43198,0.087],[86395,0.145],[154244,0.158],[215943,0.178],[275870,0.198],[551739,0.208],[Infinity,0.213]], bpa:10382 },
+    'YT': { name:'Yukon', brackets:[[55867,0.064],[111733,0.09],[154906,0.109],[500000,0.128],[Infinity,0.15]], bpa:15705 },
+    'NT': { name:'Northwest Territories', brackets:[[50597,0.059],[101198,0.086],[164525,0.122],[Infinity,0.1405]], bpa:16593 },
+    'NU': { name:'Nunavut', brackets:[[53268,0.04],[106537,0.07],[173205,0.09],[Infinity,0.115]], bpa:17925 }
+  };
+
+  // ── Federal tax brackets 2024 ──
+  var FED_BRACKETS = [
+    [55867, 0.15],
+    [111733, 0.205],
+    [154906, 0.26],
+    [220000, 0.29],
+    [Infinity, 0.33]
+  ];
+
+  var FED_BPA = 15705;
+
+  // CPP constants (2024)
+  var CPP_RATE = 0.0595;
+  var CPP_EXEMPTION = 3500;
+  var CPP_CEILING1 = 68500;
+  var CPP2_RATE = 0.04;
+  var CPP2_CEILING = 73200;
+
+  // EI constants (2024)
+  var EI_RATE = 0.0166;
+  var EI_MAX_INSURABLE = 63200;
+
+  // Quebec-specific adjustments
+  var QPIP_RATE = 0.00494;   // Quebec Parental Insurance Plan (employee)
+  var QPIP_MAX_INSURABLE = 94000;
+  var QC_EI_RATE = 0.01320;  // Quebec EI rate (reduced)
+  var QPP_RATE = 0.0640;     // QPP rate slightly different
+  // For simplicity we use CPP rates for QPP as they are very close
+
+  // RRSP limit
+  var RRSP_LIMIT = 31560;
+
+  // ── DOM elements ──
+  var grossInput = document.getElementById('grossSalary');
+  var provinceSelect = document.getElementById('province');
+  var freqSelect = document.getElementById('payFrequency');
+  var rrspInput = document.getElementById('rrsp');
+  var rrspPer = document.getElementById('rrspPer');
+  var otherInput = document.getElementById('otherDeductions');
+
+  // ── Populate province dropdown ──
+  var codes = Object.keys(PROVINCES).sort(function(a, b) {
+    return PROVINCES[a].name.localeCompare(PROVINCES[b].name);
+  });
+  for (var i = 0; i < codes.length; i++) {
+    var o = document.createElement('option');
+    o.value = codes[i];
+    o.textContent = PROVINCES[codes[i]].name;
+    provinceSelect.appendChild(o);
+  }
+  provinceSelect.value = 'ON';
+
+  // ── Populate US state links for SEO ──
+  var US_STATES = [
+    'Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut',
+    'Delaware','District of Columbia','Florida','Georgia','Hawaii','Idaho','Illinois',
+    'Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts',
+    'Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada',
+    'New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota',
+    'Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota',
+    'Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming'
+  ];
+  var linksDiv = document.getElementById('stateLinks');
+  for (var i = 0; i < US_STATES.length; i++) {
+    var a = document.createElement('a');
+    var slug = US_STATES[i].toLowerCase().replace(/\s+/g, '-');
+    a.href = '../' + slug + '/';
+    a.textContent = US_STATES[i];
+    linksDiv.appendChild(a);
+  }
+
+  // ── Calculation helpers ──
+  function calcBracketTax(income, brackets) {
+    var tax = 0, prev = 0;
+    for (var i = 0; i < brackets.length; i++) {
+      var limit = brackets[i][0], rate = brackets[i][1];
+      if (income <= prev) break;
+      tax += (Math.min(income, limit) - prev) * rate;
+      prev = limit;
+    }
+    return Math.max(0, tax);
+  }
+
+  function getMarginalRate(income, brackets) {
+    for (var i = 0; i < brackets.length; i++) {
+      if (income <= brackets[i][0]) return brackets[i][1];
+    }
+    return brackets[brackets.length - 1][1];
+  }
+
+  function calcFederalTax(taxableIncome) {
+    var grossTax = calcBracketTax(taxableIncome, FED_BRACKETS);
+    // Basic Personal Amount credit (15% of BPA)
+    var bpaCredit = FED_BPA * 0.15;
+    return Math.max(0, grossTax - bpaCredit);
+  }
+
+  function calcProvincialTax(taxableIncome, provCode) {
+    var p = PROVINCES[provCode];
+    if (!p) return 0;
+    var grossTax = calcBracketTax(taxableIncome, p.brackets);
+    // Provincial BPA credit at lowest provincial rate
+    var lowestRate = p.brackets[0][1];
+    var bpaCredit = (p.bpa || 0) * lowestRate;
+    return Math.max(0, grossTax - bpaCredit);
+  }
+
+  function calcCPP(gross, provCode) {
+    var isQuebec = PROVINCES[provCode] && PROVINCES[provCode].isQuebec;
+    var rate = isQuebec ? QPP_RATE : CPP_RATE;
+    var pensionableEarnings = Math.min(gross, CPP_CEILING1) - CPP_EXEMPTION;
+    if (pensionableEarnings < 0) pensionableEarnings = 0;
+    var cpp1 = pensionableEarnings * rate;
+
+    // CPP2 on earnings between ceiling 1 and ceiling 2
+    var cpp2 = 0;
+    if (gross > CPP_CEILING1) {
+      var cpp2Earnings = Math.min(gross, CPP2_CEILING) - CPP_CEILING1;
+      if (cpp2Earnings > 0) {
+        cpp2 = cpp2Earnings * CPP2_RATE;
+      }
+    }
+    return { cpp1: cpp1, cpp2: cpp2, total: cpp1 + cpp2 };
+  }
+
+  function calcEI(gross, provCode) {
+    var isQuebec = PROVINCES[provCode] && PROVINCES[provCode].isQuebec;
+    if (isQuebec) {
+      // Quebec has reduced EI + QPIP
+      var eiPremium = Math.min(gross, EI_MAX_INSURABLE) * QC_EI_RATE;
+      var qpipPremium = Math.min(gross, QPIP_MAX_INSURABLE) * QPIP_RATE;
+      return { ei: eiPremium, qpip: qpipPremium, total: eiPremium + qpipPremium };
+    }
+    var eiPremium = Math.min(gross, EI_MAX_INSURABLE) * EI_RATE;
+    return { ei: eiPremium, qpip: 0, total: eiPremium };
+  }
+
+  // ── Frequency labels ──
+  var FREQ_LABELS = { '1':'annually', '12':'per month', '24':'semi-monthly', '26':'per paycheck', '52':'per week' };
+  var FREQ_NAMES = { '1':'Annual', '12':'Monthly', '24':'Semi-Monthly', '26':'Biweekly', '52':'Weekly' };
+
+  // ── Main calculation ──
+  function calculate() {
+    var gross = parseFloat(grossInput.value) || 0;
+    var provCode = provinceSelect.value;
+    var freq = parseInt(freqSelect.value);
+    var isQuebec = PROVINCES[provCode] && PROVINCES[provCode].isQuebec;
+
+    // RRSP contribution (annual)
+    var rrspVal = parseFloat(rrspInput.value) || 0;
+    var rrspPerVal = rrspPer.value;
+    var annualRRSP;
+    if (rrspPerVal === 'percent') {
+      annualRRSP = gross * (rrspVal / 100);
+    } else if (rrspPerVal === 'paycheck') {
+      annualRRSP = rrspVal * freq;
+    } else {
+      annualRRSP = rrspVal;
+    }
+    // Cap at RRSP limit (also capped at 18% of earned income)
+    var rrspMax = Math.min(RRSP_LIMIT, gross * 0.18);
+    annualRRSP = Math.min(annualRRSP, rrspMax);
+
+    var otherAnnual = parseFloat(otherInput.value) || 0;
+    var totalPreTax = annualRRSP + otherAnnual;
+
+    // Taxable income (RRSP reduces taxable income)
+    var taxableIncome = Math.max(0, gross - totalPreTax);
+
+    // Federal tax
+    var federalTax = calcFederalTax(taxableIncome);
+    var fedMarginalRate = getMarginalRate(taxableIncome, FED_BRACKETS);
+
+    // Provincial tax
+    var provincialTax = calcProvincialTax(taxableIncome, provCode);
+    var provMarginalRate = getMarginalRate(taxableIncome, PROVINCES[provCode].brackets);
+
+    // CPP / QPP
+    var cpp = calcCPP(gross, provCode);
+
+    // EI / QPIP
+    var ei = calcEI(gross, provCode);
+
+    // Totals
+    var totalTax = federalTax + provincialTax + cpp.total + ei.total;
+    var annualTakeHome = gross - totalTax - totalPreTax;
+    var perPeriod = annualTakeHome / freq;
+
+    var effectiveRate = gross > 0 ? (totalTax / gross * 100) : 0;
+    var combinedMarginal = (fedMarginalRate + provMarginalRate) * 100;
+
+    // ── Update hero ──
+    document.getElementById('heroTakeHome').textContent = OneTab.fmt(Math.round(perPeriod));
+    document.getElementById('heroSublabel').textContent = FREQ_LABELS[freq] || 'per paycheck';
+
+    // ── Stats ──
+    document.getElementById('statAnnual').textContent = OneTab.fmt(Math.round(annualTakeHome));
+    document.getElementById('statEffective').textContent = effectiveRate.toFixed(1) + '%';
+    document.getElementById('statTotalTax').textContent = OneTab.fmt(Math.round(totalTax));
+    document.getElementById('statMarginal').textContent = combinedMarginal.toFixed(1) + '%';
+
+    // ── Breakdown table ──
+    var provName = PROVINCES[provCode].name;
+    var cppLabel = isQuebec ? 'QPP' : 'CPP';
+    var rows = [
+      ['Gross salary', OneTab.fmt(Math.round(gross))],
+      ['RRSP contribution', '− ' + OneTab.fmt(Math.round(annualRRSP))]
+    ];
+    if (otherAnnual > 0) {
+      rows.push(['Other deductions', '− ' + OneTab.fmt(Math.round(otherAnnual))]);
+    }
+    rows.push(['Taxable income', OneTab.fmt(Math.round(taxableIncome))]);
+    rows.push(['', '']);
+    rows.push(['Federal income tax', OneTab.fmt(Math.round(federalTax))]);
+    rows.push(['Provincial tax (' + provName + ')', OneTab.fmt(Math.round(provincialTax))]);
+    rows.push([cppLabel + ' (employee)', OneTab.fmt(Math.round(cpp.cpp1))]);
+    if (cpp.cpp2 > 0) {
+      rows.push([cppLabel + '2', OneTab.fmt(Math.round(cpp.cpp2))]);
+    }
+    rows.push(['EI (employee)', OneTab.fmt(Math.round(ei.ei))]);
+    if (isQuebec && ei.qpip > 0) {
+      rows.push(['QPIP (employee)', OneTab.fmt(Math.round(ei.qpip))]);
+    }
+
+    rows.push(['total', OneTab.fmt(Math.round(totalTax))]);
+    rows.push(['', '']);
+    if (totalPreTax > 0) {
+      rows.push(['Pre-tax deductions (RRSP + other)', '− ' + OneTab.fmt(Math.round(totalPreTax))]);
+    }
+    rows.push(['total', OneTab.fmt(Math.round(annualTakeHome))]);
+
+    var tbody = document.getElementById('breakdownTable').querySelector('tbody');
+    tbody.innerHTML = '';
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i][0] === '' && rows[i][1] === '') continue;
+      var tr = document.createElement('tr');
+      if (rows[i][0] === 'total') {
+        tr.className = 'total';
+        var td1 = document.createElement('td');
+        td1.textContent = (i === rows.length - 1) ? 'Annual take-home pay' : 'Total taxes & contributions';
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      } else {
+        var td1 = document.createElement('td');
+        td1.textContent = rows[i][0];
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      }
+      tbody.appendChild(tr);
+    }
+
+    // ── Period comparison table ──
+    var periods = [
+      { name:'Annual', div:1 },
+      { name:'Monthly', div:12 },
+      { name:'Semi-Monthly', div:24 },
+      { name:'Biweekly', div:26 },
+      { name:'Weekly', div:52 }
+    ];
+    var ptbody = document.getElementById('periodTable').querySelector('tbody');
+    ptbody.innerHTML = '';
+    for (var i = 0; i < periods.length; i++) {
+      var tr = document.createElement('tr');
+      var d = periods[i].div;
+      if (FREQ_NAMES[freq] === periods[i].name) tr.className = 'row-highlight';
+      tr.innerHTML = '<td>' + periods[i].name + '</td><td>' + OneTab.fmt(Math.round(gross / d)) +
+        '</td><td>' + OneTab.fmt(Math.round(totalTax / d)) + '</td><td>' + OneTab.fmt(Math.round(annualTakeHome / d)) + '</td>';
+      ptbody.appendChild(tr);
+    }
+
+    // ── Stacked bar ──
+    var barDiv = document.getElementById('stackedBar');
+    var legDiv = document.getElementById('stackedLegend');
+    barDiv.innerHTML = '';
+    legDiv.innerHTML = '';
+
+    if (gross > 0) {
+      var segments = [
+        { label:'Take Home', value:annualTakeHome, color:'#059669' },
+        { label:'Federal Tax', value:federalTax, color:'#2563eb' },
+        { label:'Provincial Tax', value:provincialTax, color:'#7c3aed' },
+        { label:cppLabel, value:cpp.total, color:'#d97706' },
+        { label:'EI' + (isQuebec ? ' + QPIP' : ''), value:ei.total, color:'#dc2626' }
+      ];
+      if (totalPreTax > 0) {
+        segments.push({ label:'RRSP & Deductions', value:totalPreTax, color:'#6b7280' });
+      }
+      for (var i = 0; i < segments.length; i++) {
+        var pct = segments[i].value / gross * 100;
+        if (pct < 0.3) continue;
+        var seg = document.createElement('div');
+        seg.className = 'segment';
+        seg.style.width = pct + '%';
+        seg.style.background = segments[i].color;
+        if (pct > 8) seg.textContent = pct.toFixed(0) + '%';
+        barDiv.appendChild(seg);
+
+        var li = document.createElement('div');
+        li.className = 'legend-item';
+        li.innerHTML = '<span class="legend-dot" style="background:' + segments[i].color + '"></span>' +
+          segments[i].label + ': ' + OneTab.fmt(Math.round(segments[i].value)) + ' (' + pct.toFixed(1) + '%)';
+        legDiv.appendChild(li);
+      }
+    }
+  }
+
+  // ── Bind all inputs ──
+  var inputs = document.querySelectorAll('#grossSalary,#province,#payFrequency,#rrsp,#rrspPer,#otherDeductions');
+  for (var i = 0; i < inputs.length; i++) {
+    inputs[i].addEventListener('input', calculate);
+    inputs[i].addEventListener('change', calculate);
+  }
+
+  calculate();
+})();
+</script>
+</body>
+</html>

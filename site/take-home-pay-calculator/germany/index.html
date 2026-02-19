@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Germany Take-Home Pay Calculator (Brutto-Netto) — Salary After Tax | OneTab</title>
+  <meta name="description" content="Calculate your Netto salary in Germany after income tax, solidarity surcharge, church tax, and social insurance contributions. Brutto-Netto-Rechner for 2024 tax year.">
+  <meta name="keywords" content="germany take home pay calculator, brutto netto rechner, german salary calculator, german income tax calculator, netto gehalt, lohnsteuer, sozialversicherung">
+
+  <meta property="og:title" content="Germany Take-Home Pay Calculator (Brutto-Netto) | OneTab">
+  <meta property="og:description" content="Calculate your Netto salary in Germany after income tax, solidarity surcharge, and social insurance contributions.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://onetab.tools/take-home-pay-calculator/germany/">
+  <meta property="og:site_name" content="OneTab">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Germany Take-Home Pay Calculator (Brutto-Netto) | OneTab">
+  <meta name="twitter:description" content="Calculate your Netto salary in Germany after income tax, Soli, church tax, and social insurance.">
+
+  <link rel="canonical" href="https://onetab.tools/take-home-pay-calculator/germany/">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../css/style.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Germany Take-Home Pay Calculator (Brutto-Netto)",
+    "url": "https://onetab.tools/take-home-pay-calculator/germany/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+    "description": "Calculate your Netto salary in Germany after income tax, solidarity surcharge, church tax, and social insurance contributions. Brutto-Netto-Rechner for 2024."
+  }
+  </script>
+
+  <script>
+    (function() {
+      var t = localStorage.getItem('onetab-theme');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+  </script>
+
+  <style>
+    .period-table { width:100%; border-collapse:collapse; }
+    .period-table th, .period-table td { padding:0.6rem 0.75rem; text-align:right; font-variant-numeric:tabular-nums; }
+    .period-table th:first-child, .period-table td:first-child { text-align:left; }
+    .period-table th { font-size:0.8rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--color-text-muted); border-bottom:2px solid var(--color-border); }
+    .period-table td { border-bottom:1px solid var(--color-border); font-size:0.9rem; }
+    .period-table tr:last-child td { border-bottom:none; }
+    .period-table .row-highlight td { font-weight:700; color:var(--color-success); background:rgba(5,150,105,0.05); }
+    .state-links { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.75rem; }
+    .state-links a { font-size:0.8rem; padding:0.25rem 0.5rem; border-radius:4px; background:var(--color-bg); border:1px solid var(--color-border); color:var(--color-text); text-decoration:none; transition:border-color 0.15s; }
+    .state-links a:hover { border-color:var(--color-primary); color:var(--color-primary); }
+    .info-note { font-size:0.85rem; color:var(--color-text-muted); margin-top:0.25rem; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="../../">OneTab</a>
+  <div class="header-actions">
+    <select class="country-select-global" id="country-select-global" title="Your location"></select>
+    <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">Dark</button>
+  </div>
+</header>
+
+<main class="container">
+  <h1>Germany Take-Home Pay Calculator</h1>
+  <p class="subtitle">Calculate your Netto salary after income tax, solidarity surcharge, and social insurance contributions.</p>
+
+  <div class="ad-placeholder" data-size="leaderboard"><span class="ad-label">Ad</span><span class="ad-size">728 &times; 90</span></div>
+
+  <!-- Income -->
+  <div class="card">
+    <div class="card-title">Your Income (Bruttoeinkommen)</div>
+    <div class="form-group">
+      <label>Annual gross salary (Bruttojahresgehalt)</label>
+      <div class="input-with-prefix">
+        <span class="prefix" id="pfx1">&euro;</span>
+        <input type="number" id="grossSalary" value="55000" min="0" step="1000">
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <label>Tax class (Steuerklasse)</label>
+        <select id="taxClass">
+          <option value="I" selected>Class I &mdash; Single / Divorced / Widowed</option>
+          <option value="II">Class II &mdash; Single parent</option>
+          <option value="III">Class III &mdash; Married (higher earner)</option>
+          <option value="IV">Class IV &mdash; Married (equal income)</option>
+          <option value="V">Class V &mdash; Married (lower earner)</option>
+          <option value="VI">Class VI &mdash; Second job</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Church tax (Kirchensteuer)</label>
+        <select id="churchTax">
+          <option value="0" selected>None</option>
+          <option value="0.08">8% (Bavaria, Baden-W&uuml;rttemberg)</option>
+          <option value="0.09">9% (all other states)</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <label>Children (affects care insurance)</label>
+        <select id="hasChildren">
+          <option value="no" selected>No children (or under 23)</option>
+          <option value="yes">Yes, I have children</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Pay frequency</label>
+        <select id="payFrequency">
+          <option value="12" selected>Monthly (12 paychecks/yr)</option>
+          <option value="1">Annual</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="results" class="result-section visible">
+
+    <div class="card result-hero" style="border-radius:var(--radius);">
+      <div class="rate-label">Your Take-Home Pay (Nettoeinkommen)</div>
+      <div class="rate-value" id="heroTakeHome">&euro;0</div>
+      <div class="rate-sublabel" id="heroSublabel">per month</div>
+    </div>
+
+    <div class="stat-grid" style="margin-bottom:1.5rem;">
+      <div class="stat-box success">
+        <div class="stat-value" id="statAnnual">&euro;0</div>
+        <div class="stat-label">Annual Take-Home</div>
+      </div>
+      <div class="stat-box highlight">
+        <div class="stat-value" id="statEffective">0%</div>
+        <div class="stat-label">Effective Tax + Social Rate</div>
+      </div>
+      <div class="stat-box warning">
+        <div class="stat-value" id="statTotalDeductions">&euro;0</div>
+        <div class="stat-label">Total Deductions</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="statMarginal">0%</div>
+        <div class="stat-label">Marginal Tax Rate</div>
+      </div>
+    </div>
+
+    <div class="ad-placeholder" data-size="rectangle"><span class="ad-label">Ad</span><span class="ad-size">300 &times; 250</span></div>
+
+    <!-- Tax Breakdown -->
+    <div class="card">
+      <h2>Deduction Breakdown</h2>
+      <table class="breakdown-table" id="breakdownTable">
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Pay Period Comparison -->
+    <div class="card">
+      <h2>Pay Period Breakdown</h2>
+      <table class="period-table" id="periodTable">
+        <thead>
+          <tr><th>Period</th><th>Gross</th><th>Deductions</th><th>Take-Home</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Stacked Bar -->
+    <div class="card">
+      <h2>Where Your Money Goes</h2>
+      <div class="stacked-bar" id="stackedBar"></div>
+      <div class="stacked-legend" id="stackedLegend"></div>
+    </div>
+
+    <div class="ad-placeholder" data-size="large-rectangle"><span class="ad-label">Ad</span><span class="ad-size">336 &times; 280</span></div>
+  </div>
+
+  <!-- Related Tools -->
+  <div class="card" style="margin-top:1.5rem;">
+    <div class="card-title">Related Tools</div>
+    <div style="display:flex;flex-direction:column;gap:0.5rem;">
+      <a href="../../salary-converter/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Salary to Hourly Calculator</a>
+      <a href="../../quarterly-tax-estimator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Quarterly Tax Estimator (Freelancers)</a>
+      <a href="../../freelance-rate-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Freelance Hourly Rate Calculator</a>
+      <a href="../../compound-interest-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Compound Interest Calculator</a>
+    </div>
+  </div>
+
+  <!-- Country Pages -->
+  <div class="card" style="margin-top:1rem;">
+    <div class="card-title">Take-Home Pay by State / Country</div>
+    <div class="state-links" id="stateLinks">
+      <a href="../california/">California</a>
+      <a href="../new-york/">New York</a>
+      <a href="../texas/">Texas</a>
+      <a href="../florida/">Florida</a>
+      <a href="../illinois/">Illinois</a>
+      <a href="../pennsylvania/">Pennsylvania</a>
+      <a href="../ohio/">Ohio</a>
+      <a href="../georgia/">Georgia</a>
+      <a href="../north-carolina/">North Carolina</a>
+      <a href="../washington/">Washington</a>
+      <a href="../massachusetts/">Massachusetts</a>
+      <a href="../virginia/">Virginia</a>
+      <a href="../new-jersey/">New Jersey</a>
+      <a href="../colorado/">Colorado</a>
+      <a href="../arizona/">Arizona</a>
+      <a href="../michigan/">Michigan</a>
+      <a href="../minnesota/">Minnesota</a>
+      <a href="../oregon/">Oregon</a>
+      <a href="../maryland/">Maryland</a>
+      <a href="../wisconsin/">Wisconsin</a>
+    </div>
+  </div>
+
+  <div class="ad-placeholder" data-size="in-article"><span class="ad-label">Ad</span><span class="ad-size">Responsive</span></div>
+
+  <!-- SEO Content -->
+  <div class="content-section">
+    <h2>How German Take-Home Pay Is Calculated</h2>
+    <p>In Germany, your take-home pay (Nettoeinkommen) is what remains from your gross salary (Bruttogehalt) after deducting income tax (Einkommensteuer), the solidarity surcharge (Solidarit&auml;tszuschlag), optional church tax (Kirchensteuer), and mandatory social insurance contributions (Sozialversicherungsbeitr&auml;ge). Germany uses a progressive income tax system where higher earners pay higher rates.</p>
+
+    <h2>German Income Tax (Einkommensteuer) 2024</h2>
+    <p>Germany uses a progressive income tax formula, not simple brackets. The first &euro;11,604 of annual income is tax-free (Grundfreibetrag). After that, rates rise progressively from 14% to 42%, with a top rate of 45% on income above &euro;277,825 (Reichensteuer). Unlike the US bracket system, Germany uses a mathematical formula that creates a smooth progression, meaning there are no sudden jumps in your marginal rate. For approximation purposes, this calculator uses simplified bracket ranges that closely match the official formula results.</p>
+
+    <h2>Tax Classes (Steuerklassen)</h2>
+    <p>Germany assigns every employee a tax class (Steuerklasse) that determines how much income tax is withheld from their paycheck. There are six classes:</p>
+    <ul>
+      <li><strong>Class I:</strong> Single, divorced, or widowed employees. The standard class for most unmarried workers.</li>
+      <li><strong>Class II:</strong> Single parents. Includes an additional child allowance (Entlastungsbetrag) of &euro;4,260.</li>
+      <li><strong>Class III:</strong> Married employees where the spouse earns significantly less or does not work. Doubles the basic allowance.</li>
+      <li><strong>Class IV:</strong> Married employees where both spouses earn roughly the same. Equivalent to Class I.</li>
+      <li><strong>Class V:</strong> The counterpart to Class III for the lower-earning married spouse. No basic allowance.</li>
+      <li><strong>Class VI:</strong> For second and additional jobs. No allowances applied.</li>
+    </ul>
+
+    <h2>Solidarity Surcharge (Solidarit&auml;tszuschlag)</h2>
+    <p>The solidarity surcharge ("Soli") is 5.5% of your income tax. Since 2021, most taxpayers are exempt: singles whose income tax is &euro;18,130 or less per year pay no Soli at all. Above that threshold, a transition zone applies before the full 5.5% rate kicks in. Approximately 90% of German workers no longer pay the Soli.</p>
+
+    <h2>Church Tax (Kirchensteuer)</h2>
+    <p>If you are a registered member of a recognized religious community in Germany (mainly Catholic or Protestant churches), you pay church tax as a percentage of your income tax. The rate is 8% in Bavaria and Baden-W&uuml;rttemberg, and 9% in all other German states. You can avoid church tax by officially leaving your religious community (Kirchenaustritt) at your local civil registry office.</p>
+
+    <h2>Social Insurance Contributions (Sozialversicherungsbeitr&auml;ge)</h2>
+    <p>Germany has a mandatory social insurance system where contributions are split roughly equally between employer and employee. As an employee, you pay:</p>
+    <ul>
+      <li><strong>Health insurance (Krankenversicherung):</strong> 7.3% base rate plus an average supplementary contribution of about 0.85%, totaling approximately 8.15%. Contributions apply up to the income assessment ceiling (Beitragsbemessungsgrenze) of &euro;62,100 per year.</li>
+      <li><strong>Pension insurance (Rentenversicherung):</strong> 9.3% of gross salary, up to &euro;90,600 per year (West Germany ceiling).</li>
+      <li><strong>Unemployment insurance (Arbeitslosenversicherung):</strong> 1.3% of gross salary, up to &euro;90,600 per year.</li>
+      <li><strong>Long-term care insurance (Pflegeversicherung):</strong> 1.7% base rate for employees with children. Childless employees over age 23 pay an additional 0.6% surcharge, bringing their rate to 2.3%. Income ceiling is &euro;62,100 per year.</li>
+    </ul>
+    <p>Your employer pays matching amounts for health, pension, and unemployment insurance. For care insurance, the employer always pays 1.7% regardless of whether you have children.</p>
+
+    <h2>Tips to Optimize Your Net Pay in Germany</h2>
+    <ul>
+      <li><strong>Choose the right tax class:</strong> Married couples can choose between III/V and IV/IV combinations. The III/V split benefits couples with very different incomes.</li>
+      <li><strong>Consider church membership:</strong> Leaving the church saves 8&ndash;9% of your income tax.</li>
+      <li><strong>Claim deductions in your tax return:</strong> Work-related expenses (Werbungskosten), commuting costs (Pendlerpauschale of &euro;0.30/km), and home office deductions can significantly reduce your tax burden.</li>
+      <li><strong>Use employer benefits:</strong> Many employers offer tax-free benefits like job tickets, bike leasing (Dienstrad), and meal vouchers.</li>
+      <li><strong>Private health insurance:</strong> High earners above the compulsory insurance threshold (&euro;69,300 in 2024) can switch to private health insurance, which may offer lower rates for young, healthy individuals.</li>
+    </ul>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <a href="../../" style="color:var(--color-text-muted);text-decoration:none;">&larr; Back to all tools</a>
+  <p style="margin-top:0.5rem;">Built for people who need quick answers.</p>
+</footer>
+
+<script src="../../js/onetab-global.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  // ── German Income Tax Brackets 2024 (simplified approximation) ──
+  // Based on the progressive formula: Grundfreibetrag, then two progressive zones, then flat zones
+  var TAX_BRACKETS = [
+    [11604, 0.00],
+    [17005, 0.14],
+    [66760, 0.24],
+    [277825, 0.42],
+    [Infinity, 0.45]
+  ];
+
+  // Tax class adjustments to Grundfreibetrag
+  // Class I/IV: standard (11604), Class II: +4260, Class III: double (23208), Class V/VI: 0
+  var CLASS_DEDUCTION = {
+    'I': 11604,
+    'II': 15864,
+    'III': 23208,
+    'IV': 11604,
+    'V': 0,
+    'VI': 0
+  };
+
+  // Social insurance rates (employee share, 2024)
+  var HEALTH_RATE = 0.0815;       // 7.3% + 0.85% supplementary
+  var HEALTH_CEILING = 62100;     // annual BBG health/care
+
+  var PENSION_RATE = 0.093;       // 9.3%
+  var PENSION_CEILING = 90600;    // annual BBG pension/unemployment (West)
+
+  var UNEMPLOYMENT_RATE = 0.013;  // 1.3%
+  var UNEMPLOYMENT_CEILING = 90600;
+
+  var CARE_RATE_WITH_CHILDREN = 0.017;     // 1.7%
+  var CARE_RATE_CHILDLESS = 0.023;         // 1.7% + 0.6% surcharge
+  var CARE_CEILING = 62100;
+
+  // Soli threshold for singles (annual income tax)
+  var SOLI_THRESHOLD = 18130;
+  var SOLI_RATE = 0.055;
+
+  // ── DOM elements ──
+  var grossInput = document.getElementById('grossSalary');
+  var taxClassSelect = document.getElementById('taxClass');
+  var churchTaxSelect = document.getElementById('churchTax');
+  var childrenSelect = document.getElementById('hasChildren');
+  var freqSelect = document.getElementById('payFrequency');
+
+  // ── Calculation helpers ──
+  function calcBracketTax(income, brackets) {
+    var tax = 0, prev = 0;
+    for (var i = 0; i < brackets.length; i++) {
+      var limit = brackets[i][0], rate = brackets[i][1];
+      if (income <= prev) break;
+      tax += (Math.min(income, limit) - prev) * rate;
+      prev = limit;
+    }
+    return Math.max(0, tax);
+  }
+
+  function getMarginalRate(income, brackets) {
+    var prev = 0;
+    for (var i = 0; i < brackets.length; i++) {
+      if (income <= brackets[i][0]) return brackets[i][1];
+      prev = brackets[i][0];
+    }
+    return brackets[brackets.length - 1][1];
+  }
+
+  function calcIncomeTax(grossAnnual, taxClass) {
+    var deduction = CLASS_DEDUCTION[taxClass] || 0;
+
+    // Build adjusted brackets: shift the first bracket to account for deduction
+    var adjustedBrackets = [];
+    if (deduction > 0) {
+      adjustedBrackets.push([deduction, 0.00]);
+      // Shift remaining brackets up by the difference from standard
+      var shift = deduction - 11604;
+      for (var i = 1; i < TAX_BRACKETS.length; i++) {
+        var newLimit = TAX_BRACKETS[i][0] === Infinity ? Infinity : TAX_BRACKETS[i][0] + shift;
+        adjustedBrackets.push([newLimit, TAX_BRACKETS[i][1]]);
+      }
+    } else {
+      // Class V / VI: no deduction, start taxing from first euro
+      adjustedBrackets = [
+        [17005, 0.14],
+        [66760, 0.24],
+        [277825, 0.42],
+        [Infinity, 0.45]
+      ];
+    }
+
+    var tax = calcBracketTax(grossAnnual, adjustedBrackets);
+    var marginal = getMarginalRate(grossAnnual, adjustedBrackets);
+
+    return { tax: tax, marginal: marginal };
+  }
+
+  function calcSoli(incomeTax, taxClass) {
+    // For Class III, threshold is doubled
+    var threshold = (taxClass === 'III') ? SOLI_THRESHOLD * 2 : SOLI_THRESHOLD;
+    if (incomeTax <= threshold) return 0;
+    return incomeTax * SOLI_RATE;
+  }
+
+  function calcChurchTax(incomeTax, churchRate) {
+    return incomeTax * churchRate;
+  }
+
+  function calcSocialInsurance(grossAnnual, hasChildren) {
+    var healthBase = Math.min(grossAnnual, HEALTH_CEILING);
+    var pensionBase = Math.min(grossAnnual, PENSION_CEILING);
+    var unemploymentBase = Math.min(grossAnnual, UNEMPLOYMENT_CEILING);
+    var careBase = Math.min(grossAnnual, CARE_CEILING);
+
+    var health = healthBase * HEALTH_RATE;
+    var pension = pensionBase * PENSION_RATE;
+    var unemployment = unemploymentBase * UNEMPLOYMENT_RATE;
+    var careRate = hasChildren ? CARE_RATE_WITH_CHILDREN : CARE_RATE_CHILDLESS;
+    var care = careBase * careRate;
+
+    return {
+      health: health,
+      pension: pension,
+      unemployment: unemployment,
+      care: care,
+      total: health + pension + unemployment + care
+    };
+  }
+
+  // ── Frequency labels ──
+  var FREQ_LABELS = { '1':'annually', '12':'per month' };
+
+  // ── Currency formatting helper (always uses euro) ──
+  function fmtEuro(n) {
+    return OneTab.fmt(Math.round(n));
+  }
+
+  // ── Main calculation ──
+  function calculate() {
+    var gross = parseFloat(grossInput.value) || 0;
+    var taxClass = taxClassSelect.value;
+    var churchRate = parseFloat(churchTaxSelect.value) || 0;
+    var hasChildren = childrenSelect.value === 'yes';
+    var freq = parseInt(freqSelect.value);
+
+    // Income tax
+    var taxResult = calcIncomeTax(gross, taxClass);
+    var incomeTax = taxResult.tax;
+    var marginalRate = taxResult.marginal;
+
+    // Solidarity surcharge
+    var soli = calcSoli(incomeTax, taxClass);
+
+    // Church tax
+    var church = calcChurchTax(incomeTax, churchRate);
+
+    // Social insurance
+    var social = calcSocialInsurance(gross, hasChildren);
+
+    // Totals
+    var totalTaxes = incomeTax + soli + church;
+    var totalSocial = social.total;
+    var totalDeductions = totalTaxes + totalSocial;
+    var annualTakeHome = gross - totalDeductions;
+    var perPeriod = annualTakeHome / freq;
+
+    var effectiveRate = gross > 0 ? (totalDeductions / gross * 100) : 0;
+
+    // ── Update hero ──
+    document.getElementById('heroTakeHome').textContent = fmtEuro(perPeriod);
+    document.getElementById('heroSublabel').textContent = FREQ_LABELS[freq] || 'per month';
+
+    // ── Stats ──
+    document.getElementById('statAnnual').textContent = fmtEuro(annualTakeHome);
+    document.getElementById('statEffective').textContent = effectiveRate.toFixed(1) + '%';
+    document.getElementById('statTotalDeductions').textContent = fmtEuro(totalDeductions);
+    document.getElementById('statMarginal').textContent = (marginalRate * 100).toFixed(0) + '%';
+
+    // ── Breakdown table ──
+    var rows = [
+      ['Gross salary (Brutto)', fmtEuro(gross)],
+      ['', ''],
+      ['section', 'Taxes'],
+      ['Income tax (Einkommensteuer)', fmtEuro(incomeTax)],
+      ['Solidarity surcharge (Soli, 5.5%)', fmtEuro(soli)],
+      ['Church tax (Kirchensteuer)', fmtEuro(church)],
+      ['total', fmtEuro(totalTaxes)],
+      ['', ''],
+      ['section', 'Social Insurance'],
+      ['Health insurance (KV, ' + (HEALTH_RATE * 100).toFixed(2) + '%)', fmtEuro(social.health)],
+      ['Pension insurance (RV, ' + (PENSION_RATE * 100).toFixed(1) + '%)', fmtEuro(social.pension)],
+      ['Unemployment insurance (AV, ' + (UNEMPLOYMENT_RATE * 100).toFixed(1) + '%)', fmtEuro(social.unemployment)],
+      ['Care insurance (PV, ' + ((hasChildren ? CARE_RATE_WITH_CHILDREN : CARE_RATE_CHILDLESS) * 100).toFixed(1) + '%)', fmtEuro(social.care)],
+      ['total', fmtEuro(totalSocial)],
+      ['', ''],
+      ['total', fmtEuro(annualTakeHome)]
+    ];
+
+    var tbody = document.getElementById('breakdownTable').querySelector('tbody');
+    tbody.innerHTML = '';
+    var totalCount = 0;
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i][0] === '' && rows[i][1] === '') continue;
+      if (rows[i][0] === 'section') {
+        var tr = document.createElement('tr');
+        var td = document.createElement('td');
+        td.colSpan = 2;
+        td.style.fontWeight = '700';
+        td.style.paddingTop = '0.75rem';
+        td.style.fontSize = '0.85rem';
+        td.style.textTransform = 'uppercase';
+        td.style.letterSpacing = '0.03em';
+        td.style.color = 'var(--color-text-muted)';
+        td.textContent = rows[i][1];
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+        continue;
+      }
+      var tr = document.createElement('tr');
+      if (rows[i][0] === 'total') {
+        totalCount++;
+        tr.className = 'total';
+        var td1 = document.createElement('td');
+        if (totalCount === 1) td1.textContent = 'Total taxes';
+        else if (totalCount === 2) td1.textContent = 'Total social insurance';
+        else td1.textContent = 'Annual take-home pay (Netto)';
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      } else {
+        var td1 = document.createElement('td');
+        td1.textContent = rows[i][0];
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      }
+      tbody.appendChild(tr);
+    }
+
+    // ── Period comparison table ──
+    var periods = [
+      { name:'Annual', div:1 },
+      { name:'Monthly', div:12 },
+      { name:'Weekly', div:52 },
+      { name:'Daily (work day)', div:260 }
+    ];
+    var ptbody = document.getElementById('periodTable').querySelector('tbody');
+    ptbody.innerHTML = '';
+    var freqNames = { '1':'Annual', '12':'Monthly' };
+    for (var i = 0; i < periods.length; i++) {
+      var tr = document.createElement('tr');
+      var d = periods[i].div;
+      if (freqNames[freq] === periods[i].name) tr.className = 'row-highlight';
+      tr.innerHTML = '<td>' + periods[i].name + '</td><td>' + fmtEuro(gross / d) +
+        '</td><td>' + fmtEuro(totalDeductions / d) + '</td><td>' + fmtEuro(annualTakeHome / d) + '</td>';
+      ptbody.appendChild(tr);
+    }
+
+    // ── Stacked bar ──
+    var barDiv = document.getElementById('stackedBar');
+    var legDiv = document.getElementById('stackedLegend');
+    barDiv.innerHTML = '';
+    legDiv.innerHTML = '';
+
+    if (gross > 0) {
+      var segments = [
+        { label:'Take Home', value:annualTakeHome, color:'#059669' },
+        { label:'Income Tax', value:incomeTax, color:'#2563eb' },
+        { label:'Solidarity Surcharge', value:soli, color:'#7c3aed' },
+        { label:'Church Tax', value:church, color:'#a855f7' },
+        { label:'Health Insurance', value:social.health, color:'#d97706' },
+        { label:'Pension', value:social.pension, color:'#dc2626' },
+        { label:'Unemployment', value:social.unemployment, color:'#ea580c' },
+        { label:'Care Insurance', value:social.care, color:'#6b7280' }
+      ];
+      for (var i = 0; i < segments.length; i++) {
+        var pct = segments[i].value / gross * 100;
+        if (pct < 0.3) continue;
+        var seg = document.createElement('div');
+        seg.className = 'segment';
+        seg.style.width = pct + '%';
+        seg.style.background = segments[i].color;
+        if (pct > 6) seg.textContent = pct.toFixed(0) + '%';
+        barDiv.appendChild(seg);
+
+        var li = document.createElement('div');
+        li.className = 'legend-item';
+        li.innerHTML = '<span class="legend-dot" style="background:' + segments[i].color + '"></span>' +
+          segments[i].label + ': ' + fmtEuro(segments[i].value) + ' (' + pct.toFixed(1) + '%)';
+        legDiv.appendChild(li);
+      }
+    }
+  }
+
+  // ── Bind all inputs ──
+  var inputs = document.querySelectorAll('#grossSalary,#taxClass,#churchTax,#hasChildren,#payFrequency');
+  for (var i = 0; i < inputs.length; i++) {
+    inputs[i].addEventListener('input', calculate);
+    inputs[i].addEventListener('change', calculate);
+  }
+
+  // ── Country change (update currency prefix) ──
+  OneTab.onCountryChange(function() {
+    var pfxs = document.querySelectorAll('[id^="pfx"]');
+    for (var i = 0; i < pfxs.length; i++) pfxs[i].textContent = '\u20ac';
+    calculate();
+  });
+
+  calculate();
+})();
+</script>
+</body>
+</html>
