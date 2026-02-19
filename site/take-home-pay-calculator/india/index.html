@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>India Take-Home Pay Calculator — Salary After Tax | OneTab</title>
+  <meta name="description" content="Calculate your in-hand salary in India after income tax, health &amp; education cess, EPF, and professional tax. Supports both New and Old tax regimes for FY 2024-25.">
+  <meta name="keywords" content="india take home pay calculator, india salary calculator, in-hand salary calculator, income tax calculator india, salary after tax india, new tax regime calculator, old tax regime calculator, EPF calculator, CTC to in-hand salary">
+
+  <meta property="og:title" content="India Take-Home Pay Calculator — Salary After Tax | OneTab">
+  <meta property="og:description" content="Calculate your in-hand salary in India after income tax, cess, EPF, and professional tax. New &amp; Old tax regimes supported.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://onetab.tools/take-home-pay-calculator/india/">
+  <meta property="og:site_name" content="OneTab">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="India Take-Home Pay Calculator | OneTab">
+  <meta name="twitter:description" content="Calculate your in-hand salary in India after income tax, cess, EPF, and professional tax. New &amp; Old regimes.">
+
+  <link rel="canonical" href="https://onetab.tools/take-home-pay-calculator/india/">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../css/style.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "India Take-Home Pay Calculator",
+    "url": "https://onetab.tools/take-home-pay-calculator/india/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" },
+    "description": "Calculate your in-hand salary in India after income tax, health & education cess, EPF, and professional tax. Supports New and Old tax regimes for FY 2024-25."
+  }
+  </script>
+
+  <script>
+    (function() {
+      var t = localStorage.getItem('onetab-theme');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+  </script>
+
+  <style>
+    .period-table { width:100%; border-collapse:collapse; }
+    .period-table th, .period-table td { padding:0.6rem 0.75rem; text-align:right; font-variant-numeric:tabular-nums; }
+    .period-table th:first-child, .period-table td:first-child { text-align:left; }
+    .period-table th { font-size:0.8rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--color-text-muted); border-bottom:2px solid var(--color-border); }
+    .period-table td { border-bottom:1px solid var(--color-border); font-size:0.9rem; }
+    .period-table tr:last-child td { border-bottom:none; }
+    .period-table .row-highlight td { font-weight:700; color:var(--color-success); background:rgba(5,150,105,0.05); }
+    .country-links { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.75rem; }
+    .country-links a { font-size:0.8rem; padding:0.25rem 0.5rem; border-radius:4px; background:var(--color-bg); border:1px solid var(--color-border); color:var(--color-text); text-decoration:none; transition:border-color 0.15s; }
+    .country-links a:hover { border-color:var(--color-primary); color:var(--color-primary); }
+    .regime-toggle { display:flex; gap:0; border-radius:6px; overflow:hidden; border:1px solid var(--color-border); margin-bottom:0.5rem; }
+    .regime-toggle button { flex:1; padding:0.6rem 1rem; border:none; background:var(--color-bg); color:var(--color-text-muted); font-size:0.85rem; font-weight:600; cursor:pointer; transition:all 0.15s; }
+    .regime-toggle button.active { background:var(--color-primary); color:#fff; }
+    .old-regime-fields { display:none; }
+    .old-regime-fields.visible { display:block; }
+    .deduction-row { display:flex; gap:0.75rem; align-items:end; }
+    .deduction-row .form-group { flex:1; }
+    @media (max-width:600px) {
+      .deduction-row { flex-direction:column; gap:0; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="../../">OneTab</a>
+  <div class="header-actions">
+    <select class="country-select-global" id="country-select-global" title="Your location"></select>
+    <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">Dark</button>
+  </div>
+</header>
+
+<main class="container">
+  <h1>India Take-Home Pay Calculator</h1>
+  <p class="subtitle">Calculate your in-hand salary after income tax, cess, and provident fund deductions.</p>
+
+  <div class="ad-placeholder" data-size="leaderboard"><span class="ad-label">Ad</span><span class="ad-size">728 × 90</span></div>
+
+  <!-- Income -->
+  <div class="card">
+    <div class="card-title">Your Income</div>
+    <div class="form-group">
+      <label>Annual CTC / Gross salary</label>
+      <div class="input-with-prefix">
+        <span class="prefix" id="pfxSalary">&#8377;</span>
+        <input type="number" id="grossSalary" value="800000" min="0" step="10000">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Pay frequency</label>
+      <select id="payFrequency">
+        <option value="12" selected>Monthly (12 paychecks/yr)</option>
+        <option value="1">Annual</option>
+        <option value="26">Biweekly (26 paychecks/yr)</option>
+        <option value="52">Weekly (52 paychecks/yr)</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Tax Regime -->
+  <div class="card">
+    <div class="card-title">Tax Regime</div>
+    <div class="regime-toggle" id="regimeToggle">
+      <button class="active" data-regime="new">New Regime (Default)</button>
+      <button data-regime="old">Old Regime</button>
+    </div>
+    <p style="font-size:0.82rem;color:var(--color-text-muted);margin:0.5rem 0 0;">
+      The New Tax Regime is the default from FY 2023-24 onwards. It has lower rates but fewer deductions. The Old Regime allows deductions under 80C, 80D, HRA, etc.
+    </p>
+  </div>
+
+  <!-- Deductions -->
+  <div class="card">
+    <div class="card-title">Deductions</div>
+    <div class="form-group">
+      <label>
+        <input type="checkbox" id="epfEnabled" checked>
+        Employee Provident Fund (EPF) contribution
+      </label>
+      <p style="font-size:0.8rem;color:var(--color-text-muted);margin:0.25rem 0 0;">12% of basic salary (basic = 40% of gross), capped at &#8377;15,000/month basic = &#8377;1,800/month max</p>
+    </div>
+    <div class="form-group">
+      <label>Professional tax (annual)</label>
+      <div class="input-with-prefix">
+        <span class="prefix" id="pfxPT">&#8377;</span>
+        <input type="number" id="profTax" value="2400" min="0" step="100">
+      </div>
+      <p style="font-size:0.8rem;color:var(--color-text-muted);margin:0.25rem 0 0;">Varies by state; max &#8377;2,500/year. Default &#8377;2,400.</p>
+    </div>
+
+    <!-- Old Regime specific deductions -->
+    <div class="old-regime-fields" id="oldRegimeFields">
+      <div class="form-group" style="margin-top:0.75rem;">
+        <label>Section 80C deductions (LIC, PPF, ELSS, etc.)</label>
+        <div class="input-with-prefix">
+          <span class="prefix" id="pfx80C">&#8377;</span>
+          <input type="number" id="deduction80C" value="150000" min="0" max="150000" step="10000">
+        </div>
+        <p style="font-size:0.8rem;color:var(--color-text-muted);margin:0.25rem 0 0;">Maximum &#8377;1,50,000 per year. Includes EPF employee contribution.</p>
+      </div>
+      <div class="form-group">
+        <label>Section 80D — Health insurance premium</label>
+        <div class="input-with-prefix">
+          <span class="prefix" id="pfx80D">&#8377;</span>
+          <input type="number" id="deduction80D" value="0" min="0" max="100000" step="5000">
+        </div>
+        <p style="font-size:0.8rem;color:var(--color-text-muted);margin:0.25rem 0 0;">Up to &#8377;25,000 (&#8377;50,000 for senior citizens). Additional &#8377;25,000/&#8377;50,000 for parents.</p>
+      </div>
+      <div class="form-group">
+        <label>Other deductions (80E, 80G, 80TTA, HRA, etc.)</label>
+        <div class="input-with-prefix">
+          <span class="prefix" id="pfxOther">&#8377;</span>
+          <input type="number" id="deductionOther" value="0" min="0" step="5000">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="results" class="result-section visible">
+
+    <div class="card result-hero" style="border-radius:var(--radius);">
+      <div class="rate-label">Your In-Hand Salary</div>
+      <div class="rate-value" id="heroTakeHome">&#8377;0</div>
+      <div class="rate-sublabel" id="heroSublabel">per month</div>
+    </div>
+
+    <div class="stat-grid" style="margin-bottom:1.5rem;">
+      <div class="stat-box success">
+        <div class="stat-value" id="statAnnual">&#8377;0</div>
+        <div class="stat-label">Annual In-Hand</div>
+      </div>
+      <div class="stat-box highlight">
+        <div class="stat-value" id="statEffective">0%</div>
+        <div class="stat-label">Effective Tax Rate</div>
+      </div>
+      <div class="stat-box warning">
+        <div class="stat-value" id="statTotalTax">&#8377;0</div>
+        <div class="stat-label">Total Tax + Cess</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="statMarginal">0%</div>
+        <div class="stat-label">Marginal Rate</div>
+      </div>
+    </div>
+
+    <div class="ad-placeholder" data-size="rectangle"><span class="ad-label">Ad</span><span class="ad-size">300 × 250</span></div>
+
+    <!-- Tax Breakdown -->
+    <div class="card">
+      <h2>Tax Breakdown</h2>
+      <table class="breakdown-table" id="breakdownTable">
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Pay Period Comparison -->
+    <div class="card">
+      <h2>Pay Period Breakdown</h2>
+      <table class="period-table" id="periodTable">
+        <thead>
+          <tr><th>Period</th><th>Gross</th><th>Deductions</th><th>In-Hand</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Stacked Bar -->
+    <div class="card">
+      <h2>Where Your Salary Goes</h2>
+      <div class="stacked-bar" id="stackedBar"></div>
+      <div class="stacked-legend" id="stackedLegend"></div>
+    </div>
+
+    <div class="ad-placeholder" data-size="large-rectangle"><span class="ad-label">Ad</span><span class="ad-size">336 × 280</span></div>
+  </div>
+
+  <!-- Related Tools -->
+  <div class="card" style="margin-top:1.5rem;">
+    <div class="card-title">Related Tools</div>
+    <div style="display:flex;flex-direction:column;gap:0.5rem;">
+      <a href="../../salary-converter/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Salary to Hourly Calculator</a>
+      <a href="../../freelance-rate-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Freelance Hourly Rate Calculator</a>
+      <a href="../../compound-interest-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Compound Interest Calculator</a>
+      <a href="../../take-home-pay-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">US Take-Home Pay Calculator</a>
+    </div>
+  </div>
+
+  <!-- Country Pages -->
+  <div class="card" style="margin-top:1rem;">
+    <div class="card-title">Take-Home Pay by Country</div>
+    <div class="country-links">
+      <a href="../">United States</a>
+      <a href="../united-kingdom/">United Kingdom</a>
+      <a href="../canada/">Canada</a>
+      <a href="../australia/">Australia</a>
+      <a href="../germany/">Germany</a>
+      <a href="../france/">France</a>
+      <a href="../netherlands/">Netherlands</a>
+      <a href="../spain/">Spain</a>
+      <a href="../italy/">Italy</a>
+      <a href="../brazil/">Brazil</a>
+      <a href="../sweden/">Sweden</a>
+    </div>
+  </div>
+
+  <div class="ad-placeholder" data-size="in-article"><span class="ad-label">Ad</span><span class="ad-size">Responsive</span></div>
+
+  <!-- SEO Content -->
+  <div class="content-section">
+    <h2>How In-Hand Salary Is Calculated in India</h2>
+    <p>Your in-hand salary (also called take-home pay or net salary) is what remains after all deductions from your Cost to Company (CTC) or gross salary. The main deductions in India are income tax, health and education cess, Employee Provident Fund (EPF), and professional tax. The amount you pay depends heavily on which tax regime you choose and the deductions you can claim.</p>
+
+    <h2>New Tax Regime (Default from FY 2023-24)</h2>
+    <p>The New Tax Regime was introduced to simplify the tax structure. From FY 2023-24 (AY 2024-25), it became the default regime for all taxpayers. It features six tax slabs with lower rates but does not allow most deductions and exemptions available under the old regime. The new regime includes a standard deduction of &#8377;75,000 (raised from &#8377;50,000 in Budget 2024). Under the new regime, if your total income is &#8377;7,00,000 or less after the standard deduction, you qualify for a full tax rebate under Section 87A, effectively making your tax liability zero.</p>
+    <ul>
+      <li><strong>&#8377;0 to &#8377;3,00,000:</strong> Nil (0%)</li>
+      <li><strong>&#8377;3,00,001 to &#8377;7,00,000:</strong> 5%</li>
+      <li><strong>&#8377;7,00,001 to &#8377;10,00,000:</strong> 10%</li>
+      <li><strong>&#8377;10,00,001 to &#8377;12,00,000:</strong> 15%</li>
+      <li><strong>&#8377;12,00,001 to &#8377;15,00,000:</strong> 20%</li>
+      <li><strong>&#8377;15,00,001 and above:</strong> 30%</li>
+    </ul>
+
+    <h2>Old Tax Regime</h2>
+    <p>The Old Tax Regime has higher tax rates but allows numerous deductions and exemptions. Taxpayers can opt for it if they have significant investments and expenses that qualify for deductions. It offers a standard deduction of &#8377;50,000 plus additional deductions under various sections:</p>
+    <ul>
+      <li><strong>&#8377;0 to &#8377;2,50,000:</strong> Nil (0%)</li>
+      <li><strong>&#8377;2,50,001 to &#8377;5,00,000:</strong> 5%</li>
+      <li><strong>&#8377;5,00,001 to &#8377;10,00,000:</strong> 20%</li>
+      <li><strong>&#8377;10,00,001 and above:</strong> 30%</li>
+    </ul>
+
+    <h2>Section 80C Deductions</h2>
+    <p>Section 80C is the most widely used deduction under the old regime. It allows deductions up to &#8377;1,50,000 per financial year for investments and expenses including EPF contributions, PPF (Public Provident Fund), ELSS mutual funds, life insurance premiums, NSC (National Savings Certificate), 5-year fixed deposits, tuition fees for children, and home loan principal repayment. Most salaried individuals in India can easily exhaust this limit through a combination of EPF and other investments.</p>
+
+    <h2>Section 80D — Health Insurance</h2>
+    <p>Under Section 80D, you can claim deductions for health insurance premiums. Individuals below 60 years can claim up to &#8377;25,000 for self and family. An additional &#8377;25,000 (or &#8377;50,000 for senior citizen parents) can be claimed for parents' health insurance. This deduction is available only under the old tax regime.</p>
+
+    <h2>Health &amp; Education Cess</h2>
+    <p>A 4% Health and Education Cess is levied on the total income tax payable (including surcharge, if any). This cess applies under both the new and old tax regimes. It funds primary education and healthcare services. The cess is calculated after all deductions and rebates have been applied to your base tax.</p>
+
+    <h2>Employee Provident Fund (EPF)</h2>
+    <p>EPF is a mandatory retirement savings scheme for salaried employees in India. Both the employee and employer contribute 12% of the basic salary. Basic salary is typically 40-50% of CTC. The contribution is capped at a basic salary of &#8377;15,000 per month, meaning the maximum employee contribution is &#8377;1,800 per month or &#8377;21,600 per year. Many companies allow voluntary contributions above this cap. EPF contributions by the employee are eligible for deduction under Section 80C in the old regime.</p>
+
+    <h2>Professional Tax</h2>
+    <p>Professional tax is a state-level tax levied on salaried individuals and professionals. The rate and slab structure varies by state but is capped at &#8377;2,500 per year by law. Not all states levy professional tax. States like Maharashtra, Karnataka, West Bengal, Tamil Nadu, Andhra Pradesh, and Telangana charge professional tax, while states like Delhi, Haryana, Rajasthan, and Uttarakhand do not. Professional tax is deductible from taxable income under both regimes.</p>
+
+    <h2>Tips to Reduce Your Tax Liability</h2>
+    <ul>
+      <li><strong>Compare both regimes:</strong> Use this calculator with both New and Old regime to see which saves you more tax. The old regime is often better if you have significant 80C, 80D, and HRA deductions.</li>
+      <li><strong>Maximize Section 80C:</strong> Invest the full &#8377;1,50,000 in EPF, PPF, ELSS, or other eligible instruments under the old regime.</li>
+      <li><strong>Claim HRA exemption:</strong> If you live in rented accommodation, claim House Rent Allowance under the old regime for significant tax savings.</li>
+      <li><strong>Get health insurance:</strong> A &#8377;25,000 health insurance premium deduction under 80D reduces your taxable income and provides financial protection.</li>
+      <li><strong>NPS contribution:</strong> Additional &#8377;50,000 deduction under Section 80CCD(1B) for National Pension System contributions (available in the old regime and partially in the new regime).</li>
+      <li><strong>Home loan benefits:</strong> Interest up to &#8377;2,00,000 under Section 24(b) and principal under 80C in the old regime.</li>
+    </ul>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <a href="../../" style="color:var(--color-text-muted);text-decoration:none;">&larr; Back to all tools</a>
+  <p style="margin-top:0.5rem;">Built for people who need quick answers.</p>
+</footer>
+
+<script src="../../js/onetab-global.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  // ── Indian Tax Brackets (FY 2024-25) ──
+
+  // New Tax Regime (default)
+  var NEW_REGIME_BRACKETS = [
+    [300000, 0],
+    [700000, 0.05],
+    [1000000, 0.10],
+    [1200000, 0.15],
+    [1500000, 0.20],
+    [Infinity, 0.30]
+  ];
+
+  // Old Tax Regime
+  var OLD_REGIME_BRACKETS = [
+    [250000, 0],
+    [500000, 0.05],
+    [1000000, 0.20],
+    [Infinity, 0.30]
+  ];
+
+  // Standard deductions
+  var STD_DEDUCTION_NEW = 75000;  // New regime FY 2024-25
+  var STD_DEDUCTION_OLD = 50000;  // Old regime
+
+  // Cess
+  var CESS_RATE = 0.04;  // 4% Health & Education Cess
+
+  // Rebate u/s 87A thresholds
+  var REBATE_THRESHOLD_NEW = 700000;  // New regime: full rebate if income <= 7L
+
+  // EPF
+  var EPF_RATE = 0.12;              // 12% of basic
+  var BASIC_RATIO = 0.40;           // Basic = 40% of gross (typical)
+  var EPF_BASIC_CAP_MONTHLY = 15000; // Monthly basic cap for EPF
+  var EPF_MAX_MONTHLY = EPF_BASIC_CAP_MONTHLY * EPF_RATE; // 1800/month
+  var EPF_MAX_ANNUAL = EPF_MAX_MONTHLY * 12;               // 21600/year
+
+  // ── DOM elements ──
+  var grossInput = document.getElementById('grossSalary');
+  var freqSelect = document.getElementById('payFrequency');
+  var epfCheckbox = document.getElementById('epfEnabled');
+  var profTaxInput = document.getElementById('profTax');
+  var deduction80CInput = document.getElementById('deduction80C');
+  var deduction80DInput = document.getElementById('deduction80D');
+  var deductionOtherInput = document.getElementById('deductionOther');
+  var oldRegimeFields = document.getElementById('oldRegimeFields');
+
+  var currentRegime = 'new';
+
+  // ── Regime toggle ──
+  var regimeBtns = document.querySelectorAll('#regimeToggle button');
+  for (var i = 0; i < regimeBtns.length; i++) {
+    regimeBtns[i].addEventListener('click', function() {
+      for (var j = 0; j < regimeBtns.length; j++) regimeBtns[j].classList.remove('active');
+      this.classList.add('active');
+      currentRegime = this.getAttribute('data-regime');
+      if (currentRegime === 'old') {
+        oldRegimeFields.classList.add('visible');
+      } else {
+        oldRegimeFields.classList.remove('visible');
+      }
+      calculate();
+    });
+  }
+
+  // ── Calculation helpers ──
+  function calcBracketTax(income, brackets) {
+    var tax = 0, prev = 0;
+    for (var i = 0; i < brackets.length; i++) {
+      var limit = brackets[i][0], rate = brackets[i][1];
+      if (income <= prev) break;
+      tax += (Math.min(income, limit) - prev) * rate;
+      prev = limit;
+    }
+    return Math.max(0, tax);
+  }
+
+  function getMarginalRate(income, brackets) {
+    var prev = 0;
+    for (var i = 0; i < brackets.length; i++) {
+      if (income <= brackets[i][0]) return brackets[i][1];
+      prev = brackets[i][0];
+    }
+    return brackets[brackets.length - 1][1];
+  }
+
+  // ── Currency formatting with Indian locale ──
+  function fmtINR(n) {
+    return '\u20B9' + n.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  }
+
+  // ── Frequency labels ──
+  var FREQ_LABELS = { '1':'annually', '12':'per month', '26':'per paycheck (biweekly)', '52':'per week' };
+  var FREQ_NAMES = { '1':'Annual', '12':'Monthly', '26':'Biweekly', '52':'Weekly' };
+
+  // ── Main calculation ──
+  function calculate() {
+    var gross = parseFloat(grossInput.value) || 0;
+    var freq = parseInt(freqSelect.value);
+
+    // EPF calculation
+    var basicAnnual = gross * BASIC_RATIO;
+    var basicMonthly = basicAnnual / 12;
+    var epfMonthly = 0;
+    var epfAnnual = 0;
+    if (epfCheckbox.checked) {
+      var epfBasicMonthly = Math.min(basicMonthly, EPF_BASIC_CAP_MONTHLY);
+      epfMonthly = epfBasicMonthly * EPF_RATE;
+      epfMonthly = Math.min(epfMonthly, EPF_MAX_MONTHLY);
+      epfAnnual = epfMonthly * 12;
+    }
+
+    // Professional tax
+    var profTax = parseFloat(profTaxInput.value) || 0;
+    profTax = Math.min(profTax, 2500);
+
+    // Standard deduction
+    var stdDeduction = (currentRegime === 'new') ? STD_DEDUCTION_NEW : STD_DEDUCTION_OLD;
+
+    // Taxable income calculation
+    var taxableIncome;
+    var totalDeductions80 = 0;
+
+    if (currentRegime === 'new') {
+      // New regime: only standard deduction and professional tax
+      taxableIncome = Math.max(0, gross - stdDeduction - profTax);
+    } else {
+      // Old regime: standard deduction + 80C + 80D + other + professional tax
+      var ded80C = Math.min(parseFloat(deduction80CInput.value) || 0, 150000);
+      var ded80D = parseFloat(deduction80DInput.value) || 0;
+      var dedOther = parseFloat(deductionOtherInput.value) || 0;
+      totalDeductions80 = ded80C + ded80D + dedOther;
+      taxableIncome = Math.max(0, gross - stdDeduction - profTax - totalDeductions80);
+    }
+
+    // Calculate income tax based on regime
+    var brackets = (currentRegime === 'new') ? NEW_REGIME_BRACKETS : OLD_REGIME_BRACKETS;
+    var incomeTax = calcBracketTax(taxableIncome, brackets);
+    var marginalRate = getMarginalRate(taxableIncome, brackets);
+
+    // Apply Section 87A rebate (new regime)
+    var rebateApplied = false;
+    if (currentRegime === 'new' && taxableIncome <= REBATE_THRESHOLD_NEW) {
+      incomeTax = 0;
+      rebateApplied = true;
+    }
+
+    // Health & Education Cess (4% on income tax)
+    var cess = incomeTax * CESS_RATE;
+
+    // Total tax
+    var totalTax = incomeTax + cess;
+
+    // Total deductions from salary
+    var totalDeductions = totalTax + epfAnnual + profTax;
+
+    // Annual in-hand salary
+    var annualTakeHome = gross - totalDeductions;
+    var perPeriod = annualTakeHome / freq;
+
+    // Effective rate (tax + cess only, not EPF/PT)
+    var effectiveRate = gross > 0 ? (totalTax / gross * 100) : 0;
+
+    // ── Update hero ──
+    document.getElementById('heroTakeHome').textContent = fmtINR(Math.round(perPeriod));
+    document.getElementById('heroSublabel').textContent = FREQ_LABELS[freq] || 'per month';
+
+    // ── Stats ──
+    document.getElementById('statAnnual').textContent = fmtINR(Math.round(annualTakeHome));
+    document.getElementById('statEffective').textContent = effectiveRate.toFixed(1) + '%';
+    document.getElementById('statTotalTax').textContent = fmtINR(Math.round(totalTax));
+    document.getElementById('statMarginal').textContent = (marginalRate * 100).toFixed(0) + '%';
+
+    // ── Breakdown table ──
+    var rows = [
+      ['Gross / CTC salary', fmtINR(Math.round(gross))],
+      ['Standard deduction (' + (currentRegime === 'new' ? 'New regime' : 'Old regime') + ')', '\u2212 ' + fmtINR(Math.round(stdDeduction))],
+      ['Professional tax', '\u2212 ' + fmtINR(Math.round(profTax))]
+    ];
+
+    if (currentRegime === 'old' && totalDeductions80 > 0) {
+      rows.push(['Section 80C / 80D / Other deductions', '\u2212 ' + fmtINR(Math.round(totalDeductions80))]);
+    }
+
+    rows.push(['Taxable income', fmtINR(Math.round(taxableIncome))]);
+    rows.push(['', '']);
+    rows.push(['Income tax (' + (currentRegime === 'new' ? 'New' : 'Old') + ' regime)', fmtINR(Math.round(incomeTax))]);
+
+    if (rebateApplied) {
+      rows.push(['Rebate u/s 87A (income \u2264 \u20B97,00,000)', '\u2212 ' + fmtINR(Math.round(incomeTax))]);
+      rows.push(['Tax after rebate', fmtINR(0)]);
+    }
+
+    rows.push(['Health & Education Cess (4%)', fmtINR(Math.round(cess))]);
+    rows.push(['total', fmtINR(Math.round(totalTax))]);
+    rows.push(['', '']);
+    rows.push(['EPF employee contribution (12% of basic)', fmtINR(Math.round(epfAnnual))]);
+    rows.push(['Professional tax', fmtINR(Math.round(profTax))]);
+    rows.push(['total', fmtINR(Math.round(annualTakeHome))]);
+
+    var tbody = document.getElementById('breakdownTable').querySelector('tbody');
+    tbody.innerHTML = '';
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i][0] === '' && rows[i][1] === '') continue;
+      var tr = document.createElement('tr');
+      if (rows[i][0] === 'total') {
+        tr.className = 'total';
+        var td1 = document.createElement('td');
+        // Determine which total row this is
+        var totalCount = 0;
+        for (var k = 0; k <= i; k++) {
+          if (rows[k][0] === 'total') totalCount++;
+        }
+        td1.textContent = (totalCount === 1) ? 'Total tax + cess' : 'Annual in-hand salary';
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      } else {
+        var td1 = document.createElement('td');
+        td1.textContent = rows[i][0];
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      }
+      tbody.appendChild(tr);
+    }
+
+    // ── Period comparison table ──
+    var periods = [
+      { name:'Annual', div:1 },
+      { name:'Monthly', div:12 },
+      { name:'Biweekly', div:26 },
+      { name:'Weekly', div:52 }
+    ];
+    var ptbody = document.getElementById('periodTable').querySelector('tbody');
+    ptbody.innerHTML = '';
+    for (var i = 0; i < periods.length; i++) {
+      var tr = document.createElement('tr');
+      var d = periods[i].div;
+      if (FREQ_NAMES[freq] === periods[i].name) tr.className = 'row-highlight';
+      tr.innerHTML = '<td>' + periods[i].name + '</td><td>' + fmtINR(Math.round(gross / d)) +
+        '</td><td>' + fmtINR(Math.round(totalDeductions / d)) + '</td><td>' + fmtINR(Math.round(annualTakeHome / d)) + '</td>';
+      ptbody.appendChild(tr);
+    }
+
+    // ── Stacked bar ──
+    var barDiv = document.getElementById('stackedBar');
+    var legDiv = document.getElementById('stackedLegend');
+    barDiv.innerHTML = '';
+    legDiv.innerHTML = '';
+
+    if (gross > 0) {
+      var segments = [
+        { label:'In-Hand Salary', value:annualTakeHome, color:'#059669' },
+        { label:'Income Tax', value:incomeTax, color:'#2563eb' },
+        { label:'Health & Education Cess', value:cess, color:'#7c3aed' },
+        { label:'EPF (Employee)', value:epfAnnual, color:'#d97706' },
+        { label:'Professional Tax', value:profTax, color:'#dc2626' }
+      ];
+      for (var i = 0; i < segments.length; i++) {
+        var pct = segments[i].value / gross * 100;
+        if (pct < 0.3) continue;
+        var seg = document.createElement('div');
+        seg.className = 'segment';
+        seg.style.width = pct + '%';
+        seg.style.background = segments[i].color;
+        if (pct > 8) seg.textContent = pct.toFixed(0) + '%';
+        barDiv.appendChild(seg);
+
+        var li = document.createElement('div');
+        li.className = 'legend-item';
+        li.innerHTML = '<span class="legend-dot" style="background:' + segments[i].color + '"></span>' +
+          segments[i].label + ': ' + fmtINR(Math.round(segments[i].value)) + ' (' + pct.toFixed(1) + '%)';
+        legDiv.appendChild(li);
+      }
+    }
+  }
+
+  // ── Bind all inputs ──
+  var inputs = document.querySelectorAll('#grossSalary,#payFrequency,#epfEnabled,#profTax,#deduction80C,#deduction80D,#deductionOther');
+  for (var i = 0; i < inputs.length; i++) {
+    inputs[i].addEventListener('input', calculate);
+    inputs[i].addEventListener('change', calculate);
+  }
+
+  // ── Country change (update prefix symbols) ──
+  OneTab.onCountryChange(function(c) {
+    calculate();
+  });
+
+  calculate();
+})();
+</script>
+</body>
+</html>
