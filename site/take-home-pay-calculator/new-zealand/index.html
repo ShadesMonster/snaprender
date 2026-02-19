@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Zealand Take-Home Pay Calculator — Salary After Tax | OneTab</title>
+  <meta name="description" content="Free New Zealand take-home pay calculator. Enter your salary and see your pay after PAYE income tax, ACC earners' levy, KiwiSaver contributions, and student loan repayments. Updated for 2024-25.">
+  <meta name="keywords" content="new zealand take home pay calculator, nz salary calculator, nz paye calculator, kiwisaver calculator, acc levy calculator, nz net pay calculator, nz student loan repayment">
+
+  <meta property="og:title" content="New Zealand Take-Home Pay Calculator — Salary After Tax | OneTab">
+  <meta property="og:description" content="Calculate your New Zealand take-home pay after PAYE income tax, ACC earners' levy, KiwiSaver, and student loan repayments.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://onetab.tools/take-home-pay-calculator/new-zealand/">
+  <meta property="og:site_name" content="OneTab">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="New Zealand Take-Home Pay Calculator | OneTab">
+  <meta name="twitter:description" content="Calculate your New Zealand take-home pay after PAYE income tax, ACC earners' levy, KiwiSaver, and student loan repayments.">
+
+  <link rel="canonical" href="https://onetab.tools/take-home-pay-calculator/new-zealand/">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../css/style.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "New Zealand Take-Home Pay Calculator",
+    "url": "https://onetab.tools/take-home-pay-calculator/new-zealand/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "NZD" },
+    "description": "Free New Zealand take-home pay calculator. See your salary after PAYE income tax, ACC earners' levy, KiwiSaver contributions, and student loan repayments. Updated for 2024-25."
+  }
+  </script>
+
+  <script>
+    (function() {
+      var t = localStorage.getItem('onetab-theme');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+  </script>
+
+  <style>
+    .period-table { width:100%; border-collapse:collapse; }
+    .period-table th, .period-table td { padding:0.6rem 0.75rem; text-align:right; font-variant-numeric:tabular-nums; }
+    .period-table th:first-child, .period-table td:first-child { text-align:left; }
+    .period-table th { font-size:0.8rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--color-text-muted); border-bottom:2px solid var(--color-border); }
+    .period-table td { border-bottom:1px solid var(--color-border); font-size:0.9rem; }
+    .period-table tr:last-child td { border-bottom:none; }
+    .period-table .row-highlight td { font-weight:700; color:var(--color-success); background:rgba(5,150,105,0.05); }
+    .country-links { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.75rem; }
+    .country-links a { font-size:0.8rem; padding:0.25rem 0.5rem; border-radius:4px; background:var(--color-bg); border:1px solid var(--color-border); color:var(--color-text); text-decoration:none; transition:border-color 0.15s; }
+    .country-links a:hover { border-color:var(--color-primary); color:var(--color-primary); }
+    .checkbox-row { display:flex; align-items:center; gap:0.5rem; margin-top:0.25rem; }
+    .checkbox-row input[type="checkbox"] { width:1.1rem; height:1.1rem; accent-color:var(--color-primary); }
+    .checkbox-row label { font-size:0.9rem; cursor:pointer; }
+    @media (max-width:600px) {
+      .row { flex-direction:column; gap:0; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="../../">OneTab</a>
+  <div class="header-actions">
+    <select class="country-select-global" id="country-select-global" title="Your location"></select>
+    <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">Dark</button>
+  </div>
+</header>
+
+<main class="container">
+  <h1>New Zealand Take-Home Pay Calculator</h1>
+  <p class="subtitle">Calculate your take-home pay after PAYE income tax, ACC levy, and KiwiSaver.</p>
+
+  <div class="ad-placeholder" data-size="leaderboard"><span class="ad-label">Ad</span><span class="ad-size">728 × 90</span></div>
+
+  <!-- Income -->
+  <div class="card">
+    <div class="card-title">Your Income</div>
+    <div class="form-group">
+      <label>Annual gross salary</label>
+      <div class="input-with-prefix">
+        <span class="prefix" id="pfxSalary">NZ$</span>
+        <input type="number" id="grossSalary" value="72000" min="0" step="1000">
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <label>KiwiSaver employee rate</label>
+        <select id="kiwiSaverRate">
+          <option value="0.03" selected>3%</option>
+          <option value="0.04">4%</option>
+          <option value="0.06">6%</option>
+          <option value="0.08">8%</option>
+          <option value="0.10">10%</option>
+          <option value="0">Not enrolled</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Pay frequency</label>
+        <select id="payFrequency">
+          <option value="26" selected>Fortnightly (26 paychecks/yr)</option>
+          <option value="52">Weekly (52 paychecks/yr)</option>
+          <option value="12">Monthly (12 paychecks/yr)</option>
+          <option value="24">Semi-monthly (24 paychecks/yr)</option>
+          <option value="1">Annual</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="checkbox-row">
+        <input type="checkbox" id="studentLoan">
+        <label for="studentLoan">I have a student loan (12% on income above $22,828)</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="results" class="result-section visible">
+
+    <div class="card result-hero" style="border-radius:var(--radius);">
+      <div class="rate-label">Your Take-Home Pay</div>
+      <div class="rate-value" id="heroTakeHome">NZ$0</div>
+      <div class="rate-sublabel" id="heroSublabel">per fortnight</div>
+    </div>
+
+    <div class="stat-grid" style="margin-bottom:1.5rem;">
+      <div class="stat-box success">
+        <div class="stat-value" id="statAnnual">NZ$0</div>
+        <div class="stat-label">Annual Take-Home</div>
+      </div>
+      <div class="stat-box highlight">
+        <div class="stat-value" id="statEffective">0%</div>
+        <div class="stat-label">Effective Tax Rate</div>
+      </div>
+      <div class="stat-box warning">
+        <div class="stat-value" id="statTotalTax">NZ$0</div>
+        <div class="stat-label">Total Deductions</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="statMarginal">0%</div>
+        <div class="stat-label">Marginal PAYE Rate</div>
+      </div>
+    </div>
+
+    <div class="ad-placeholder" data-size="rectangle"><span class="ad-label">Ad</span><span class="ad-size">300 × 250</span></div>
+
+    <!-- Tax Breakdown -->
+    <div class="card">
+      <h2>Tax Breakdown</h2>
+      <table class="breakdown-table" id="breakdownTable">
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Pay Period Comparison -->
+    <div class="card">
+      <h2>Pay Period Breakdown</h2>
+      <table class="period-table" id="periodTable">
+        <thead>
+          <tr><th>Period</th><th>Gross</th><th>Deductions</th><th>Take-Home</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Stacked Bar -->
+    <div class="card">
+      <h2>Where Your Money Goes</h2>
+      <div class="stacked-bar" id="stackedBar"></div>
+      <div class="stacked-legend" id="stackedLegend"></div>
+    </div>
+
+    <div class="ad-placeholder" data-size="large-rectangle"><span class="ad-label">Ad</span><span class="ad-size">336 × 280</span></div>
+  </div>
+
+  <!-- Related Tools -->
+  <div class="card" style="margin-top:1.5rem;">
+    <div class="card-title">Related Tools</div>
+    <div style="display:flex;flex-direction:column;gap:0.5rem;">
+      <a href="../../salary-converter/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Salary to Hourly Calculator</a>
+      <a href="../../quarterly-tax-estimator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Quarterly Tax Estimator (Freelancers)</a>
+      <a href="../../freelance-rate-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Freelance Hourly Rate Calculator</a>
+      <a href="../../compound-interest-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Compound Interest Calculator</a>
+    </div>
+  </div>
+
+  <!-- Country Pages -->
+  <div class="card" style="margin-top:1rem;">
+    <div class="card-title">Take-Home Pay by Country</div>
+    <div class="country-links">
+      <a href="../">United States</a>
+      <a href="../united-kingdom/">United Kingdom</a>
+      <a href="./" style="border-color:var(--color-primary);color:var(--color-primary);font-weight:600;">New Zealand</a>
+    </div>
+  </div>
+
+  <div class="ad-placeholder" data-size="in-article"><span class="ad-label">Ad</span><span class="ad-size">Responsive</span></div>
+
+  <!-- SEO Content -->
+  <div class="content-section">
+    <h2>How New Zealand Take-Home Pay Is Calculated</h2>
+    <p>Your take-home pay is what remains of your gross salary after PAYE income tax, ACC earners' levy, KiwiSaver contributions, and student loan repayments are deducted. New Zealand uses a Pay As You Earn (PAYE) system where your employer deducts these amounts from each pay before you receive it. Unlike many other countries, New Zealand has no tax-free threshold &mdash; you pay tax on every dollar you earn from the first dollar.</p>
+
+    <h2>New Zealand PAYE Income Tax (2024&ndash;25)</h2>
+    <p>New Zealand uses a progressive income tax system with five brackets. The rates apply uniformly nationwide &mdash; there are no regional or state taxes. The brackets are: 10.5% on income up to $14,000; 17.5% on income from $14,001 to $48,000; 30% on income from $48,001 to $70,000; 33% on income from $70,001 to $180,000; and 39% on income above $180,000. There is no personal allowance or standard deduction, so your entire gross salary is subject to tax.</p>
+
+    <h2>ACC Earners' Levy</h2>
+    <p>The Accident Compensation Corporation (ACC) earners' levy is a compulsory levy that funds New Zealand's no-fault accident insurance scheme. For the 2024&ndash;25 tax year, the rate is 1.60% of your liable earnings, up to a maximum of $142,283 in earnings. This levy is deducted from your pay by your employer through the PAYE system. ACC covers all residents and visitors for personal injury from accidents, regardless of fault, and provides treatment costs, income compensation, and rehabilitation support.</p>
+
+    <h2>KiwiSaver</h2>
+    <p>KiwiSaver is New Zealand's voluntary, work-based savings initiative designed to help you save for retirement. If you are enrolled, you can choose an employee contribution rate of 3%, 4%, 6%, 8%, or 10% of your gross salary. Your employer is required to contribute at least 3% on top of your salary (though employer contributions are subject to ESCT). KiwiSaver contributions are deducted from your after-tax pay, meaning they do not reduce your taxable income. You can apply for a contributions holiday if you need to temporarily stop contributing. New employees are automatically enrolled but can opt out within a limited window.</p>
+
+    <h2>Student Loan Repayment</h2>
+    <p>If you have a student loan from StudyLink, repayments are deducted automatically through the PAYE system once your income exceeds the repayment threshold. For the 2024&ndash;25 tax year, the repayment rate is 12% on every dollar you earn above $22,828 per year. For example, if you earn $72,000, you would repay 12% of ($72,000 &minus; $22,828) = $5,900.64 per year. Student loan repayments are deducted after tax has been calculated &mdash; they reduce your take-home pay but not your tax liability.</p>
+
+    <h2>Tips to Increase Your Take-Home Pay</h2>
+    <ul>
+      <li><strong>Review your KiwiSaver rate:</strong> While saving for retirement is important, choosing a lower contribution rate (3% vs 10%) will increase your immediate take-home pay. Consider your long-term goals before reducing contributions.</li>
+      <li><strong>Check your tax code:</strong> Make sure your employer is using the correct PAYE tax code (e.g., M for primary employment, S if you have a student loan). An incorrect code can lead to over- or under-deductions.</li>
+      <li><strong>Claim tax credits:</strong> If you are eligible for the Independent Earner Tax Credit (IETC) for income between $24,000 and $48,000, you may be able to claim up to $520 per year.</li>
+      <li><strong>Voluntary student loan repayments:</strong> Making extra repayments above the compulsory amount can reduce your loan balance faster and eliminate the deduction sooner, increasing future take-home pay.</li>
+      <li><strong>Use a PIE fund for savings:</strong> Portfolio Investment Entity (PIE) funds cap your tax rate at 28%, which may be lower than your marginal PAYE rate if you earn over $48,000.</li>
+    </ul>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <a href="../../" style="color:var(--color-text-muted);text-decoration:none;">&larr; Back to all tools</a>
+  <p style="margin-top:0.5rem;">Built for people who need quick answers.</p>
+</footer>
+
+<script src="../../js/onetab-global.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  // ── NZ PAYE Income Tax Brackets 2024-25 ──
+  // No tax-free threshold in NZ
+  var PAYE_BRACKETS = [
+    [14000, 0.105],
+    [48000, 0.175],
+    [70000, 0.30],
+    [180000, 0.33],
+    [Infinity, 0.39]
+  ];
+
+  // ── ACC Earners' Levy 2024-25 ──
+  var ACC_RATE = 0.016;
+  var ACC_MAX_EARNINGS = 142283;
+
+  // ── Student Loan Repayment 2024-25 ──
+  var SL_RATE = 0.12;
+  var SL_THRESHOLD = 22828;
+
+  // ── DOM elements ──
+  var grossInput      = document.getElementById('grossSalary');
+  var kiwiSelect      = document.getElementById('kiwiSaverRate');
+  var freqSelect      = document.getElementById('payFrequency');
+  var studentLoanChk  = document.getElementById('studentLoan');
+
+  // ── Frequency labels ──
+  var FREQ_LABELS = { '1':'annually', '12':'per month', '24':'semi-monthly', '26':'per fortnight', '52':'per week' };
+  var FREQ_NAMES  = { '1':'Annual', '12':'Monthly', '24':'Semi-Monthly', '26':'Fortnightly', '52':'Weekly' };
+
+  // ── Helpers ──
+  function fmtNZD(v) {
+    return OneTab.fmt(v).replace(/^\$/, 'NZ$');
+  }
+
+  function calcBracketTax(income, brackets) {
+    var tax = 0, prev = 0;
+    for (var i = 0; i < brackets.length; i++) {
+      var limit = brackets[i][0], rate = brackets[i][1];
+      if (income <= prev) break;
+      tax += (Math.min(income, limit) - prev) * rate;
+      prev = limit;
+    }
+    return Math.max(0, tax);
+  }
+
+  function getMarginalRate(income, brackets) {
+    var prev = 0;
+    for (var i = 0; i < brackets.length; i++) {
+      if (income <= brackets[i][0]) return brackets[i][1];
+      prev = brackets[i][0];
+    }
+    return brackets[brackets.length - 1][1];
+  }
+
+  function calcPAYE(gross) {
+    return calcBracketTax(gross, PAYE_BRACKETS);
+  }
+
+  function calcACC(gross) {
+    return Math.min(gross, ACC_MAX_EARNINGS) * ACC_RATE;
+  }
+
+  function calcStudentLoan(gross) {
+    if (gross <= SL_THRESHOLD) return 0;
+    return (gross - SL_THRESHOLD) * SL_RATE;
+  }
+
+  function calcKiwiSaver(gross, rate) {
+    return gross * rate;
+  }
+
+  // ── Main calculation ──
+  function calculate() {
+    var gross = parseFloat(grossInput.value) || 0;
+    var kiwiRate = parseFloat(kiwiSelect.value) || 0;
+    var freq = parseInt(freqSelect.value);
+    var hasStudentLoan = studentLoanChk.checked;
+
+    // PAYE income tax
+    var paye = calcPAYE(gross);
+
+    // ACC earners' levy
+    var acc = calcACC(gross);
+
+    // KiwiSaver employee contribution (post-tax, does not reduce taxable income)
+    var kiwiSaver = calcKiwiSaver(gross, kiwiRate);
+
+    // Student loan repayment
+    var studentLoan = hasStudentLoan ? calcStudentLoan(gross) : 0;
+
+    // Totals
+    var totalTax = paye + acc;
+    var totalDeductions = totalTax + kiwiSaver + studentLoan;
+    var annualTakeHome = gross - totalDeductions;
+    var perPeriod = annualTakeHome / freq;
+
+    var effectiveRate = gross > 0 ? (totalDeductions / gross * 100) : 0;
+    var marginalRate = getMarginalRate(gross, PAYE_BRACKETS);
+
+    // ── Update hero ──
+    document.getElementById('heroTakeHome').textContent = fmtNZD(Math.round(perPeriod));
+    document.getElementById('heroSublabel').textContent = FREQ_LABELS[freq] || 'per fortnight';
+
+    // ── Stats ──
+    document.getElementById('statAnnual').textContent = fmtNZD(Math.round(annualTakeHome));
+    document.getElementById('statEffective').textContent = effectiveRate.toFixed(1) + '%';
+    document.getElementById('statTotalTax').textContent = fmtNZD(Math.round(totalDeductions));
+    document.getElementById('statMarginal').textContent = (marginalRate * 100).toFixed(1) + '%';
+
+    // ── Breakdown table ──
+    var kiwiLabel = kiwiRate > 0 ? (kiwiRate * 100) + '%' : 'not enrolled';
+    var rows = [
+      ['Gross salary', fmtNZD(Math.round(gross))],
+      ['', ''],
+      ['PAYE income tax', fmtNZD(Math.round(paye))],
+      ['ACC earners\u2019 levy (1.60%)', fmtNZD(Math.round(acc))],
+      ['total_tax', fmtNZD(Math.round(totalTax))]
+    ];
+
+    rows.push(['', '']);
+
+    if (kiwiSaver > 0) {
+      rows.push(['KiwiSaver employee (' + kiwiLabel + ')', '\u2212 ' + fmtNZD(Math.round(kiwiSaver))]);
+    }
+
+    if (studentLoan > 0) {
+      rows.push(['Student loan repayment (12%)', '\u2212 ' + fmtNZD(Math.round(studentLoan))]);
+    }
+
+    if (kiwiSaver > 0 || studentLoan > 0) {
+      rows.push(['', '']);
+    }
+
+    rows.push(['total_final', fmtNZD(Math.round(annualTakeHome))]);
+
+    var tbody = document.getElementById('breakdownTable').querySelector('tbody');
+    tbody.innerHTML = '';
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i][0] === '' && rows[i][1] === '') continue;
+      var tr = document.createElement('tr');
+      if (rows[i][0] === 'total_tax') {
+        tr.className = 'total';
+        var td1 = document.createElement('td');
+        td1.textContent = 'Total tax (PAYE + ACC)';
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      } else if (rows[i][0] === 'total_final') {
+        tr.className = 'total';
+        var td1 = document.createElement('td');
+        td1.textContent = 'Annual take-home pay';
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      } else {
+        var td1 = document.createElement('td');
+        td1.textContent = rows[i][0];
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      }
+      tbody.appendChild(tr);
+    }
+
+    // ── Period comparison table ──
+    var periods = [
+      { name:'Annual', div:1 },
+      { name:'Monthly', div:12 },
+      { name:'Semi-Monthly', div:24 },
+      { name:'Fortnightly', div:26 },
+      { name:'Weekly', div:52 }
+    ];
+    var ptbody = document.getElementById('periodTable').querySelector('tbody');
+    ptbody.innerHTML = '';
+    for (var i = 0; i < periods.length; i++) {
+      var tr = document.createElement('tr');
+      var d = periods[i].div;
+      if (FREQ_NAMES[freq] === periods[i].name) tr.className = 'row-highlight';
+      tr.innerHTML = '<td>' + periods[i].name + '</td><td>' + fmtNZD(Math.round(gross / d)) +
+        '</td><td>' + fmtNZD(Math.round(totalDeductions / d)) + '</td><td>' + fmtNZD(Math.round(annualTakeHome / d)) + '</td>';
+      ptbody.appendChild(tr);
+    }
+
+    // ── Stacked bar ──
+    var barDiv = document.getElementById('stackedBar');
+    var legDiv = document.getElementById('stackedLegend');
+    barDiv.innerHTML = '';
+    legDiv.innerHTML = '';
+
+    if (gross > 0) {
+      var segments = [
+        { label:'Take Home', value:annualTakeHome, color:'#059669' },
+        { label:'PAYE Income Tax', value:paye, color:'#2563eb' },
+        { label:'ACC Levy', value:acc, color:'#d97706' }
+      ];
+      if (kiwiSaver > 0) {
+        segments.push({ label:'KiwiSaver', value:kiwiSaver, color:'#7c3aed' });
+      }
+      if (studentLoan > 0) {
+        segments.push({ label:'Student Loan', value:studentLoan, color:'#dc2626' });
+      }
+      for (var i = 0; i < segments.length; i++) {
+        var pct = segments[i].value / gross * 100;
+        if (pct < 0.3) continue;
+        var seg = document.createElement('div');
+        seg.className = 'segment';
+        seg.style.width = pct + '%';
+        seg.style.background = segments[i].color;
+        if (pct > 8) seg.textContent = pct.toFixed(0) + '%';
+        barDiv.appendChild(seg);
+
+        var li = document.createElement('div');
+        li.className = 'legend-item';
+        li.innerHTML = '<span class="legend-dot" style="background:' + segments[i].color + '"></span>' +
+          segments[i].label + ': ' + fmtNZD(Math.round(segments[i].value)) + ' (' + pct.toFixed(1) + '%)';
+        legDiv.appendChild(li);
+      }
+    }
+  }
+
+  // ── Bind all inputs ──
+  var inputs = document.querySelectorAll('#grossSalary,#kiwiSaverRate,#payFrequency,#studentLoan');
+  for (var i = 0; i < inputs.length; i++) {
+    inputs[i].addEventListener('input', calculate);
+    inputs[i].addEventListener('change', calculate);
+  }
+
+  calculate();
+})();
+</script>
+</body>
+</html>

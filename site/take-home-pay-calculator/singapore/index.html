@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Singapore Take-Home Pay Calculator — Salary After Tax &amp; CPF | OneTab</title>
+  <meta name="description" content="Calculate your take-home pay in Singapore after income tax and CPF contributions. Uses YA 2024 IRAS tax brackets and CPF rates for residents.">
+  <meta name="keywords" content="singapore take home pay calculator, singapore salary calculator, singapore income tax calculator, CPF calculator, singapore paycheck after tax, IRAS tax brackets">
+
+  <meta property="og:title" content="Singapore Take-Home Pay Calculator | OneTab">
+  <meta property="og:description" content="Calculate your take-home pay in Singapore after income tax and CPF contributions. Uses YA 2024 IRAS tax brackets and CPF rates.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://onetab.tools/take-home-pay-calculator/singapore/">
+  <meta property="og:site_name" content="OneTab">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Singapore Take-Home Pay Calculator | OneTab">
+  <meta name="twitter:description" content="Calculate your take-home pay in Singapore after income tax and CPF contributions. Uses YA 2024 IRAS tax brackets and CPF rates.">
+
+  <link rel="canonical" href="https://onetab.tools/take-home-pay-calculator/singapore/">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../css/style.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Singapore Take-Home Pay Calculator",
+    "url": "https://onetab.tools/take-home-pay-calculator/singapore/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "SGD" },
+    "description": "Calculate your take-home pay in Singapore after income tax and CPF contributions. Uses YA 2024 IRAS tax brackets and CPF rates for residents."
+  }
+  </script>
+
+  <script>
+    (function() {
+      var t = localStorage.getItem('onetab-theme');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+  </script>
+
+  <style>
+    .period-table { width:100%; border-collapse:collapse; }
+    .period-table th, .period-table td { padding:0.6rem 0.75rem; text-align:right; font-variant-numeric:tabular-nums; }
+    .period-table th:first-child, .period-table td:first-child { text-align:left; }
+    .period-table th { font-size:0.8rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--color-text-muted); border-bottom:2px solid var(--color-border); }
+    .period-table td { border-bottom:1px solid var(--color-border); font-size:0.9rem; }
+    .period-table tr:last-child td { border-bottom:none; }
+    .period-table .row-highlight td { font-weight:700; color:var(--color-success); background:rgba(5,150,105,0.05); }
+    .country-links { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.75rem; }
+    .country-links a { font-size:0.8rem; padding:0.25rem 0.5rem; border-radius:4px; background:var(--color-bg); border:1px solid var(--color-border); color:var(--color-text); text-decoration:none; transition:border-color 0.15s; }
+    .country-links a:hover { border-color:var(--color-primary); color:var(--color-primary); }
+    .cpf-note { font-size:0.82rem; color:var(--color-text-muted); margin-top:0.35rem; line-height:1.45; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="../../">OneTab</a>
+  <div class="header-actions">
+    <select class="country-select-global" id="country-select-global" title="Your location"></select>
+    <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">Dark</button>
+  </div>
+</header>
+
+<main class="container">
+  <h1>Singapore Take-Home Pay Calculator</h1>
+  <p class="subtitle">Calculate your take-home pay after income tax and CPF contributions.</p>
+
+  <div class="ad-placeholder" data-size="leaderboard"><span class="ad-label">Ad</span><span class="ad-size">728 × 90</span></div>
+
+  <!-- Income -->
+  <div class="card">
+    <div class="card-title">Your Income</div>
+    <div class="form-group">
+      <label>Annual gross salary</label>
+      <div class="input-with-prefix">
+        <span class="prefix" id="pfxSalary">S$</span>
+        <input type="number" id="grossSalary" value="72000" min="0" step="1000">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Age bracket</label>
+      <select id="ageBracket">
+        <option value="55" selected>55 and below</option>
+        <option value="56-60">56–60</option>
+        <option value="61-65">61–65</option>
+        <option value="66-70">66–70</option>
+        <option value="70+">Above 70</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Pay frequency</label>
+      <select id="payFrequency">
+        <option value="12" selected>Monthly (12 paychecks/yr)</option>
+        <option value="26">Biweekly (26 paychecks/yr)</option>
+        <option value="24">Semi-monthly (24 paychecks/yr)</option>
+        <option value="52">Weekly (52 paychecks/yr)</option>
+        <option value="1">Annual</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>
+        <input type="checkbox" id="cpfOptOut"> Opt out of CPF
+        <span class="cpf-note">(for non-citizens or certain permanent residents who do not contribute to CPF)</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="results" class="result-section visible">
+
+    <div class="card result-hero" style="border-radius:var(--radius);">
+      <div class="rate-label">Your Take-Home Pay</div>
+      <div class="rate-value" id="heroTakeHome">S$0</div>
+      <div class="rate-sublabel" id="heroSublabel">per month</div>
+    </div>
+
+    <div class="stat-grid" style="margin-bottom:1.5rem;">
+      <div class="stat-box success">
+        <div class="stat-value" id="statAnnual">S$0</div>
+        <div class="stat-label">Annual Take-Home</div>
+      </div>
+      <div class="stat-box highlight">
+        <div class="stat-value" id="statEffective">0%</div>
+        <div class="stat-label">Effective Tax Rate</div>
+      </div>
+      <div class="stat-box warning">
+        <div class="stat-value" id="statTotalTax">S$0</div>
+        <div class="stat-label">Income Tax</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="statCPF">S$0</div>
+        <div class="stat-label">Employee CPF</div>
+      </div>
+    </div>
+
+    <div class="ad-placeholder" data-size="rectangle"><span class="ad-label">Ad</span><span class="ad-size">300 × 250</span></div>
+
+    <!-- Tax Breakdown -->
+    <div class="card">
+      <h2>Tax &amp; CPF Breakdown</h2>
+      <table class="breakdown-table" id="breakdownTable">
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Pay Period Comparison -->
+    <div class="card">
+      <h2>Pay Period Breakdown</h2>
+      <table class="period-table" id="periodTable">
+        <thead>
+          <tr><th>Period</th><th>Gross</th><th>Tax</th><th>CPF</th><th>Take-Home</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Stacked Bar -->
+    <div class="card">
+      <h2>Where Your Money Goes</h2>
+      <div class="stacked-bar" id="stackedBar"></div>
+      <div class="stacked-legend" id="stackedLegend"></div>
+    </div>
+
+    <div class="ad-placeholder" data-size="large-rectangle"><span class="ad-label">Ad</span><span class="ad-size">336 × 280</span></div>
+  </div>
+
+  <!-- Related Tools -->
+  <div class="card" style="margin-top:1.5rem;">
+    <div class="card-title">Related Tools</div>
+    <div style="display:flex;flex-direction:column;gap:0.5rem;">
+      <a href="../../salary-converter/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Salary to Hourly Calculator</a>
+      <a href="../../quarterly-tax-estimator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Quarterly Tax Estimator</a>
+      <a href="../../freelance-rate-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Freelance Hourly Rate Calculator</a>
+      <a href="../../compound-interest-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Compound Interest Calculator</a>
+    </div>
+  </div>
+
+  <!-- Country Pages -->
+  <div class="card" style="margin-top:1rem;">
+    <div class="card-title">Take-Home Pay by Country &amp; State</div>
+    <div class="country-links">
+      <a href="../">All Calculators</a>
+      <a href="../california/">California</a>
+      <a href="../new-york/">New York</a>
+      <a href="../texas/">Texas</a>
+      <a href="../florida/">Florida</a>
+      <a href="../washington/">Washington</a>
+      <a href="../illinois/">Illinois</a>
+      <a href="../pennsylvania/">Pennsylvania</a>
+      <a href="../ohio/">Ohio</a>
+      <a href="../georgia/">Georgia</a>
+      <a href="../north-carolina/">North Carolina</a>
+      <a href="../new-jersey/">New Jersey</a>
+      <a href="../virginia/">Virginia</a>
+      <a href="../massachusetts/">Massachusetts</a>
+      <a href="../colorado/">Colorado</a>
+      <a href="../maryland/">Maryland</a>
+      <a href="../oregon/">Oregon</a>
+      <a href="../minnesota/">Minnesota</a>
+      <a href="../hawaii/">Hawaii</a>
+    </div>
+  </div>
+
+  <div class="ad-placeholder" data-size="in-article"><span class="ad-label">Ad</span><span class="ad-size">Responsive</span></div>
+
+  <!-- SEO Content -->
+  <div class="content-section">
+    <h2>How Singapore Take-Home Pay Is Calculated</h2>
+    <p>Your take-home pay in Singapore is your gross salary minus income tax and your employee Central Provident Fund (CPF) contribution. Unlike many countries, Singapore has no sales tax on income, no capital gains tax, and relatively low personal income tax rates, making it one of the most tax-friendly jurisdictions in the world.</p>
+
+    <h2>Singapore Income Tax (YA 2024)</h2>
+    <p>Singapore uses a progressive income tax system administered by the Inland Revenue Authority of Singapore (IRAS). Tax residents are taxed on a tiered bracket system starting at 0% for the first S$20,000 of chargeable income and rising to a top marginal rate of 22% for income above S$320,000. Non-residents are generally taxed at a flat rate of 22% (or the progressive resident rate, whichever gives a higher tax), with some exceptions for short-term employment.</p>
+    <p>The tax brackets for resident individuals in Year of Assessment 2024 are:</p>
+    <ul>
+      <li>First S$20,000: 0%</li>
+      <li>Next S$10,000 (S$20,001 to S$30,000): 2%</li>
+      <li>Next S$10,000 (S$30,001 to S$40,000): 3.5%</li>
+      <li>Next S$40,000 (S$40,001 to S$80,000): 7%</li>
+      <li>Next S$40,000 (S$80,001 to S$120,000): 11.5%</li>
+      <li>Next S$40,000 (S$120,001 to S$160,000): 15%</li>
+      <li>Next S$40,000 (S$160,001 to S$200,000): 18%</li>
+      <li>Next S$40,000 (S$200,001 to S$240,000): 19%</li>
+      <li>Next S$40,000 (S$240,001 to S$280,000): 19.5%</li>
+      <li>Next S$40,000 (S$280,001 to S$320,000): 20%</li>
+      <li>Above S$320,000: 22%</li>
+    </ul>
+
+    <h2>Personal Tax Reliefs</h2>
+    <p>Singapore provides several personal tax reliefs that reduce your chargeable income. The most common is the Earned Income Relief, which is automatically applied: S$1,000 for individuals below age 55, S$6,000 for those aged 55 to 59, and S$8,000 for those aged 60 and above. Other reliefs include course fees relief, life insurance relief, CPF relief (for employee contributions), NS-man relief, parent/handicapped parent relief, spouse relief, qualifying/handicapped child relief, and more. This calculator applies the earned income relief and CPF relief automatically.</p>
+
+    <h2>Central Provident Fund (CPF)</h2>
+    <p>CPF is Singapore's mandatory social security savings scheme for working Singaporeans and permanent residents. Both employees and employers contribute a percentage of the employee's wages. The employee contribution rate depends on age:</p>
+    <ul>
+      <li>Age 55 and below: 20% of ordinary wages</li>
+      <li>Age 56 to 60: 17%</li>
+      <li>Age 61 to 65: 11.5%</li>
+      <li>Age 66 to 70: 7.5%</li>
+      <li>Above age 70: 5%</li>
+    </ul>
+    <p>CPF contributions are capped at the Ordinary Wage (OW) ceiling of S$6,800 per month (S$81,600 per year). Wages above this ceiling do not attract CPF contributions. Employee CPF contributions are tax-deductible, meaning they reduce your chargeable income for income tax purposes.</p>
+    <p>Non-citizens (including Employment Pass and S Pass holders) are generally not required to contribute to CPF, though first- and second-year permanent residents may have graduated rates. This calculator includes a CPF opt-out checkbox for non-citizens.</p>
+
+    <h2>Resident vs Non-Resident Tax</h2>
+    <p>You are considered a tax resident of Singapore if you are a Singapore citizen or permanent resident residing in Singapore, or a foreigner who has stayed or worked in Singapore for 183 days or more in a calendar year. Non-residents face a flat 22% tax rate on employment income (or progressive resident rates, whichever is higher), with no personal reliefs. This calculator assumes resident tax status. If you are a non-resident, consult IRAS for your specific tax obligations.</p>
+
+    <h2>Tips to Optimise Your Take-Home Pay in Singapore</h2>
+    <ul>
+      <li><strong>Maximise tax reliefs:</strong> Claim all eligible reliefs such as course fees (up to S$5,500), NSman relief, parent relief, and working mother's child relief to reduce chargeable income.</li>
+      <li><strong>Voluntary CPF top-ups:</strong> Cash top-ups to your Special Account or MediSave (up to S$8,000 per year) qualify for additional tax relief while boosting your retirement savings.</li>
+      <li><strong>SRS contributions:</strong> Contributing to a Supplementary Retirement Scheme (SRS) account gives you dollar-for-dollar tax relief up to S$15,300 per year (S$35,700 for foreigners).</li>
+      <li><strong>Charitable donations:</strong> Donations to approved Institutions of a Public Character (IPCs) qualify for 250% tax deduction.</li>
+      <li><strong>Understand your employment benefits:</strong> Some benefits like employer CPF contributions are not taxable, while others like housing benefits may be.</li>
+    </ul>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <a href="../../" style="color:var(--color-text-muted);text-decoration:none;">← Back to all tools</a>
+  <p style="margin-top:0.5rem;">Built for people who need quick answers.</p>
+</footer>
+
+<script src="../../js/onetab-global.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  // ── Singapore Income Tax Brackets (YA 2024, Residents) ──
+  // Each entry: [cumulative upper limit, marginal rate]
+  var SG_TAX_BRACKETS = [
+    [20000,  0.00],
+    [30000,  0.02],
+    [40000,  0.035],
+    [80000,  0.07],
+    [120000, 0.115],
+    [160000, 0.15],
+    [200000, 0.18],
+    [240000, 0.19],
+    [280000, 0.195],
+    [320000, 0.20],
+    [Infinity, 0.22]
+  ];
+
+  // ── Earned Income Relief by age ──
+  var EARNED_INCOME_RELIEF = {
+    '55':    1000,
+    '56-60': 6000,
+    '61-65': 8000,
+    '66-70': 8000,
+    '70+':   8000
+  };
+
+  // ── CPF Employee Contribution Rates by age ──
+  var CPF_EMPLOYEE_RATE = {
+    '55':    0.20,
+    '56-60': 0.17,
+    '61-65': 0.115,
+    '66-70': 0.075,
+    '70+':   0.05
+  };
+
+  // CPF Ordinary Wage ceiling: S$6,800/month = S$81,600/year
+  var CPF_OW_ANNUAL_CAP = 81600;
+
+  // ── DOM elements ──
+  var grossInput    = document.getElementById('grossSalary');
+  var ageSelect     = document.getElementById('ageBracket');
+  var freqSelect    = document.getElementById('payFrequency');
+  var cpfOptOut     = document.getElementById('cpfOptOut');
+
+  // ── Calculation helpers ──
+  function calcBracketTax(income, brackets) {
+    var tax = 0, prev = 0;
+    for (var i = 0; i < brackets.length; i++) {
+      var limit = brackets[i][0], rate = brackets[i][1];
+      if (income <= prev) break;
+      tax += (Math.min(income, limit) - prev) * rate;
+      prev = limit;
+    }
+    return Math.max(0, tax);
+  }
+
+  function getMarginalRate(income, brackets) {
+    var prev = 0;
+    for (var i = 0; i < brackets.length; i++) {
+      if (income <= brackets[i][0]) return brackets[i][1];
+      prev = brackets[i][0];
+    }
+    return brackets[brackets.length - 1][1];
+  }
+
+  // ── Frequency labels ──
+  var FREQ_LABELS = { '1':'annually', '12':'per month', '24':'semi-monthly', '26':'per paycheck', '52':'per week' };
+  var FREQ_NAMES  = { '1':'Annual', '12':'Monthly', '24':'Semi-Monthly', '26':'Biweekly', '52':'Weekly' };
+
+  // ── Main calculation ──
+  function calculate() {
+    var gross   = parseFloat(grossInput.value) || 0;
+    var age     = ageSelect.value;
+    var freq    = parseInt(freqSelect.value);
+    var noCPF   = cpfOptOut.checked;
+
+    // CPF employee contribution
+    var cpfRate       = noCPF ? 0 : (CPF_EMPLOYEE_RATE[age] || 0.20);
+    var cpfableWages  = Math.min(gross, CPF_OW_ANNUAL_CAP);
+    var employeeCPF   = cpfableWages * cpfRate;
+
+    // Earned income relief
+    var earnedRelief = EARNED_INCOME_RELIEF[age] || 1000;
+
+    // CPF contributions are tax-deductible
+    var cpfRelief = employeeCPF;
+
+    // Chargeable income = gross - earned income relief - CPF relief
+    var chargeableIncome = Math.max(0, gross - earnedRelief - cpfRelief);
+
+    // Income tax
+    var incomeTax    = calcBracketTax(chargeableIncome, SG_TAX_BRACKETS);
+    var marginalRate = getMarginalRate(chargeableIncome, SG_TAX_BRACKETS);
+
+    // Total deductions and take-home
+    var totalDeductions = incomeTax + employeeCPF;
+    var annualTakeHome  = gross - totalDeductions;
+    var perPeriod       = annualTakeHome / freq;
+
+    var effectiveRate = gross > 0 ? (incomeTax / gross * 100) : 0;
+
+    // ── Update hero ──
+    document.getElementById('heroTakeHome').textContent = OneTab.fmt(Math.round(perPeriod));
+    document.getElementById('heroSublabel').textContent = FREQ_LABELS[freq] || 'per month';
+
+    // ── Stats ──
+    document.getElementById('statAnnual').textContent    = OneTab.fmt(Math.round(annualTakeHome));
+    document.getElementById('statEffective').textContent  = effectiveRate.toFixed(1) + '%';
+    document.getElementById('statTotalTax').textContent   = OneTab.fmt(Math.round(incomeTax));
+    document.getElementById('statCPF').textContent        = OneTab.fmt(Math.round(employeeCPF));
+
+    // ── Breakdown table ──
+    var rows = [
+      ['Gross salary', OneTab.fmt(Math.round(gross))],
+      ['Earned income relief (' + (age === '55' ? 'below 55' : age === '70+' ? 'above 70' : 'age ' + age) + ')', '− ' + OneTab.fmt(Math.round(earnedRelief))],
+      ['CPF relief (employee contribution)', '− ' + OneTab.fmt(Math.round(cpfRelief))],
+      ['Chargeable income', OneTab.fmt(Math.round(chargeableIncome))],
+      ['', ''],
+      ['Income tax (marginal rate: ' + (marginalRate * 100).toFixed(1) + '%)', OneTab.fmt(Math.round(incomeTax))],
+      ['Employee CPF (' + (cpfRate * 100).toFixed(1) + '% of wages up to S$81,600)', OneTab.fmt(Math.round(employeeCPF))],
+      ['total-deductions', OneTab.fmt(Math.round(totalDeductions))],
+      ['', ''],
+      ['total-takehome', OneTab.fmt(Math.round(annualTakeHome))]
+    ];
+
+    var tbody = document.getElementById('breakdownTable').querySelector('tbody');
+    tbody.innerHTML = '';
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i][0] === '' && rows[i][1] === '') continue;
+      var tr = document.createElement('tr');
+      if (rows[i][0] === 'total-deductions') {
+        tr.className = 'total';
+        var td1 = document.createElement('td');
+        td1.textContent = 'Total deductions';
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      } else if (rows[i][0] === 'total-takehome') {
+        tr.className = 'total';
+        var td1 = document.createElement('td');
+        td1.textContent = 'Annual take-home pay';
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      } else {
+        var td1 = document.createElement('td');
+        td1.textContent = rows[i][0];
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      }
+      tbody.appendChild(tr);
+    }
+
+    // ── Period comparison table ──
+    var periods = [
+      { name:'Annual',      div:1 },
+      { name:'Monthly',     div:12 },
+      { name:'Semi-Monthly', div:24 },
+      { name:'Biweekly',    div:26 },
+      { name:'Weekly',      div:52 }
+    ];
+    var ptbody = document.getElementById('periodTable').querySelector('tbody');
+    ptbody.innerHTML = '';
+    for (var i = 0; i < periods.length; i++) {
+      var tr = document.createElement('tr');
+      var d = periods[i].div;
+      if (FREQ_NAMES[freq] === periods[i].name) tr.className = 'row-highlight';
+      tr.innerHTML = '<td>' + periods[i].name + '</td>' +
+        '<td>' + OneTab.fmt(Math.round(gross / d)) + '</td>' +
+        '<td>' + OneTab.fmt(Math.round(incomeTax / d)) + '</td>' +
+        '<td>' + OneTab.fmt(Math.round(employeeCPF / d)) + '</td>' +
+        '<td>' + OneTab.fmt(Math.round(annualTakeHome / d)) + '</td>';
+      ptbody.appendChild(tr);
+    }
+
+    // ── Stacked bar ──
+    var barDiv = document.getElementById('stackedBar');
+    var legDiv = document.getElementById('stackedLegend');
+    barDiv.innerHTML = '';
+    legDiv.innerHTML = '';
+
+    if (gross > 0) {
+      var segments = [
+        { label:'Take Home',   value:annualTakeHome, color:'#059669' },
+        { label:'Income Tax',  value:incomeTax,      color:'#2563eb' },
+        { label:'Employee CPF', value:employeeCPF,   color:'#d97706' }
+      ];
+      for (var i = 0; i < segments.length; i++) {
+        var pct = segments[i].value / gross * 100;
+        if (pct < 0.3) continue;
+        var seg = document.createElement('div');
+        seg.className = 'segment';
+        seg.style.width = pct + '%';
+        seg.style.background = segments[i].color;
+        if (pct > 8) seg.textContent = pct.toFixed(0) + '%';
+        barDiv.appendChild(seg);
+
+        var li = document.createElement('div');
+        li.className = 'legend-item';
+        li.innerHTML = '<span class="legend-dot" style="background:' + segments[i].color + '"></span>' +
+          segments[i].label + ': ' + OneTab.fmt(Math.round(segments[i].value)) + ' (' + pct.toFixed(1) + '%)';
+        legDiv.appendChild(li);
+      }
+    }
+  }
+
+  // ── Bind all inputs ──
+  var inputs = document.querySelectorAll('#grossSalary,#ageBracket,#payFrequency,#cpfOptOut');
+  for (var i = 0; i < inputs.length; i++) {
+    inputs[i].addEventListener('input', calculate);
+    inputs[i].addEventListener('change', calculate);
+  }
+
+  // ── Country change (update currency prefix display) ──
+  OneTab.onCountryChange(function(c) {
+    var pfx = document.getElementById('pfxSalary');
+    if (pfx) pfx.textContent = c.currency;
+    calculate();
+  });
+
+  calculate();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Japan Take-Home Pay Calculator (手取り計算) — Salary After Tax | OneTab</title>
+  <meta name="description" content="Calculate your tedori (手取り) salary in Japan after income tax, resident tax, and social insurance. See your net pay after all deductions for 2024.">
+  <meta name="keywords" content="japan take home pay calculator, 手取り計算, tedori calculator, japan salary after tax, japan income tax calculator, japan net salary, 給与所得控除, 住民税, 社会保険">
+
+  <meta property="og:title" content="Japan Take-Home Pay Calculator (手取り計算) | OneTab">
+  <meta property="og:description" content="Calculate your tedori (手取り) salary in Japan after income tax, resident tax, and social insurance deductions.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://onetab.tools/take-home-pay-calculator/japan/">
+  <meta property="og:site_name" content="OneTab">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Japan Take-Home Pay Calculator (手取り計算) | OneTab">
+  <meta name="twitter:description" content="Calculate your tedori (手取り) salary in Japan after income tax, resident tax, and social insurance deductions.">
+
+  <link rel="canonical" href="https://onetab.tools/take-home-pay-calculator/japan/">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../css/style.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Japan Take-Home Pay Calculator",
+    "url": "https://onetab.tools/take-home-pay-calculator/japan/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "description": "Calculate your tedori (手取り) salary in Japan after income tax, resident tax, and social insurance. Covers employment income deduction, national income tax, reconstruction surtax, resident tax, health insurance, pension, and employment insurance."
+  }
+  </script>
+
+  <script>
+    (function() {
+      var t = localStorage.getItem('onetab-theme');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+  </script>
+
+  <style>
+    .period-table { width:100%; border-collapse:collapse; }
+    .period-table th, .period-table td { padding:0.6rem 0.75rem; text-align:right; font-variant-numeric:tabular-nums; }
+    .period-table th:first-child, .period-table td:first-child { text-align:left; }
+    .period-table th { font-size:0.8rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--color-text-muted); border-bottom:2px solid var(--color-border); }
+    .period-table td { border-bottom:1px solid var(--color-border); font-size:0.9rem; }
+    .period-table tr:last-child td { border-bottom:none; }
+    .period-table .row-highlight td { font-weight:700; color:var(--color-success); background:rgba(5,150,105,0.05); }
+    .country-links { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.75rem; }
+    .country-links a { font-size:0.8rem; padding:0.25rem 0.5rem; border-radius:4px; background:var(--color-bg); border:1px solid var(--color-border); color:var(--color-text); text-decoration:none; transition:border-color 0.15s; }
+    .country-links a:hover { border-color:var(--color-primary); color:var(--color-primary); }
+    .jp-label { font-size:0.82rem; color:var(--color-text-muted); }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="../../">OneTab</a>
+  <div class="header-actions">
+    <select class="country-select-global" id="country-select-global" title="Your location"></select>
+    <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">Dark</button>
+  </div>
+</header>
+
+<main class="container">
+  <h1>Japan Take-Home Pay Calculator</h1>
+  <p class="subtitle">Calculate your tedori (手取り) salary after income tax, resident tax, and social insurance.</p>
+
+  <div class="ad-placeholder" data-size="leaderboard"><span class="ad-label">Ad</span><span class="ad-size">728 × 90</span></div>
+
+  <!-- Income -->
+  <div class="card">
+    <div class="card-title">Your Income <span class="jp-label">(収入)</span></div>
+    <div class="form-group">
+      <label>Annual gross salary <span class="jp-label">(年収 / 額面)</span></label>
+      <div class="input-with-prefix">
+        <span class="prefix" id="pfxSalary">¥</span>
+        <input type="number" id="grossSalary" value="5500000" min="0" step="100000">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Pay frequency</label>
+      <select id="payFrequency">
+        <option value="12" selected>Monthly (12 payments/yr)</option>
+        <option value="14">Monthly + Bonus (14 payments/yr)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Number of dependents <span class="jp-label">(扶養親族)</span></label>
+      <select id="dependents">
+        <option value="0" selected>0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="results" class="result-section visible">
+
+    <div class="card result-hero" style="border-radius:var(--radius);">
+      <div class="rate-label">Your Take-Home Pay <span class="jp-label">(手取り)</span></div>
+      <div class="rate-value" id="heroTakeHome">¥0</div>
+      <div class="rate-sublabel" id="heroSublabel">per month</div>
+    </div>
+
+    <div class="stat-grid" style="margin-bottom:1.5rem;">
+      <div class="stat-box success">
+        <div class="stat-value" id="statAnnual">¥0</div>
+        <div class="stat-label">Annual Take-Home</div>
+      </div>
+      <div class="stat-box highlight">
+        <div class="stat-value" id="statEffective">0%</div>
+        <div class="stat-label">Effective Tax + SI Rate</div>
+      </div>
+      <div class="stat-box warning">
+        <div class="stat-value" id="statTotalDeductions">¥0</div>
+        <div class="stat-label">Total Deductions</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="statMarginal">0%</div>
+        <div class="stat-label">Marginal Income Tax</div>
+      </div>
+    </div>
+
+    <div class="ad-placeholder" data-size="rectangle"><span class="ad-label">Ad</span><span class="ad-size">300 × 250</span></div>
+
+    <!-- Tax Breakdown -->
+    <div class="card">
+      <h2>Deduction Breakdown <span class="jp-label">(控除内訳)</span></h2>
+      <table class="breakdown-table" id="breakdownTable">
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Pay Period Comparison -->
+    <div class="card">
+      <h2>Pay Period Breakdown</h2>
+      <table class="period-table" id="periodTable">
+        <thead>
+          <tr><th>Period</th><th>Gross</th><th>Deductions</th><th>Take-Home</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Stacked Bar -->
+    <div class="card">
+      <h2>Where Your Money Goes</h2>
+      <div class="stacked-bar" id="stackedBar"></div>
+      <div class="stacked-legend" id="stackedLegend"></div>
+    </div>
+
+    <div class="ad-placeholder" data-size="large-rectangle"><span class="ad-label">Ad</span><span class="ad-size">336 × 280</span></div>
+  </div>
+
+  <!-- Related Tools -->
+  <div class="card" style="margin-top:1.5rem;">
+    <div class="card-title">Related Tools</div>
+    <div style="display:flex;flex-direction:column;gap:0.5rem;">
+      <a href="../../salary-converter/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Salary to Hourly Calculator</a>
+      <a href="../../quarterly-tax-estimator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Quarterly Tax Estimator (Freelancers)</a>
+      <a href="../../freelance-rate-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Freelance Hourly Rate Calculator</a>
+      <a href="../../compound-interest-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Compound Interest Calculator</a>
+    </div>
+  </div>
+
+  <!-- Country Pages -->
+  <div class="card" style="margin-top:1rem;">
+    <div class="card-title">Take-Home Pay by State / Country</div>
+    <div class="country-links">
+      <a href="../california/">California</a>
+      <a href="../new-york/">New York</a>
+      <a href="../texas/">Texas</a>
+      <a href="../florida/">Florida</a>
+      <a href="../washington/">Washington</a>
+      <a href="../illinois/">Illinois</a>
+      <a href="../pennsylvania/">Pennsylvania</a>
+      <a href="../ohio/">Ohio</a>
+      <a href="../georgia/">Georgia</a>
+      <a href="../north-carolina/">North Carolina</a>
+      <a href="../michigan/">Michigan</a>
+      <a href="../new-jersey/">New Jersey</a>
+      <a href="../virginia/">Virginia</a>
+      <a href="../massachusetts/">Massachusetts</a>
+      <a href="../colorado/">Colorado</a>
+    </div>
+  </div>
+
+  <div class="ad-placeholder" data-size="in-article"><span class="ad-label">Ad</span><span class="ad-size">Responsive</span></div>
+
+  <!-- SEO Content -->
+  <div class="content-section">
+    <h2>How Japanese Take-Home Pay Is Calculated</h2>
+    <p>In Japan, your take-home pay (手取り / tedori) is your gross salary (額面 / gakumen) minus three main categories of deductions: national and local income taxes, and social insurance premiums. Unlike many Western countries, Japan uses a unique "employment income deduction" (給与所得控除) system that provides automatic deductions based on your salary level before calculating taxable income.</p>
+
+    <h2>Employment Income Deduction (給与所得控除)</h2>
+    <p>Every salaried employee in Japan receives an automatic deduction from their gross salary before income tax is calculated. This is not a tax itself but reduces your taxable income. The deduction is tiered: for salaries up to ¥1,625,000 the minimum deduction is ¥550,000, scaling up through brackets that apply decreasing percentages, and capping at ¥1,950,000 for salaries above ¥8,500,000. This system acknowledges that employees have work-related expenses and provides a standardised deduction without requiring individual documentation.</p>
+
+    <h2>National Income Tax (所得税)</h2>
+    <p>Japan's national income tax uses a progressive bracket system with seven rates ranging from 5% to 45%. After subtracting the employment income deduction and the basic deduction (基礎控除) of ¥480,000 from your salary, the resulting taxable income is applied to these brackets. Each bracket has a corresponding "quick deduction" amount that simplifies the calculation. For example, income between ¥3,300,001 and ¥6,950,000 is taxed at 20% with a quick deduction of ¥427,500. A reconstruction surtax (復興特別所得税) of 2.1% is added on top of your calculated income tax to fund recovery from the 2011 earthquake, and remains in effect through 2037.</p>
+
+    <h2>Resident Tax (住民税)</h2>
+    <p>Resident tax (住民税 / juuminzei) is a local tax collected by your municipality and prefecture. It is approximately 10% of your taxable income (typically 6% municipal + 4% prefectural), plus a per-capita levy of about ¥5,000 per year. Unlike income tax which is withheld from your monthly salary in real time, resident tax is based on your previous year's income and is deducted from your salary starting in June. Each dependent reduces your resident tax through a ¥330,000 deduction per dependent from taxable income.</p>
+
+    <h2>Social Insurance (社会保険)</h2>
+    <p>Social insurance premiums in Japan are shared between employer and employee. As an employee, you pay approximately 14.75% of your salary across three programmes:</p>
+    <ul>
+      <li><strong>Health Insurance (健康保険):</strong> Approximately 5% of your standard monthly remuneration (標準報酬月額). The exact rate varies by prefecture and health insurance society, but averages around 5% for the employee share. There is a cap at a standard monthly remuneration of ¥1,390,000.</li>
+      <li><strong>Employees' Pension (厚生年金):</strong> 9.15% of your standard monthly remuneration, capped at a standard monthly remuneration of ¥650,000 (approximately ¥7,800,000 per year). This is Japan's mandatory corporate pension system.</li>
+      <li><strong>Employment Insurance (雇用保険):</strong> 0.6% of your salary with no cap. This covers unemployment benefits and job training.</li>
+    </ul>
+    <p>Social insurance premiums are deducted before income tax is calculated, which provides a tax benefit. Your employer pays an equal or slightly higher share on top of your deductions.</p>
+
+    <h2>Bonuses in Japan</h2>
+    <p>Many Japanese companies pay bonuses (賞与 / shouyo) twice a year, typically in June and December, on top of 12 monthly salary payments. These bonuses are subject to the same income tax and social insurance deductions. When using this calculator with the "Monthly + Bonus (14 payments)" option, the annual salary is divided into 14 equal portions to approximate the common practice of receiving 12 monthly payments plus two bonus payments.</p>
+
+    <h2>Tips to Increase Your Take-Home Pay in Japan</h2>
+    <ul>
+      <li><strong>Claim dependents correctly:</strong> Each qualifying dependent reduces your resident tax liability through additional deductions.</li>
+      <li><strong>Use iDeCo (個人型確定拠出年金):</strong> Contributions to Japan's individual defined contribution pension plan are fully tax-deductible, reducing both income tax and resident tax.</li>
+      <li><strong>Hometown tax (ふるさと納税):</strong> Donate to rural municipalities and receive tax credits plus regional gifts, effectively redirecting resident tax payments.</li>
+      <li><strong>Medical expense deduction:</strong> If your household's annual medical expenses exceed ¥100,000, you can claim a deduction via your annual tax return (確定申告).</li>
+      <li><strong>Mortgage deduction:</strong> Homeowners can receive a significant income tax credit for up to 13 years on their home loan balance.</li>
+    </ul>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <a href="../../" style="color:var(--color-text-muted);text-decoration:none;">← Back to all tools</a>
+  <p style="margin-top:0.5rem;">Built for people who need quick answers.</p>
+</footer>
+
+<script src="../../js/onetab-global.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  // ── Employment Income Deduction (給与所得控除) 2024 ──
+  function calcEmploymentIncomeDeduction(income) {
+    if (income <= 0) return 0;
+    if (income <= 1625000) return 550000;
+    if (income <= 1800000) return income * 0.40 - 100000;
+    if (income <= 3600000) return income * 0.30 + 80000;
+    if (income <= 6600000) return income * 0.20 + 440000;
+    if (income <= 8500000) return income * 0.10 + 1100000;
+    return 1950000;
+  }
+
+  // ── Basic Deduction (基礎控除) ──
+  function calcBasicDeduction(income) {
+    // income here is "employment income" after employment income deduction
+    if (income <= 24000000) return 480000;
+    if (income <= 24500000) return 320000;
+    if (income <= 25000000) return 160000;
+    return 0;
+  }
+
+  // ── National Income Tax Brackets (所得税) 2024 ──
+  // bracket: [upper limit, rate, quick deduction]
+  var INCOME_TAX_BRACKETS = [
+    [1950000,  0.05, 0],
+    [3300000,  0.10, 97500],
+    [6950000,  0.20, 427500],
+    [9000000,  0.23, 636000],
+    [18000000, 0.33, 1536000],
+    [40000000, 0.40, 2796000],
+    [Infinity,  0.45, 4796000]
+  ];
+
+  function calcNationalIncomeTax(taxableIncome) {
+    if (taxableIncome <= 0) return 0;
+    for (var i = 0; i < INCOME_TAX_BRACKETS.length; i++) {
+      if (taxableIncome <= INCOME_TAX_BRACKETS[i][0]) {
+        return taxableIncome * INCOME_TAX_BRACKETS[i][1] - INCOME_TAX_BRACKETS[i][2];
+      }
+    }
+    // Fallback (should not reach here)
+    var last = INCOME_TAX_BRACKETS[INCOME_TAX_BRACKETS.length - 1];
+    return taxableIncome * last[1] - last[2];
+  }
+
+  function getMarginalRate(taxableIncome) {
+    if (taxableIncome <= 0) return 0.05;
+    for (var i = 0; i < INCOME_TAX_BRACKETS.length; i++) {
+      if (taxableIncome <= INCOME_TAX_BRACKETS[i][0]) {
+        return INCOME_TAX_BRACKETS[i][1];
+      }
+    }
+    return 0.45;
+  }
+
+  // ── Social Insurance (社会保険) employee share ──
+  var HEALTH_RATE = 0.05;
+  var PENSION_RATE = 0.0915;
+  var EMPLOYMENT_INS_RATE = 0.006;
+  var PENSION_CAP_ANNUAL = 7800000;    // standard monthly remuneration ¥650,000 × 12
+  var HEALTH_CAP_ANNUAL = 16680000;    // standard monthly remuneration ¥1,390,000 × 12
+
+  function calcSocialInsurance(grossSalary) {
+    var healthBase = Math.min(grossSalary, HEALTH_CAP_ANNUAL);
+    var pensionBase = Math.min(grossSalary, PENSION_CAP_ANNUAL);
+
+    var health = Math.round(healthBase * HEALTH_RATE);
+    var pension = Math.round(pensionBase * PENSION_RATE);
+    var employment = Math.round(grossSalary * EMPLOYMENT_INS_RATE);
+
+    return {
+      health: health,
+      pension: pension,
+      employment: employment,
+      total: health + pension + employment
+    };
+  }
+
+  // ── Resident Tax (住民税) ──
+  var RESIDENT_TAX_RATE = 0.10;
+  var RESIDENT_PER_CAPITA = 5000;
+  var RESIDENT_DEPENDENT_DEDUCTION = 330000; // per dependent
+
+  function calcResidentTax(taxableIncomeForResident, dependents) {
+    var depDeduction = dependents * RESIDENT_DEPENDENT_DEDUCTION;
+    var adjustedTaxable = Math.max(0, taxableIncomeForResident - depDeduction);
+    var tax = Math.round(adjustedTaxable * RESIDENT_TAX_RATE) + RESIDENT_PER_CAPITA;
+    return Math.max(0, tax);
+  }
+
+  // ── Reconstruction Surtax (復興特別所得税) ──
+  var RECONSTRUCTION_RATE = 0.021;
+
+  // ── DOM elements ──
+  var grossInput = document.getElementById('grossSalary');
+  var freqSelect = document.getElementById('payFrequency');
+  var depSelect = document.getElementById('dependents');
+
+  // ── Frequency labels ──
+  var FREQ_LABELS = { '12': 'per month', '14': 'per payment (incl. bonus)' };
+
+  // ── Currency formatter for yen (no decimals) ──
+  function fmtYen(n) {
+    return '¥' + Math.round(n).toLocaleString('ja-JP');
+  }
+
+  // ── Main calculation ──
+  function calculate() {
+    var gross = parseFloat(grossInput.value) || 0;
+    var freq = parseInt(freqSelect.value);
+    var dependents = parseInt(depSelect.value) || 0;
+
+    // 1. Social Insurance
+    var si = calcSocialInsurance(gross);
+
+    // 2. Employment Income Deduction
+    var employmentDeduction = calcEmploymentIncomeDeduction(gross);
+
+    // 3. Employment income (給与所得) = gross - employment income deduction
+    var employmentIncome = Math.max(0, gross - employmentDeduction);
+
+    // 4. Income after social insurance deduction (社会保険料控除)
+    //    Social insurance premiums are deductible from income
+    var incomeAfterSI = Math.max(0, employmentIncome - si.total);
+
+    // 5. Basic deduction
+    var basicDeduction = calcBasicDeduction(employmentIncome);
+
+    // 6. Taxable income for national income tax
+    var taxableIncome = Math.max(0, incomeAfterSI - basicDeduction);
+
+    // 7. National income tax
+    var incomeTax = Math.max(0, Math.round(calcNationalIncomeTax(taxableIncome)));
+
+    // 8. Reconstruction surtax
+    var reconstructionTax = Math.round(incomeTax * RECONSTRUCTION_RATE);
+
+    // 9. Total national tax
+    var totalNationalTax = incomeTax + reconstructionTax;
+
+    // 10. Resident tax (uses similar taxable income basis)
+    var residentTax = calcResidentTax(taxableIncome, dependents);
+
+    // 11. Total deductions
+    var totalTax = totalNationalTax + residentTax;
+    var totalDeductions = totalTax + si.total;
+    var annualTakeHome = gross - totalDeductions;
+    var perPeriod = freq > 0 ? annualTakeHome / freq : 0;
+
+    var effectiveRate = gross > 0 ? (totalDeductions / gross * 100) : 0;
+    var marginalRate = getMarginalRate(taxableIncome) * 100;
+
+    // ── Update hero ──
+    document.getElementById('heroTakeHome').textContent = fmtYen(perPeriod);
+    document.getElementById('heroSublabel').textContent = FREQ_LABELS[freq] || 'per month';
+
+    // ── Stats ──
+    document.getElementById('statAnnual').textContent = fmtYen(annualTakeHome);
+    document.getElementById('statEffective').textContent = effectiveRate.toFixed(1) + '%';
+    document.getElementById('statTotalDeductions').textContent = fmtYen(totalDeductions);
+    document.getElementById('statMarginal').textContent = marginalRate.toFixed(0) + '%';
+
+    // ── Breakdown table ──
+    var rows = [
+      ['Gross salary (額面)', fmtYen(gross)],
+      ['Employment income deduction (給与所得控除)', '− ' + fmtYen(employmentDeduction)],
+      ['Employment income (給与所得)', fmtYen(employmentIncome)],
+      ['Social insurance deduction (社会保険料控除)', '− ' + fmtYen(si.total)],
+      ['Basic deduction (基礎控除)', '− ' + fmtYen(basicDeduction)],
+      ['Taxable income (課税所得)', fmtYen(taxableIncome)],
+      ['sep', ''],
+      ['National income tax (所得税)', fmtYen(incomeTax)],
+      ['Reconstruction surtax (復興特別所得税) 2.1%', fmtYen(reconstructionTax)],
+      ['Resident tax (住民税) ~10%', fmtYen(residentTax)],
+      ['total-tax', fmtYen(totalTax)],
+      ['sep', ''],
+      ['Health insurance (健康保険) ~5%', fmtYen(si.health)],
+      ['Pension (厚生年金) 9.15%', fmtYen(si.pension)],
+      ['Employment insurance (雇用保険) 0.6%', fmtYen(si.employment)],
+      ['total-si', fmtYen(si.total)],
+      ['sep', ''],
+      ['total-deductions', fmtYen(totalDeductions)],
+      ['total-takehome', fmtYen(annualTakeHome)]
+    ];
+
+    var tbody = document.getElementById('breakdownTable').querySelector('tbody');
+    tbody.innerHTML = '';
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i][0] === 'sep') continue;
+      var tr = document.createElement('tr');
+      var td1 = document.createElement('td');
+      var td2 = document.createElement('td');
+
+      if (rows[i][0] === 'total-tax') {
+        tr.className = 'total';
+        td1.textContent = 'Total taxes';
+        td2.textContent = rows[i][1];
+      } else if (rows[i][0] === 'total-si') {
+        tr.className = 'total';
+        td1.textContent = 'Total social insurance';
+        td2.textContent = rows[i][1];
+      } else if (rows[i][0] === 'total-deductions') {
+        tr.className = 'total';
+        td1.textContent = 'Total deductions';
+        td2.textContent = rows[i][1];
+      } else if (rows[i][0] === 'total-takehome') {
+        tr.className = 'total';
+        td1.textContent = 'Annual take-home pay (手取り)';
+        td2.textContent = rows[i][1];
+        td2.style.color = 'var(--color-success)';
+      } else {
+        td1.textContent = rows[i][0];
+        td2.textContent = rows[i][1];
+      }
+
+      tr.appendChild(td1);
+      tr.appendChild(td2);
+      tbody.appendChild(tr);
+    }
+
+    // ── Period comparison table ──
+    var periods = [
+      { name: 'Annual', div: 1 },
+      { name: 'Monthly', div: 12 },
+      { name: 'Monthly + Bonus (÷14)', div: 14 }
+    ];
+    var ptbody = document.getElementById('periodTable').querySelector('tbody');
+    ptbody.innerHTML = '';
+    for (var i = 0; i < periods.length; i++) {
+      var tr = document.createElement('tr');
+      var d = periods[i].div;
+      if (d === freq) tr.className = 'row-highlight';
+      tr.innerHTML = '<td>' + periods[i].name + '</td><td>' + fmtYen(gross / d) +
+        '</td><td>' + fmtYen(totalDeductions / d) + '</td><td>' + fmtYen(annualTakeHome / d) + '</td>';
+      ptbody.appendChild(tr);
+    }
+
+    // ── Stacked bar ──
+    var barDiv = document.getElementById('stackedBar');
+    var legDiv = document.getElementById('stackedLegend');
+    barDiv.innerHTML = '';
+    legDiv.innerHTML = '';
+
+    if (gross > 0) {
+      var segments = [
+        { label: 'Take Home (手取り)', value: annualTakeHome, color: '#059669' },
+        { label: 'Income Tax (所得税)', value: totalNationalTax, color: '#2563eb' },
+        { label: 'Resident Tax (住民税)', value: residentTax, color: '#7c3aed' },
+        { label: 'Health Insurance (健康保険)', value: si.health, color: '#d97706' },
+        { label: 'Pension (厚生年金)', value: si.pension, color: '#dc2626' },
+        { label: 'Employment Ins. (雇用保険)', value: si.employment, color: '#6b7280' }
+      ];
+      for (var i = 0; i < segments.length; i++) {
+        var pct = segments[i].value / gross * 100;
+        if (pct < 0.3) continue;
+        var seg = document.createElement('div');
+        seg.className = 'segment';
+        seg.style.width = pct + '%';
+        seg.style.background = segments[i].color;
+        if (pct > 6) seg.textContent = pct.toFixed(0) + '%';
+        barDiv.appendChild(seg);
+
+        var li = document.createElement('div');
+        li.className = 'legend-item';
+        li.innerHTML = '<span class="legend-dot" style="background:' + segments[i].color + '"></span>' +
+          segments[i].label + ': ' + fmtYen(segments[i].value) + ' (' + pct.toFixed(1) + '%)';
+        legDiv.appendChild(li);
+      }
+    }
+  }
+
+  // ── Bind all inputs ──
+  var inputs = document.querySelectorAll('#grossSalary,#payFrequency,#dependents');
+  for (var i = 0; i < inputs.length; i++) {
+    inputs[i].addEventListener('input', calculate);
+    inputs[i].addEventListener('change', calculate);
+  }
+
+  calculate();
+})();
+</script>
+</body>
+</html>
