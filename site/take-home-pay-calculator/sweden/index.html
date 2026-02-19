@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sweden Take-Home Pay Calculator — Salary After Tax | OneTab</title>
+  <meta name="description" content="Calculate your Swedish take-home pay (nettol&ouml;n) after municipal tax, national tax, and jobbskatteavdrag. See your salary after skatt for any income level.">
+  <meta name="keywords" content="sweden take home pay calculator, swedish salary after tax, nettol&ouml;n calculator, jobbskatteavdrag, kommunalskatt, statlig skatt, swedish income tax, l&ouml;n efter skatt">
+
+  <meta property="og:title" content="Sweden Take-Home Pay Calculator &mdash; Salary After Tax | OneTab">
+  <meta property="og:description" content="Calculate your Swedish take-home pay (nettol&ouml;n) after municipal tax, national tax, and jobbskatteavdrag.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://onetab.tools/take-home-pay-calculator/sweden/">
+  <meta property="og:site_name" content="OneTab">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Sweden Take-Home Pay Calculator | OneTab">
+  <meta name="twitter:description" content="Calculate your Swedish take-home pay (nettol&ouml;n) after municipal tax, national tax, and jobbskatteavdrag.">
+
+  <link rel="canonical" href="https://onetab.tools/take-home-pay-calculator/sweden/">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../css/style.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Sweden Take-Home Pay Calculator",
+    "url": "https://onetab.tools/take-home-pay-calculator/sweden/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "SEK" },
+    "description": "Calculate your Swedish take-home pay (nettol\u00f6n) after municipal tax, national tax, and jobbskatteavdrag. See your salary after skatt for any income level."
+  }
+  </script>
+
+  <script>
+    (function() {
+      var t = localStorage.getItem('onetab-theme');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+  </script>
+
+  <style>
+    .period-table { width:100%; border-collapse:collapse; }
+    .period-table th, .period-table td { padding:0.6rem 0.75rem; text-align:right; font-variant-numeric:tabular-nums; }
+    .period-table th:first-child, .period-table td:first-child { text-align:left; }
+    .period-table th { font-size:0.8rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--color-text-muted); border-bottom:2px solid var(--color-border); }
+    .period-table td { border-bottom:1px solid var(--color-border); font-size:0.9rem; }
+    .period-table tr:last-child td { border-bottom:none; }
+    .period-table .row-highlight td { font-weight:700; color:var(--color-success); background:rgba(5,150,105,0.05); }
+    .country-links { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.75rem; }
+    .country-links a { font-size:0.8rem; padding:0.25rem 0.5rem; border-radius:4px; background:var(--color-bg); border:1px solid var(--color-border); color:var(--color-text); text-decoration:none; transition:border-color 0.15s; }
+    .country-links a:hover { border-color:var(--color-primary); color:var(--color-primary); }
+    .checkbox-row { display:flex; align-items:center; gap:0.5rem; margin-top:0.25rem; }
+    .checkbox-row input[type="checkbox"] { width:1.1rem; height:1.1rem; cursor:pointer; }
+    .checkbox-row label { font-size:0.9rem; cursor:pointer; }
+    .municipal-row { display:flex; gap:0.75rem; align-items:end; }
+    .municipal-row .form-group { flex:1; }
+    .municipal-row .form-group:last-child { flex:0 0 120px; }
+    @media (max-width:600px) {
+      .municipal-row { flex-direction:column; gap:0; }
+      .municipal-row .form-group:last-child { flex:1; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="../../">OneTab</a>
+  <div class="header-actions">
+    <select class="country-select-global" id="country-select-global" title="Your location"></select>
+    <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">Dark</button>
+  </div>
+</header>
+
+<main class="container">
+  <h1>Sweden Take-Home Pay Calculator</h1>
+  <p class="subtitle">Calculate your nettol&ouml;n after municipal tax, national tax, and jobbskatteavdrag.</p>
+
+  <div class="ad-placeholder" data-size="leaderboard"><span class="ad-label">Ad</span><span class="ad-size">728 &times; 90</span></div>
+
+  <!-- Income -->
+  <div class="card">
+    <div class="card-title">Your Income</div>
+    <div class="form-group">
+      <label>Annual gross salary (bruttol&ouml;n)</label>
+      <div class="input-with-prefix">
+        <span class="prefix" id="pfxSalary">kr</span>
+        <input type="number" id="grossSalary" value="500000" min="0" step="10000">
+      </div>
+    </div>
+    <div class="municipal-row">
+      <div class="form-group">
+        <label>Municipal tax rate (kommunalskatt) %</label>
+        <input type="number" id="municipalRate" value="32.41" min="28" max="36" step="0.01">
+      </div>
+      <div class="form-group">
+        <label>Pay frequency</label>
+        <select id="payFrequency">
+          <option value="12" selected>Monthly (12/yr)</option>
+          <option value="26">Biweekly (26/yr)</option>
+          <option value="52">Weekly (52/yr)</option>
+          <option value="1">Annual</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group" style="margin-top:0.5rem;">
+      <div class="checkbox-row">
+        <input type="checkbox" id="churchMember">
+        <label for="churchMember">Member of Svenska kyrkan (church tax ~1%)</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="results" class="result-section visible">
+
+    <div class="card result-hero" style="border-radius:var(--radius);">
+      <div class="rate-label">Your Take-Home Pay (Nettol&ouml;n)</div>
+      <div class="rate-value" id="heroTakeHome">kr 0</div>
+      <div class="rate-sublabel" id="heroSublabel">per month</div>
+    </div>
+
+    <div class="stat-grid" style="margin-bottom:1.5rem;">
+      <div class="stat-box success">
+        <div class="stat-value" id="statAnnual">kr 0</div>
+        <div class="stat-label">Annual Take-Home</div>
+      </div>
+      <div class="stat-box highlight">
+        <div class="stat-value" id="statEffective">0%</div>
+        <div class="stat-label">Effective Tax Rate</div>
+      </div>
+      <div class="stat-box warning">
+        <div class="stat-value" id="statTotalTax">kr 0</div>
+        <div class="stat-label">Total Tax Deducted</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="statMarginal">0%</div>
+        <div class="stat-label">Marginal Rate</div>
+      </div>
+    </div>
+
+    <div class="ad-placeholder" data-size="rectangle"><span class="ad-label">Ad</span><span class="ad-size">300 &times; 250</span></div>
+
+    <!-- Tax Breakdown -->
+    <div class="card">
+      <h2>Tax Breakdown</h2>
+      <table class="breakdown-table" id="breakdownTable">
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Pay Period Comparison -->
+    <div class="card">
+      <h2>Pay Period Breakdown</h2>
+      <table class="period-table" id="periodTable">
+        <thead>
+          <tr><th>Period</th><th>Gross</th><th>Taxes</th><th>Take-Home</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Stacked Bar -->
+    <div class="card">
+      <h2>Where Your Money Goes</h2>
+      <div class="stacked-bar" id="stackedBar"></div>
+      <div class="stacked-legend" id="stackedLegend"></div>
+    </div>
+
+    <!-- Employer Cost -->
+    <div class="card">
+      <h2>Total Employer Cost</h2>
+      <p style="font-size:0.9rem;color:var(--color-text-muted);margin-bottom:0.75rem;">Swedish employers pay arbetsgivaravgifter (social contributions) of 31.42% on top of your gross salary. This is <strong>not</strong> deducted from your paycheck.</p>
+      <table class="breakdown-table" id="employerTable">
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="ad-placeholder" data-size="large-rectangle"><span class="ad-label">Ad</span><span class="ad-size">336 &times; 280</span></div>
+  </div>
+
+  <!-- Related Tools -->
+  <div class="card" style="margin-top:1.5rem;">
+    <div class="card-title">Related Tools</div>
+    <div style="display:flex;flex-direction:column;gap:0.5rem;">
+      <a href="../../salary-converter/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Salary to Hourly Calculator</a>
+      <a href="../../quarterly-tax-estimator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Quarterly Tax Estimator</a>
+      <a href="../../freelance-rate-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Freelance Hourly Rate Calculator</a>
+      <a href="../../compound-interest-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Compound Interest Calculator</a>
+    </div>
+  </div>
+
+  <!-- Country / State Pages -->
+  <div class="card" style="margin-top:1rem;">
+    <div class="card-title">Take-Home Pay by Country &amp; State</div>
+    <div class="country-links" id="countryLinks"></div>
+  </div>
+
+  <div class="ad-placeholder" data-size="in-article"><span class="ad-label">Ad</span><span class="ad-size">Responsive</span></div>
+
+  <!-- SEO Content -->
+  <div class="content-section">
+    <h2>How Swedish Take-Home Pay Is Calculated</h2>
+    <p>In Sweden, your take-home pay (nettol&ouml;n) is what remains after income taxes are deducted from your gross salary (bruttol&ouml;n). Unlike many countries, Sweden's tax system primarily consists of municipal income tax plus an additional national tax on higher incomes. A significant earned income tax credit (jobbskatteavdrag) reduces the amount you actually pay, making the effective rate lower than the headline municipal rate.</p>
+
+    <h2>Municipal Tax (Kommunalskatt)</h2>
+    <p>Every Swedish resident pays municipal income tax (kommunalskatt) to their local municipality and county (landsting). This rate varies by municipality, ranging from roughly 29% to 35%, with the national average at approximately 32.41% in 2024. The rate is set annually by each municipality. Unlike progressive brackets, the municipal tax applies as a flat percentage on your taxable income after the basic deduction (grundavdrag). Stockholm municipality charges about 30.33%, while some smaller municipalities exceed 34%.</p>
+
+    <h2>National Tax (Statlig Inkomstskatt)</h2>
+    <p>If your taxable earned income exceeds SEK 598,500 (the breakpoint for 2024), you pay an additional 20% national income tax on the portion above that threshold. This is sometimes called "state tax" and effectively creates a marginal rate above 50% for high earners when combined with municipal tax. The breakpoint is adjusted annually for inflation.</p>
+
+    <h2>Basic Deduction (Grundavdrag)</h2>
+    <p>All taxpayers receive a basic deduction (grundavdrag) that reduces taxable income. The amount varies by income level, generally providing the largest relative benefit to lower earners. For a typical salary around SEK 500,000, the grundavdrag is approximately SEK 16,500. The deduction phases down for very high incomes and is set at SEK 16,800 for most middle-to-high earners. This calculator uses a simplified fixed deduction of SEK 16,500.</p>
+
+    <h2>Jobbskatteavdrag (Earned Income Tax Credit)</h2>
+    <p>The jobbskatteavdrag is Sweden's most important tax credit for employees. Introduced to make work more financially attractive, it directly reduces the tax you owe. The credit is most generous for low-to-middle incomes and phases out gradually for higher earners. For incomes between approximately SEK 163,800 and SEK 341,200, the maximum credit of about SEK 53,400 applies. Above SEK 341,200, the credit slowly decreases. This credit is a major reason why effective tax rates in Sweden are notably lower than the headline municipal rate.</p>
+
+    <h2>Church Tax (Kyrkoavgift)</h2>
+    <p>If you are a member of the Swedish Church (Svenska kyrkan), an additional fee of approximately 1% is added to your tax rate. This is collected automatically through the tax system. About 55% of the Swedish population are members. If you are not a member, you do not pay this fee. A separate burial fee (begravningsavgift) of about 0.25% applies to everyone regardless of church membership, but this calculator focuses on the main church tax toggle for simplicity.</p>
+
+    <h2>Employer Social Contributions (Arbetsgivaravgifter)</h2>
+    <p>Swedish employers pay social contributions (arbetsgivaravgifter) at a rate of 31.42% on top of the employee's gross salary. These contributions fund pensions, health insurance, parental insurance, and other social benefits. Importantly, these are <strong>not</strong> deducted from your paycheck &mdash; they are an additional cost borne entirely by the employer. Your gross salary figure does not include employer contributions.</p>
+
+    <h2>Tips to Understand Your Swedish Pay</h2>
+    <ul>
+      <li><strong>Check your municipality:</strong> Moving to a lower-tax municipality can save thousands of kronor per year. Stockholm city has one of the lower rates.</li>
+      <li><strong>Review your church membership:</strong> If you are not actively involved with Svenska kyrkan, leaving saves about 1% of your taxable income.</li>
+      <li><strong>Understand your tax table:</strong> Skatteverket (the Swedish Tax Agency) publishes annual tax tables that employers use for monthly withholding.</li>
+      <li><strong>ROT and RUT deductions:</strong> Home renovation (ROT) and household services (RUT) provide additional tax credits not covered by this calculator.</li>
+      <li><strong>Pension contributions:</strong> Mandatory pension (tj&auml;nstepension) is typically negotiated in collective agreements and paid by the employer on top of social contributions.</li>
+    </ul>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <a href="../../" style="color:var(--color-text-muted);text-decoration:none;">&larr; Back to all tools</a>
+  <p style="margin-top:0.5rem;">Built for people who need quick answers.</p>
+</footer>
+
+<script src="../../js/onetab-global.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  // ── Swedish Tax Constants (2024) ──
+  var NATIONAL_TAX_RATE = 0.20;
+  var NATIONAL_TAX_THRESHOLD = 598500;
+  var BASIC_DEDUCTION = 16500;
+  var CHURCH_TAX_RATE = 0.01;
+  var EMPLOYER_SOCIAL_RATE = 0.3142;
+
+  // Jobbskatteavdrag brackets (simplified 2024 approximation)
+  var JSA_BRACKET_1 = 46200;
+  var JSA_BRACKET_2 = 163800;
+  var JSA_BRACKET_3 = 341200;
+  var JSA_MID_RATE = 0.3297;
+  var JSA_MAX_CREDIT = 53400;
+  var JSA_PHASE_OUT_RATE = 0.03;
+
+  // ── DOM Elements ──
+  var grossInput = document.getElementById('grossSalary');
+  var municipalInput = document.getElementById('municipalRate');
+  var churchCheckbox = document.getElementById('churchMember');
+  var freqSelect = document.getElementById('payFrequency');
+
+  // ── Frequency labels ──
+  var FREQ_LABELS = { '1':'annually', '12':'per month', '26':'per paycheck', '52':'per week' };
+  var FREQ_NAMES = { '1':'Annual', '12':'Monthly', '26':'Biweekly', '52':'Weekly' };
+
+  // ── Calculate Jobbskatteavdrag ──
+  function calcJobbskatteavdrag(income, municipalRate) {
+    // income = annual gross income (before basic deduction, used for bracket determination)
+    var incomeAfterBasic = Math.max(0, income - BASIC_DEDUCTION);
+
+    if (income <= 0) return 0;
+
+    if (income <= JSA_BRACKET_1) {
+      // Credit = (income - basic deduction) * municipal rate
+      return Math.max(0, incomeAfterBasic * municipalRate);
+    } else if (income <= JSA_BRACKET_2) {
+      // Credit = 14,600 + (income - 46,200) * 0.3297
+      return 14600 + (income - JSA_BRACKET_1) * JSA_MID_RATE;
+    } else if (income <= JSA_BRACKET_3) {
+      // Maximum credit
+      return JSA_MAX_CREDIT;
+    } else {
+      // Phase-out: credit = max(0, 53,400 - (income - 341,200) * 0.03)
+      return Math.max(0, JSA_MAX_CREDIT - (income - JSA_BRACKET_3) * JSA_PHASE_OUT_RATE);
+    }
+  }
+
+  // ── Populate country / state links ──
+  function populateLinks() {
+    var linksDiv = document.getElementById('countryLinks');
+    if (!linksDiv) return;
+
+    var links = [
+      { name: 'California', slug: 'california' },
+      { name: 'New York', slug: 'new-york' },
+      { name: 'Texas', slug: 'texas' },
+      { name: 'Florida', slug: 'florida' },
+      { name: 'Illinois', slug: 'illinois' },
+      { name: 'Washington', slug: 'washington' },
+      { name: 'Pennsylvania', slug: 'pennsylvania' },
+      { name: 'Massachusetts', slug: 'massachusetts' },
+      { name: 'Colorado', slug: 'colorado' },
+      { name: 'Georgia', slug: 'georgia' },
+      { name: 'North Carolina', slug: 'north-carolina' },
+      { name: 'Oregon', slug: 'oregon' },
+      { name: 'Minnesota', slug: 'minnesota' },
+      { name: 'Virginia', slug: 'virginia' },
+      { name: 'Ohio', slug: 'ohio' },
+      { name: 'Michigan', slug: 'michigan' },
+      { name: 'New Jersey', slug: 'new-jersey' },
+      { name: 'Maryland', slug: 'maryland' },
+      { name: 'Arizona', slug: 'arizona' },
+      { name: 'Nevada', slug: 'nevada' }
+    ];
+
+    for (var i = 0; i < links.length; i++) {
+      var a = document.createElement('a');
+      a.href = '../' + links[i].slug + '/';
+      a.textContent = links[i].name;
+      linksDiv.appendChild(a);
+    }
+  }
+  populateLinks();
+
+  // ── Main Calculation ──
+  function calculate() {
+    var gross = parseFloat(grossInput.value) || 0;
+    var municipalRate = (parseFloat(municipalInput.value) || 32.41) / 100;
+    var isChurchMember = churchCheckbox.checked;
+    var freq = parseInt(freqSelect.value);
+
+    // Church tax
+    var churchRate = isChurchMember ? CHURCH_TAX_RATE : 0;
+
+    // Combined local tax rate (municipal + optional church)
+    var combinedLocalRate = municipalRate + churchRate;
+
+    // Taxable income after basic deduction
+    var taxableIncome = Math.max(0, gross - BASIC_DEDUCTION);
+
+    // Municipal + church tax (flat rate on taxable income)
+    var municipalTax = taxableIncome * municipalRate;
+    var churchTax = taxableIncome * churchRate;
+
+    // National tax (20% on income above threshold)
+    var nationalTaxableAmount = Math.max(0, taxableIncome - NATIONAL_TAX_THRESHOLD);
+    var nationalTax = nationalTaxableAmount * NATIONAL_TAX_RATE;
+
+    // Total gross tax before credits
+    var grossTax = municipalTax + churchTax + nationalTax;
+
+    // Jobbskatteavdrag (earned income tax credit)
+    var jobbskatteavdrag = calcJobbskatteavdrag(gross, municipalRate);
+
+    // Net tax (cannot go below 0)
+    var netTax = Math.max(0, grossTax - jobbskatteavdrag);
+
+    // Take-home
+    var annualTakeHome = gross - netTax;
+    var perPeriod = freq > 0 ? annualTakeHome / freq : annualTakeHome;
+
+    // Effective rate
+    var effectiveRate = gross > 0 ? (netTax / gross * 100) : 0;
+
+    // Marginal rate: combined local rate + national rate if above threshold
+    var marginalRate = combinedLocalRate;
+    if (taxableIncome > NATIONAL_TAX_THRESHOLD) {
+      marginalRate += NATIONAL_TAX_RATE;
+    }
+    // Subtract approximate marginal jobbskatteavdrag effect for display
+    // For simplicity, show the statutory marginal rate
+    var marginalPct = marginalRate * 100;
+
+    // Employer cost
+    var employerSocial = gross * EMPLOYER_SOCIAL_RATE;
+    var totalEmployerCost = gross + employerSocial;
+
+    // ── Update Hero ──
+    document.getElementById('heroTakeHome').textContent = OneTab.fmt(Math.round(perPeriod));
+    document.getElementById('heroSublabel').textContent = FREQ_LABELS[freq] || 'per month';
+
+    // ── Stats ──
+    document.getElementById('statAnnual').textContent = OneTab.fmt(Math.round(annualTakeHome));
+    document.getElementById('statEffective').textContent = effectiveRate.toFixed(1) + '%';
+    document.getElementById('statTotalTax').textContent = OneTab.fmt(Math.round(netTax));
+    document.getElementById('statMarginal').textContent = marginalPct.toFixed(1) + '%';
+
+    // ── Breakdown Table ──
+    var rows = [
+      ['Gross salary (bruttol\u00f6n)', OneTab.fmt(Math.round(gross))],
+      ['Basic deduction (grundavdrag)', '\u2212 ' + OneTab.fmt(Math.round(BASIC_DEDUCTION))],
+      ['Taxable income (beskattningsbar inkomst)', OneTab.fmt(Math.round(taxableIncome))],
+      ['', ''],
+      ['Municipal tax (' + (municipalRate * 100).toFixed(2) + '%)', OneTab.fmt(Math.round(municipalTax))]
+    ];
+
+    if (isChurchMember) {
+      rows.push(['Church tax (~1%)', OneTab.fmt(Math.round(churchTax))]);
+    }
+
+    if (nationalTax > 0) {
+      rows.push(['National tax (20% on income above ' + OneTab.fmt(NATIONAL_TAX_THRESHOLD) + ')', OneTab.fmt(Math.round(nationalTax))]);
+    }
+
+    rows.push(['Gross tax before credits', OneTab.fmt(Math.round(grossTax))]);
+    rows.push(['Jobbskatteavdrag (earned income tax credit)', '\u2212 ' + OneTab.fmt(Math.round(jobbskatteavdrag))]);
+    rows.push(['', '']);
+    rows.push(['total_tax', OneTab.fmt(Math.round(netTax))]);
+    rows.push(['', '']);
+    rows.push(['total_takehome', OneTab.fmt(Math.round(annualTakeHome))]);
+
+    var tbody = document.getElementById('breakdownTable').querySelector('tbody');
+    tbody.innerHTML = '';
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i][0] === '' && rows[i][1] === '') continue;
+      var tr = document.createElement('tr');
+      if (rows[i][0] === 'total_tax') {
+        tr.className = 'total';
+        var td1 = document.createElement('td');
+        td1.textContent = 'Total tax deducted';
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      } else if (rows[i][0] === 'total_takehome') {
+        tr.className = 'total';
+        var td1 = document.createElement('td');
+        td1.textContent = 'Annual take-home pay (nettol\u00f6n)';
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      } else {
+        var td1 = document.createElement('td');
+        td1.textContent = rows[i][0];
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      }
+      tbody.appendChild(tr);
+    }
+
+    // ── Period Comparison Table ──
+    var periods = [
+      { name:'Annual', div:1 },
+      { name:'Monthly', div:12 },
+      { name:'Biweekly', div:26 },
+      { name:'Weekly', div:52 }
+    ];
+    var ptbody = document.getElementById('periodTable').querySelector('tbody');
+    ptbody.innerHTML = '';
+    for (var i = 0; i < periods.length; i++) {
+      var tr = document.createElement('tr');
+      var d = periods[i].div;
+      if (FREQ_NAMES[freq] === periods[i].name) tr.className = 'row-highlight';
+      tr.innerHTML = '<td>' + periods[i].name + '</td><td>' + OneTab.fmt(Math.round(gross / d)) +
+        '</td><td>' + OneTab.fmt(Math.round(netTax / d)) + '</td><td>' + OneTab.fmt(Math.round(annualTakeHome / d)) + '</td>';
+      ptbody.appendChild(tr);
+    }
+
+    // ── Stacked Bar ──
+    var barDiv = document.getElementById('stackedBar');
+    var legDiv = document.getElementById('stackedLegend');
+    barDiv.innerHTML = '';
+    legDiv.innerHTML = '';
+
+    if (gross > 0) {
+      var segments = [
+        { label: 'Take Home', value: annualTakeHome, color: '#059669' },
+        { label: 'Municipal Tax', value: Math.max(0, municipalTax - jobbskatteavdrag), color: '#2563eb' }
+      ];
+
+      if (isChurchMember && churchTax > 0) {
+        segments.push({ label: 'Church Tax', value: churchTax, color: '#7c3aed' });
+      }
+
+      if (nationalTax > 0) {
+        segments.push({ label: 'National Tax', value: nationalTax, color: '#dc2626' });
+      }
+
+      // If jobbskatteavdrag exceeds municipal tax, adjust
+      // The credit primarily offsets municipal tax, so show net municipal
+      // Recalculate to ensure segments sum to gross
+      var segTotal = 0;
+      for (var i = 0; i < segments.length; i++) segTotal += segments[i].value;
+      // If there's a rounding gap, absorb into take-home
+      if (Math.abs(segTotal - gross) > 1) {
+        segments[0].value = gross - (segTotal - segments[0].value);
+      }
+
+      for (var i = 0; i < segments.length; i++) {
+        var pct = segments[i].value / gross * 100;
+        if (pct < 0.3) continue;
+        var seg = document.createElement('div');
+        seg.className = 'segment';
+        seg.style.width = pct + '%';
+        seg.style.background = segments[i].color;
+        if (pct > 8) seg.textContent = pct.toFixed(0) + '%';
+        barDiv.appendChild(seg);
+
+        var li = document.createElement('div');
+        li.className = 'legend-item';
+        li.innerHTML = '<span class="legend-dot" style="background:' + segments[i].color + '"></span>' +
+          segments[i].label + ': ' + OneTab.fmt(Math.round(segments[i].value)) + ' (' + pct.toFixed(1) + '%)';
+        legDiv.appendChild(li);
+      }
+    }
+
+    // ── Employer Cost Table ──
+    var etbody = document.getElementById('employerTable').querySelector('tbody');
+    etbody.innerHTML = '';
+    var eRows = [
+      ['Gross salary', OneTab.fmt(Math.round(gross))],
+      ['Arbetsgivaravgifter (31.42%)', '+ ' + OneTab.fmt(Math.round(employerSocial))],
+      ['total_employer', OneTab.fmt(Math.round(totalEmployerCost))]
+    ];
+    for (var i = 0; i < eRows.length; i++) {
+      var tr = document.createElement('tr');
+      if (eRows[i][0] === 'total_employer') {
+        tr.className = 'total';
+        var td1 = document.createElement('td');
+        td1.textContent = 'Total employer cost';
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = eRows[i][1];
+        tr.appendChild(td2);
+      } else {
+        var td1 = document.createElement('td');
+        td1.textContent = eRows[i][0];
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = eRows[i][1];
+        tr.appendChild(td2);
+      }
+      etbody.appendChild(tr);
+    }
+  }
+
+  // ── Bind Inputs ──
+  var inputs = document.querySelectorAll('#grossSalary,#municipalRate,#churchMember,#payFrequency');
+  for (var i = 0; i < inputs.length; i++) {
+    inputs[i].addEventListener('input', calculate);
+    inputs[i].addEventListener('change', calculate);
+  }
+
+  // ── Country Change ──
+  OneTab.onCountryChange(function(c) {
+    var pfx = document.getElementById('pfxSalary');
+    if (pfx) pfx.textContent = c.currency;
+    calculate();
+  });
+
+  calculate();
+})();
+</script>
+</body>
+</html>

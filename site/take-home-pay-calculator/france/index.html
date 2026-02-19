@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>France Take-Home Pay Calculator (Salaire Net) — After Tax | OneTab</title>
+  <meta name="description" content="Calculate your salaire net after French income tax (imp&ocirc;t sur le revenu) and social contributions (cotisations sociales). See your take-home pay from gross salary (salaire brut).">
+  <meta name="keywords" content="france take home pay calculator, salaire net, salaire brut net, calculateur imp&ocirc;t france, cotisations sociales, quotient familial, french income tax calculator">
+
+  <meta property="og:title" content="France Take-Home Pay Calculator (Salaire Net) | OneTab">
+  <meta property="og:description" content="Calculate your salaire net after French income tax and social contributions. See your take-home pay from gross salary.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://onetab.tools/take-home-pay-calculator/france/">
+  <meta property="og:site_name" content="OneTab">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="France Take-Home Pay Calculator (Salaire Net) | OneTab">
+  <meta name="twitter:description" content="Calculate your salaire net after French income tax and social contributions. See your take-home pay from gross salary.">
+
+  <link rel="canonical" href="https://onetab.tools/take-home-pay-calculator/france/">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../css/style.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "France Take-Home Pay Calculator",
+    "url": "https://onetab.tools/take-home-pay-calculator/france/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+    "description": "Calculate your salaire net after French income tax and social contributions. See your take-home pay from gross salary (salaire brut)."
+  }
+  </script>
+
+  <script>
+    (function() {
+      var t = localStorage.getItem('onetab-theme');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+  </script>
+
+  <style>
+    .period-table { width:100%; border-collapse:collapse; }
+    .period-table th, .period-table td { padding:0.6rem 0.75rem; text-align:right; font-variant-numeric:tabular-nums; }
+    .period-table th:first-child, .period-table td:first-child { text-align:left; }
+    .period-table th { font-size:0.8rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--color-text-muted); border-bottom:2px solid var(--color-border); }
+    .period-table td { border-bottom:1px solid var(--color-border); font-size:0.9rem; }
+    .period-table tr:last-child td { border-bottom:none; }
+    .period-table .row-highlight td { font-weight:700; color:var(--color-success); background:rgba(5,150,105,0.05); }
+    .country-links { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.75rem; }
+    .country-links a { font-size:0.8rem; padding:0.25rem 0.5rem; border-radius:4px; background:var(--color-bg); border:1px solid var(--color-border); color:var(--color-text); text-decoration:none; transition:border-color 0.15s; }
+    .country-links a:hover { border-color:var(--color-primary); color:var(--color-primary); }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="../../">OneTab</a>
+  <div class="header-actions">
+    <select class="country-select-global" id="country-select-global" title="Your location"></select>
+    <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">Dark</button>
+  </div>
+</header>
+
+<main class="container">
+  <h1>France Take-Home Pay Calculator</h1>
+  <p class="subtitle">Calculate your salaire net after income tax and social contributions.</p>
+
+  <div class="ad-placeholder" data-size="leaderboard"><span class="ad-label">Ad</span><span class="ad-size">728 × 90</span></div>
+
+  <!-- Income -->
+  <div class="card">
+    <div class="card-title">Your Income (Revenu)</div>
+    <div class="form-group">
+      <label>Annual gross salary (salaire brut)</label>
+      <div class="input-with-prefix">
+        <span class="prefix" id="pfx1">&euro;</span>
+        <input type="number" id="grossSalary" value="45000" min="0" step="1000">
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <label>Family situation (situation familiale)</label>
+        <select id="familySituation">
+          <option value="single">Single (C&eacute;libataire) &mdash; 1 part</option>
+          <option value="married">Married / PACS &mdash; 2 parts</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Number of children (enfants)</label>
+        <select id="numChildren">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Pay frequency (fr&eacute;quence de paie)</label>
+      <select id="payFrequency">
+        <option value="12" selected>Monthly (12 months/yr)</option>
+        <option value="13">13th month (13 paychecks/yr)</option>
+        <option value="1">Annual</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="results" class="result-section visible">
+
+    <div class="card result-hero" style="border-radius:var(--radius);">
+      <div class="rate-label">Your Take-Home Pay (Salaire Net Apr&egrave;s Imp&ocirc;t)</div>
+      <div class="rate-value" id="heroTakeHome">&euro;0</div>
+      <div class="rate-sublabel" id="heroSublabel">per month</div>
+    </div>
+
+    <div class="stat-grid" style="margin-bottom:1.5rem;">
+      <div class="stat-box success">
+        <div class="stat-value" id="statAnnual">&euro;0</div>
+        <div class="stat-label">Annual Take-Home</div>
+      </div>
+      <div class="stat-box highlight">
+        <div class="stat-value" id="statEffective">0%</div>
+        <div class="stat-label">Effective Tax + Charges Rate</div>
+      </div>
+      <div class="stat-box warning">
+        <div class="stat-value" id="statTotalDeductions">&euro;0</div>
+        <div class="stat-label">Total Deductions</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="statMarginal">0%</div>
+        <div class="stat-label">Marginal Tax Rate</div>
+      </div>
+    </div>
+
+    <div class="ad-placeholder" data-size="rectangle"><span class="ad-label">Ad</span><span class="ad-size">300 × 250</span></div>
+
+    <!-- Tax Breakdown -->
+    <div class="card">
+      <h2>Breakdown (D&eacute;composition)</h2>
+      <table class="breakdown-table" id="breakdownTable">
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Pay Period Comparison -->
+    <div class="card">
+      <h2>Pay Period Breakdown</h2>
+      <table class="period-table" id="periodTable">
+        <thead>
+          <tr><th>Period</th><th>Gross</th><th>Deductions</th><th>Take-Home</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Stacked Bar -->
+    <div class="card">
+      <h2>Where Your Money Goes</h2>
+      <div class="stacked-bar" id="stackedBar"></div>
+      <div class="stacked-legend" id="stackedLegend"></div>
+    </div>
+
+    <div class="ad-placeholder" data-size="large-rectangle"><span class="ad-label">Ad</span><span class="ad-size">336 × 280</span></div>
+  </div>
+
+  <!-- Related Tools -->
+  <div class="card" style="margin-top:1.5rem;">
+    <div class="card-title">Related Tools</div>
+    <div style="display:flex;flex-direction:column;gap:0.5rem;">
+      <a href="../../salary-converter/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Salary to Hourly Calculator</a>
+      <a href="../../freelance-rate-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Freelance Hourly Rate Calculator</a>
+      <a href="../../compound-interest-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Compound Interest Calculator</a>
+    </div>
+  </div>
+
+  <!-- Country Pages -->
+  <div class="card" style="margin-top:1rem;">
+    <div class="card-title">Take-Home Pay by Country &amp; State</div>
+    <div class="country-links">
+      <a href="../california/">California</a>
+      <a href="../new-york/">New York</a>
+      <a href="../texas/">Texas</a>
+      <a href="../florida/">Florida</a>
+      <a href="../washington/">Washington</a>
+      <a href="../illinois/">Illinois</a>
+      <a href="../pennsylvania/">Pennsylvania</a>
+      <a href="../ohio/">Ohio</a>
+      <a href="../georgia/">Georgia</a>
+      <a href="../north-carolina/">North Carolina</a>
+      <a href="../massachusetts/">Massachusetts</a>
+      <a href="../colorado/">Colorado</a>
+    </div>
+  </div>
+
+  <div class="ad-placeholder" data-size="in-article"><span class="ad-label">Ad</span><span class="ad-size">Responsive</span></div>
+
+  <!-- SEO Content -->
+  <div class="content-section">
+    <h2>How French Take-Home Pay Is Calculated</h2>
+    <p>In France, take-home pay (salaire net apr&egrave;s imp&ocirc;t) is what remains of your gross salary (salaire brut) after two main categories of deductions: social contributions (cotisations sociales) and income tax (imp&ocirc;t sur le revenu, or IR). Since January 2019, income tax is withheld at source (pr&eacute;l&egrave;vement &agrave; la source), so most employees see both deductions on their payslip (fiche de paie).</p>
+
+    <h2>Social Contributions (Cotisations Sociales)</h2>
+    <p>French employee social contributions fund the country's comprehensive social security system, covering healthcare (Assurance Maladie), retirement pensions (retraite de base and compl&eacute;mentaire AGIRC-ARRCO), unemployment insurance, and family benefits. As an employee, you typically pay around 22% of your gross salary in social charges. Key components include:</p>
+    <ul>
+      <li><strong>CSG (Contribution Sociale G&eacute;n&eacute;ralis&eacute;e):</strong> 9.2% on 98.25% of gross salary. Of this, 6.8% is deductible from taxable income and 2.4% is non-deductible.</li>
+      <li><strong>CRDS (Contribution au Remboursement de la Dette Sociale):</strong> 0.5% on 98.25% of gross salary, non-deductible.</li>
+      <li><strong>Pension (retraite de base):</strong> 6.9% on earnings up to the Social Security ceiling (Plafond de la S&eacute;curit&eacute; Sociale, &euro;46,368/year in 2024).</li>
+      <li><strong>Complementary pension (AGIRC-ARRCO):</strong> 3.15% on Tranche 1 (up to &euro;46,368) and 8.64% on Tranche 2 (from &euro;46,368 to &euro;370,944).</li>
+      <li><strong>Unemployment insurance:</strong> 0% for employees since October 2018 (fully employer-funded).</li>
+      <li><strong>Health insurance (Assurance Maladie):</strong> 0% employee share (employer-paid in mainland France).</li>
+    </ul>
+    <p>For simplicity, this calculator uses a combined employee social contribution rate of approximately 22%, which is the standard approximation for cadre and non-cadre employees in the private sector.</p>
+
+    <h2>French Income Tax (Imp&ocirc;t sur le Revenu)</h2>
+    <p>France uses a progressive income tax system with five brackets (tranches) applied to your net taxable income per fiscal part (quotient familial). The 2024 brackets are:</p>
+    <ul>
+      <li>&euro;0 &ndash; &euro;11,294: <strong>0%</strong></li>
+      <li>&euro;11,295 &ndash; &euro;28,797: <strong>11%</strong></li>
+      <li>&euro;28,798 &ndash; &euro;82,341: <strong>30%</strong></li>
+      <li>&euro;82,342 &ndash; &euro;177,106: <strong>41%</strong></li>
+      <li>Above &euro;177,106: <strong>45%</strong></li>
+    </ul>
+
+    <h2>Quotient Familial (Family Quotient System)</h2>
+    <p>France's distinctive quotient familial system divides your taxable income by the number of "parts" in your household before applying tax brackets, then multiplies the resulting tax back by the same number of parts. This mechanism provides meaningful tax savings for families with children.</p>
+    <ul>
+      <li><strong>Single (c&eacute;libataire):</strong> 1 part</li>
+      <li><strong>Married or PACS:</strong> 2 parts</li>
+      <li><strong>1st and 2nd child:</strong> +0.5 parts each</li>
+      <li><strong>3rd child onward:</strong> +1 part each</li>
+    </ul>
+    <p>For example, a married couple with 3 children has 2 + 0.5 + 0.5 + 1 = 4 parts. Their income is divided by 4 for bracket application, then the tax is multiplied by 4.</p>
+
+    <h2>Salaire Net vs Salaire Brut</h2>
+    <p>In France, job offers typically quote the salaire brut (gross salary). To convert to salaire net avant imp&ocirc;t (net salary before tax), you subtract employee social contributions (roughly 22%). To get the salaire net apr&egrave;s imp&ocirc;t (net salary after tax), you also subtract income tax withheld at source. This calculator computes both steps for you.</p>
+
+    <h2>The 10% Professional Expenses Deduction</h2>
+    <p>French tax law automatically applies a 10% deduction on your net taxable salary to account for professional expenses (frais professionnels), unless you opt to deduct actual expenses (frais r&eacute;els). This calculator applies the standard 10% deduction. The deduction is capped at &euro;14,171 and has a minimum floor of &euro;495 for 2024.</p>
+
+    <h2>Tips to Optimize Your French Take-Home Pay</h2>
+    <ul>
+      <li><strong>Maximize your quotient familial:</strong> Marriage or PACS can significantly reduce taxes for couples with unequal incomes.</li>
+      <li><strong>Consider frais r&eacute;els:</strong> If your actual professional expenses exceed 10% of salary (long commute, home office costs), opt for actual deduction.</li>
+      <li><strong>Use PER (Plan d'&Eacute;pargne Retraite):</strong> Contributions to a PER are deductible from taxable income, reducing your income tax.</li>
+      <li><strong>Check your tax rate:</strong> The pr&eacute;l&egrave;vement &agrave; la source rate can be adjusted if your situation changes (marriage, children, salary change).</li>
+      <li><strong>Understand your fiche de paie:</strong> Your payslip shows both the salaire net (after social charges) and salaire net fiscal (taxable net), which differ because non-deductible CSG/CRDS are added back.</li>
+    </ul>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <a href="../../" style="color:var(--color-text-muted);text-decoration:none;">&larr; Back to all tools</a>
+  <p style="margin-top:0.5rem;">Built for people who need quick answers.</p>
+</footer>
+
+<script src="../../js/onetab-global.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  // ── French income tax brackets 2024 (per part) ──
+  var IR_BRACKETS = [
+    [11294, 0.00],
+    [28797, 0.11],
+    [82341, 0.30],
+    [177106, 0.41],
+    [Infinity, 0.45]
+  ];
+
+  // Social contribution rate (employee, simplified ~22% of gross)
+  var SOCIAL_RATE = 0.22;
+
+  // 10% professional expenses deduction for income tax
+  var PRO_EXPENSES_RATE = 0.10;
+  var PRO_EXPENSES_MAX = 14171;
+  var PRO_EXPENSES_MIN = 495;
+
+  // CSG deductible rate (for computing taxable income)
+  // Deductible CSG = 6.8% on 98.25% of gross
+  var CSG_DEDUCTIBLE_RATE = 0.068;
+  var CSG_BASE_RATE = 0.9825;
+
+  // ── DOM elements ──
+  var grossInput = document.getElementById('grossSalary');
+  var familySelect = document.getElementById('familySituation');
+  var childrenSelect = document.getElementById('numChildren');
+  var freqSelect = document.getElementById('payFrequency');
+
+  // ── Calculation helpers ──
+  function calcBracketTax(income, brackets) {
+    var tax = 0, prev = 0;
+    for (var i = 0; i < brackets.length; i++) {
+      var limit = brackets[i][0], rate = brackets[i][1];
+      if (income <= prev) break;
+      tax += (Math.min(income, limit) - prev) * rate;
+      prev = limit;
+    }
+    return Math.max(0, tax);
+  }
+
+  function getMarginalRate(income, brackets) {
+    var prev = 0;
+    for (var i = 0; i < brackets.length; i++) {
+      if (income <= brackets[i][0]) return brackets[i][1];
+      prev = brackets[i][0];
+    }
+    return brackets[brackets.length - 1][1];
+  }
+
+  function calcParts(family, children) {
+    var parts = (family === 'married') ? 2 : 1;
+    var n = parseInt(children) || 0;
+    if (n >= 1) parts += 0.5; // 1st child
+    if (n >= 2) parts += 0.5; // 2nd child
+    if (n >= 3) parts += (n - 2) * 1; // 3rd child onward: +1 each
+    return parts;
+  }
+
+  // ── Frequency labels ──
+  var FREQ_LABELS = { '1':'annually', '12':'per month', '13':'per month (13th month)' };
+  var FREQ_NAMES = { '1':'Annual', '12':'Monthly', '13':'Monthly (13 months)' };
+
+  // ── Main calculation ──
+  function calculate() {
+    var gross = parseFloat(grossInput.value) || 0;
+    var family = familySelect.value;
+    var children = childrenSelect.value;
+    var freq = parseInt(freqSelect.value);
+    var parts = calcParts(family, children);
+
+    // Step 1: Social contributions (employee share, ~22% of gross)
+    var socialContributions = gross * SOCIAL_RATE;
+
+    // Step 2: Net salary before tax (salaire net avant impot)
+    var netBeforeTax = gross - socialContributions;
+
+    // Step 3: Compute taxable income for income tax (revenu net imposable)
+    // Taxable income = gross - deductible CSG - social contributions (simplified)
+    // In practice: net imposable = net + non-deductible CSG/CRDS - deductible CSG
+    // Simplified: we use gross - social contributions + non-deductible portion
+    // More accurately: taxable = gross - total social charges + non-deductible CSG/CRDS
+    // For simplicity: taxable net = gross * (1 - 0.22) * 1.0285 approximately
+    // Actually the standard approach:
+    // Net imposable = salaire net + CSG non-deductible (2.4%) on 98.25% + CRDS (0.5%) on 98.25%
+    // = netBeforeTax + gross * 0.9825 * (0.024 + 0.005)
+    var nonDeductibleCSGCRDS = gross * CSG_BASE_RATE * (0.024 + 0.005);
+    var netImposable = netBeforeTax + nonDeductibleCSGCRDS;
+
+    // Step 4: Apply 10% professional expenses deduction
+    var proExpenses = netImposable * PRO_EXPENSES_RATE;
+    proExpenses = Math.max(PRO_EXPENSES_MIN, Math.min(proExpenses, PRO_EXPENSES_MAX));
+    var revenuImposable = Math.max(0, netImposable - proExpenses);
+
+    // Step 5: Apply quotient familial
+    var incomePerPart = revenuImposable / parts;
+
+    // Step 6: Calculate tax per part, then multiply by parts
+    var taxPerPart = calcBracketTax(incomePerPart, IR_BRACKETS);
+    var incomeTax = taxPerPart * parts;
+
+    // Marginal rate (based on income per part)
+    var marginalRate = getMarginalRate(incomePerPart, IR_BRACKETS);
+
+    // Step 7: Total deductions and take-home
+    var totalDeductions = socialContributions + incomeTax;
+    var annualTakeHome = gross - totalDeductions;
+    var perPeriod = annualTakeHome / freq;
+
+    var effectiveRate = gross > 0 ? (totalDeductions / gross * 100) : 0;
+
+    // ── Update hero ──
+    document.getElementById('heroTakeHome').textContent = OneTab.fmt(Math.round(perPeriod));
+    document.getElementById('heroSublabel').textContent = FREQ_LABELS[freq] || 'per month';
+
+    // ── Stats ──
+    document.getElementById('statAnnual').textContent = OneTab.fmt(Math.round(annualTakeHome));
+    document.getElementById('statEffective').textContent = effectiveRate.toFixed(1) + '%';
+    document.getElementById('statTotalDeductions').textContent = OneTab.fmt(Math.round(totalDeductions));
+    document.getElementById('statMarginal').textContent = (marginalRate * 100).toFixed(0) + '%';
+
+    // ── Breakdown table ──
+    var partsLabel = parts === 1 ? '1 part' : parts + ' parts';
+    var rows = [
+      ['Salaire brut (gross salary)', OneTab.fmt(Math.round(gross))],
+      ['Cotisations sociales (employee) ~22%', '\u2212 ' + OneTab.fmt(Math.round(socialContributions))],
+      ['Salaire net avant imp\u00f4t', OneTab.fmt(Math.round(netBeforeTax))],
+      ['', ''],
+      ['Net imposable (taxable net)', OneTab.fmt(Math.round(netImposable))],
+      ['Abattement 10% (professional expenses)', '\u2212 ' + OneTab.fmt(Math.round(proExpenses))],
+      ['Revenu imposable', OneTab.fmt(Math.round(revenuImposable))],
+      ['Quotient familial (' + partsLabel + ')', OneTab.fmt(Math.round(incomePerPart)) + ' per part'],
+      ['', ''],
+      ['Imp\u00f4t sur le revenu (income tax)', OneTab.fmt(Math.round(incomeTax))],
+      ['Cotisations sociales (employee)', OneTab.fmt(Math.round(socialContributions))],
+      ['total', OneTab.fmt(Math.round(totalDeductions))],
+      ['', ''],
+      ['total', OneTab.fmt(Math.round(annualTakeHome))]
+    ];
+
+    var tbody = document.getElementById('breakdownTable').querySelector('tbody');
+    tbody.innerHTML = '';
+    var totalCount = 0;
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i][0] === '' && rows[i][1] === '') continue;
+      var tr = document.createElement('tr');
+      if (rows[i][0] === 'total') {
+        totalCount++;
+        tr.className = 'total';
+        var td1 = document.createElement('td');
+        td1.textContent = (totalCount === 1) ? 'Total deductions' : 'Annual take-home pay (salaire net apr\u00e8s imp\u00f4t)';
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      } else {
+        var td1 = document.createElement('td');
+        td1.textContent = rows[i][0];
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      }
+      tbody.appendChild(tr);
+    }
+
+    // ── Period comparison table ──
+    var periods = [
+      { name:'Annual', div:1 },
+      { name:'Monthly (12 mo)', div:12 },
+      { name:'Monthly (13 mo)', div:13 }
+    ];
+    var ptbody = document.getElementById('periodTable').querySelector('tbody');
+    ptbody.innerHTML = '';
+    for (var i = 0; i < periods.length; i++) {
+      var tr = document.createElement('tr');
+      var d = periods[i].div;
+      var isHighlight = (freq === d);
+      if (isHighlight) tr.className = 'row-highlight';
+      tr.innerHTML = '<td>' + periods[i].name + '</td><td>' + OneTab.fmt(Math.round(gross / d)) +
+        '</td><td>' + OneTab.fmt(Math.round(totalDeductions / d)) + '</td><td>' + OneTab.fmt(Math.round(annualTakeHome / d)) + '</td>';
+      ptbody.appendChild(tr);
+    }
+
+    // ── Stacked bar ──
+    var barDiv = document.getElementById('stackedBar');
+    var legDiv = document.getElementById('stackedLegend');
+    barDiv.innerHTML = '';
+    legDiv.innerHTML = '';
+
+    if (gross > 0) {
+      var segments = [
+        { label:'Take Home', value:annualTakeHome, color:'#059669' },
+        { label:'Income Tax (IR)', value:incomeTax, color:'#2563eb' },
+        { label:'Social Contributions', value:socialContributions, color:'#d97706' }
+      ];
+      for (var i = 0; i < segments.length; i++) {
+        var pct = segments[i].value / gross * 100;
+        if (pct < 0.3) continue;
+        var seg = document.createElement('div');
+        seg.className = 'segment';
+        seg.style.width = pct + '%';
+        seg.style.background = segments[i].color;
+        if (pct > 8) seg.textContent = pct.toFixed(0) + '%';
+        barDiv.appendChild(seg);
+
+        var li = document.createElement('div');
+        li.className = 'legend-item';
+        li.innerHTML = '<span class="legend-dot" style="background:' + segments[i].color + '"></span>' +
+          segments[i].label + ': ' + OneTab.fmt(Math.round(segments[i].value)) + ' (' + pct.toFixed(1) + '%)';
+        legDiv.appendChild(li);
+      }
+    }
+  }
+
+  // ── Bind all inputs ──
+  var inputs = document.querySelectorAll('#grossSalary,#familySituation,#numChildren,#payFrequency');
+  for (var i = 0; i < inputs.length; i++) {
+    inputs[i].addEventListener('input', calculate);
+    inputs[i].addEventListener('change', calculate);
+  }
+
+  // ── Country change (update currency prefix) ──
+  OneTab.onCountryChange(function(c) {
+    var pfxs = document.querySelectorAll('[id^="pfx"]');
+    for (var i = 0; i < pfxs.length; i++) pfxs[i].textContent = c.currency;
+    calculate();
+  });
+
+  calculate();
+})();
+</script>
+</body>
+</html>

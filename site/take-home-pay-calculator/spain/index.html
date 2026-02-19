@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spain Take-Home Pay Calculator (Salario Neto) — After Tax | OneTab</title>
+  <meta name="description" content="Calculate your salario neto in Spain after IRPF income tax and social security contributions. See your take-home pay with 12 or 14 pagas, personal minimum, and employment income reduction.">
+  <meta name="keywords" content="spain take home pay calculator, salario neto calculator, IRPF calculator, spain income tax, spanish payroll calculator, calculadora salario neto, pagas extras, seguridad social">
+
+  <meta property="og:title" content="Spain Take-Home Pay Calculator (Salario Neto) | OneTab">
+  <meta property="og:description" content="Calculate your salario neto in Spain after IRPF income tax and social security contributions. Supports 12 or 14 pagas.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://onetab.tools/take-home-pay-calculator/spain/">
+  <meta property="og:site_name" content="OneTab">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Spain Take-Home Pay Calculator (Salario Neto) | OneTab">
+  <meta name="twitter:description" content="Calculate your salario neto in Spain after IRPF income tax and social security contributions.">
+
+  <link rel="canonical" href="https://onetab.tools/take-home-pay-calculator/spain/">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../css/style.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Spain Take-Home Pay Calculator",
+    "url": "https://onetab.tools/take-home-pay-calculator/spain/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+    "description": "Calculate your salario neto in Spain after IRPF income tax and social security contributions. Supports 12 or 14 pagas."
+  }
+  </script>
+
+  <script>
+    (function() {
+      var t = localStorage.getItem('onetab-theme');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+  </script>
+
+  <style>
+    .period-table { width:100%; border-collapse:collapse; }
+    .period-table th, .period-table td { padding:0.6rem 0.75rem; text-align:right; font-variant-numeric:tabular-nums; }
+    .period-table th:first-child, .period-table td:first-child { text-align:left; }
+    .period-table th { font-size:0.8rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--color-text-muted); border-bottom:2px solid var(--color-border); }
+    .period-table td { border-bottom:1px solid var(--color-border); font-size:0.9rem; }
+    .period-table tr:last-child td { border-bottom:none; }
+    .period-table .row-highlight td { font-weight:700; color:var(--color-success); background:rgba(5,150,105,0.05); }
+    .country-links { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.75rem; }
+    .country-links a { font-size:0.8rem; padding:0.25rem 0.5rem; border-radius:4px; background:var(--color-bg); border:1px solid var(--color-border); color:var(--color-text); text-decoration:none; transition:border-color 0.15s; }
+    .country-links a:hover { border-color:var(--color-primary); color:var(--color-primary); }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="../../">OneTab</a>
+  <div class="header-actions">
+    <select class="country-select-global" id="country-select-global" title="Your location"></select>
+    <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">Dark</button>
+  </div>
+</header>
+
+<main class="container">
+  <h1>Spain Take-Home Pay Calculator</h1>
+  <p class="subtitle">Calculate your salario neto after IRPF income tax and social security contributions.</p>
+
+  <div class="ad-placeholder" data-size="leaderboard"><span class="ad-label">Ad</span><span class="ad-size">728 × 90</span></div>
+
+  <!-- Income -->
+  <div class="card">
+    <div class="card-title">Your Income</div>
+    <div class="form-group">
+      <label>Annual gross salary (salario bruto anual)</label>
+      <div class="input-with-prefix">
+        <span class="prefix" id="pfxSalary">&euro;</span>
+        <input type="number" id="grossSalary" value="35000" min="0" step="1000">
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <label>Number of children</label>
+        <select id="numChildren">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5+</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Pay frequency (pagas)</label>
+        <select id="payFrequency">
+          <option value="12">12 payments / year</option>
+          <option value="14" selected>14 payments / year (pagas extras)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="results" class="result-section visible">
+
+    <div class="card result-hero" style="border-radius:var(--radius);">
+      <div class="rate-label">Your Take-Home Pay (Salario Neto)</div>
+      <div class="rate-value" id="heroTakeHome">&euro;0</div>
+      <div class="rate-sublabel" id="heroSublabel">per payment (14 pagas)</div>
+    </div>
+
+    <div class="stat-grid" style="margin-bottom:1.5rem;">
+      <div class="stat-box success">
+        <div class="stat-value" id="statAnnual">&euro;0</div>
+        <div class="stat-label">Annual Take-Home</div>
+      </div>
+      <div class="stat-box highlight">
+        <div class="stat-value" id="statEffective">0%</div>
+        <div class="stat-label">Effective Tax Rate</div>
+      </div>
+      <div class="stat-box warning">
+        <div class="stat-value" id="statTotalTax">&euro;0</div>
+        <div class="stat-label">Total Deductions</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="statMarginal">0%</div>
+        <div class="stat-label">Marginal IRPF Rate</div>
+      </div>
+    </div>
+
+    <div class="ad-placeholder" data-size="rectangle"><span class="ad-label">Ad</span><span class="ad-size">300 × 250</span></div>
+
+    <!-- Tax Breakdown -->
+    <div class="card">
+      <h2>Tax Breakdown</h2>
+      <table class="breakdown-table" id="breakdownTable">
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Pay Period Comparison -->
+    <div class="card">
+      <h2>Pay Period Breakdown</h2>
+      <table class="period-table" id="periodTable">
+        <thead>
+          <tr><th>Period</th><th>Gross</th><th>Deductions</th><th>Take-Home</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Stacked Bar -->
+    <div class="card">
+      <h2>Where Your Money Goes</h2>
+      <div class="stacked-bar" id="stackedBar"></div>
+      <div class="stacked-legend" id="stackedLegend"></div>
+    </div>
+
+    <div class="ad-placeholder" data-size="large-rectangle"><span class="ad-label">Ad</span><span class="ad-size">336 × 280</span></div>
+  </div>
+
+  <!-- Related Tools -->
+  <div class="card" style="margin-top:1.5rem;">
+    <div class="card-title">Related Tools</div>
+    <div style="display:flex;flex-direction:column;gap:0.5rem;">
+      <a href="../../salary-converter/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Salary to Hourly Calculator</a>
+      <a href="../../freelance-rate-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Freelance Hourly Rate Calculator</a>
+      <a href="../../compound-interest-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Compound Interest Calculator</a>
+      <a href="../" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">US Take-Home Pay Calculator (all 50 states)</a>
+    </div>
+  </div>
+
+  <!-- Country Links -->
+  <div class="card" style="margin-top:1rem;">
+    <div class="card-title">Take-Home Pay by Country</div>
+    <div class="country-links" id="countryLinks">
+      <a href="../">United States</a>
+    </div>
+  </div>
+
+  <div class="ad-placeholder" data-size="in-article"><span class="ad-label">Ad</span><span class="ad-size">Responsive</span></div>
+
+  <!-- SEO Content -->
+  <div class="content-section">
+    <h2>How Take-Home Pay Is Calculated in Spain</h2>
+    <p>Your take-home pay in Spain (salario neto) is what remains from your gross salary (salario bruto) after two main deductions: IRPF income tax and social security contributions (cotizaciones a la Seguridad Social). Unlike the US system, Spain does not have a separate state-level income tax return; instead, the regional portion is collected alongside the national IRPF through a single withholding process managed by the Agencia Tributaria.</p>
+
+    <h2>IRPF (Impuesto sobre la Renta de las Personas F&iacute;sicas)</h2>
+    <p>Spain's personal income tax, known as IRPF, is a progressive tax applied to your taxable income. The tax is split between the national government and your autonomous community (comunidad aut&oacute;noma). The national portion ranges from 9.5% to 24.5%, while most regions add a similar schedule, resulting in combined marginal rates from 19% on the first &euro;12,450 up to 47% on income above &euro;300,000. This calculator uses the combined national + average regional rates, which are representative for most of mainland Spain.</p>
+    <p>Before applying the tax brackets, Spain allows a personal minimum (m&iacute;nimo personal) of &euro;5,550 per year, which is the amount of income considered necessary for basic living expenses and is effectively tax-free. Additional amounts apply for children: &euro;2,400 for the first child, &euro;2,700 for the second, &euro;4,000 for the third, and &euro;4,500 for each additional child. An employment income reduction (reducci&oacute;n por rendimientos del trabajo) of &euro;2,000 also applies to salaried workers earning below certain thresholds, further reducing your taxable base.</p>
+
+    <h2>Spanish IRPF Tax Brackets (2024, Combined National + Regional)</h2>
+    <ul>
+      <li><strong>&euro;0 &ndash; &euro;12,450:</strong> 19%</li>
+      <li><strong>&euro;12,451 &ndash; &euro;20,200:</strong> 24%</li>
+      <li><strong>&euro;20,201 &ndash; &euro;35,200:</strong> 30%</li>
+      <li><strong>&euro;35,201 &ndash; &euro;60,000:</strong> 37%</li>
+      <li><strong>&euro;60,001 &ndash; &euro;300,000:</strong> 45%</li>
+      <li><strong>&euro;300,001+:</strong> 47%</li>
+    </ul>
+
+    <h2>Social Security Contributions (Seguridad Social)</h2>
+    <p>All employees in Spain contribute to the social security system. The employee's share is approximately 6.35% of gross salary, broken down as follows: 4.7% for general contingencies (contingencias comunes), 1.55% for unemployment (desempleo), and 0.1% for professional training (formaci&oacute;n profesional). These contributions are capped at a maximum monthly base of &euro;4,720.50 (approximately &euro;56,646 per year in 2024). Income above this cap is not subject to additional employee social security contributions.</p>
+    <p>The employer also pays a much larger share (around 30%) on top of your salary, but this does not come out of your paycheck and is not shown in this calculator.</p>
+
+    <h2>Pagas Extras (14 Payments per Year)</h2>
+    <p>A distinctive feature of Spanish payroll is the system of "pagas extras" (extra payments). Most Spanish employment contracts split the annual salary into 14 payments rather than 12. The two extra payments are traditionally paid in June (paga de verano) and December (paga de Navidad). Your total annual salary remains the same whether paid in 12 or 14 installments &mdash; the only difference is the size of each individual payment. This calculator supports both options so you can see your actual monthly take-home under either arrangement.</p>
+
+    <h2>Regional Tax Variations</h2>
+    <p>While the national IRPF brackets are uniform across Spain, each autonomous community sets its own regional (auton&oacute;mica) tax schedule. In practice, the regional rates roughly mirror the national portion, giving the combined rates used in this calculator. Some regions like Madrid have slightly lower rates, while Catalonia and Valencia tend to be slightly higher. For most employees, the difference is within 1&ndash;2 percentage points of the average combined rates shown here.</p>
+
+    <h2>Tips to Optimize Your Take-Home Pay in Spain</h2>
+    <ul>
+      <li><strong>Claim all applicable deductions:</strong> Make sure your employer knows about your children and other personal circumstances so your IRPF withholding is calculated correctly from the start.</li>
+      <li><strong>Contribute to a plan de pensiones:</strong> Contributions to Spanish pension plans (up to &euro;1,500/year) reduce your IRPF taxable base.</li>
+      <li><strong>Consider cheques restaurante:</strong> Meal vouchers up to &euro;11/day are exempt from IRPF, which can boost your effective take-home pay.</li>
+      <li><strong>Check your comunidad aut&oacute;noma:</strong> Regional deductions for rent, childcare, and other expenses can lower your IRPF bill at tax filing time.</li>
+      <li><strong>Review your draft declaration:</strong> Each spring, the Agencia Tributaria publishes your borrador (draft tax return). Review it carefully to ensure all deductions and personal circumstances are reflected.</li>
+    </ul>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <a href="../../" style="color:var(--color-text-muted);text-decoration:none;">&larr; Back to all tools</a>
+  <p style="margin-top:0.5rem;">Built for people who need quick answers.</p>
+</footer>
+
+<script src="../../js/onetab-global.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  // ── Spanish IRPF Brackets 2024 (combined national + average regional) ──
+  // These are cumulative upper limits (not marginal boundaries)
+  var IRPF_BRACKETS = [
+    [12450, 0.19],
+    [20200, 0.24],
+    [35200, 0.30],
+    [60000, 0.37],
+    [300000, 0.45],
+    [Infinity, 0.47]
+  ];
+
+  // ── Social Security (employee, 2024) ──
+  var SS_GENERAL = 0.047;       // Contingencias comunes
+  var SS_UNEMPLOYMENT = 0.0155; // Desempleo
+  var SS_TRAINING = 0.001;      // Formaci&oacute;n profesional
+  var SS_TOTAL_RATE = 0.0635;   // Total employee share
+  var SS_MAX_BASE_ANNUAL = 56646; // €4,720.50/month × 12
+
+  // ── Personal minimums ──
+  var PERSONAL_MINIMUM = 5550;
+  var EMPLOYMENT_REDUCTION = 2000;
+  // Children minimums (cumulative per child)
+  var CHILD_MINIMUMS = [2400, 2700, 4000, 4500, 4500]; // 1st, 2nd, 3rd, 4th, 5th+
+
+  // ── DOM elements ──
+  var grossInput = document.getElementById('grossSalary');
+  var childrenSelect = document.getElementById('numChildren');
+  var freqSelect = document.getElementById('payFrequency');
+
+  // ── Calculation helpers ──
+  function calcBracketTax(income, brackets) {
+    var tax = 0, prev = 0;
+    for (var i = 0; i < brackets.length; i++) {
+      var limit = brackets[i][0], rate = brackets[i][1];
+      if (income <= prev) break;
+      tax += (Math.min(income, limit) - prev) * rate;
+      prev = limit;
+    }
+    return Math.max(0, tax);
+  }
+
+  function getMarginalRate(income, brackets) {
+    var prev = 0;
+    for (var i = 0; i < brackets.length; i++) {
+      if (income <= brackets[i][0]) return brackets[i][1];
+      prev = brackets[i][0];
+    }
+    return brackets[brackets.length - 1][1];
+  }
+
+  // ── Frequency labels ──
+  var FREQ_LABELS = { '12': 'per month (12 pagas)', '14': 'per payment (14 pagas)' };
+
+  // ── Main calculation ──
+  function calculate() {
+    var gross = parseFloat(grossInput.value) || 0;
+    var numChildren = parseInt(childrenSelect.value) || 0;
+    var freq = parseInt(freqSelect.value);
+
+    // Social Security (employee)
+    var ssBase = Math.min(gross, SS_MAX_BASE_ANNUAL);
+    var ssGeneral = ssBase * SS_GENERAL;
+    var ssUnemployment = ssBase * SS_UNEMPLOYMENT;
+    var ssTraining = ssBase * SS_TRAINING;
+    var ssTotal = ssBase * SS_TOTAL_RATE;
+
+    // IRPF taxable income
+    // Rendimiento neto = Gross - SS contributions - Employment reduction
+    var netIncome = Math.max(0, gross - ssTotal - EMPLOYMENT_REDUCTION);
+
+    // Personal minimum + children minimums
+    var personalMin = PERSONAL_MINIMUM;
+    for (var i = 0; i < numChildren && i < CHILD_MINIMUMS.length; i++) {
+      personalMin += CHILD_MINIMUMS[i];
+    }
+
+    // IRPF is calculated as: tax on full net income minus tax on personal minimum
+    var irpfOnIncome = calcBracketTax(netIncome, IRPF_BRACKETS);
+    var irpfOnMinimum = calcBracketTax(personalMin, IRPF_BRACKETS);
+    var irpf = Math.max(0, irpfOnIncome - irpfOnMinimum);
+
+    // Marginal rate based on net income
+    var marginalRate = getMarginalRate(netIncome, IRPF_BRACKETS);
+
+    // Totals
+    var totalDeductions = irpf + ssTotal;
+    var annualTakeHome = gross - totalDeductions;
+    var perPeriod = annualTakeHome / freq;
+
+    var effectiveRate = gross > 0 ? (totalDeductions / gross * 100) : 0;
+
+    // ── Update hero ──
+    document.getElementById('heroTakeHome').textContent = OneTab.fmt(Math.round(perPeriod));
+    document.getElementById('heroSublabel').textContent = FREQ_LABELS[freq] || 'per payment';
+
+    // ── Stats ──
+    document.getElementById('statAnnual').textContent = OneTab.fmt(Math.round(annualTakeHome));
+    document.getElementById('statEffective').textContent = effectiveRate.toFixed(1) + '%';
+    document.getElementById('statTotalTax').textContent = OneTab.fmt(Math.round(totalDeductions));
+    document.getElementById('statMarginal').textContent = (marginalRate * 100).toFixed(0) + '%';
+
+    // ── Breakdown table ──
+    var rows = [
+      ['Gross salary (salario bruto)', OneTab.fmt(Math.round(gross))],
+      ['', ''],
+      ['Social Security — General contingencies (4.7%)', OneTab.fmt(Math.round(ssGeneral))],
+      ['Social Security — Unemployment (1.55%)', OneTab.fmt(Math.round(ssUnemployment))],
+      ['Social Security — Professional training (0.1%)', OneTab.fmt(Math.round(ssTraining))],
+      ['total', OneTab.fmt(Math.round(ssTotal))],
+      ['', ''],
+      ['Net income (rendimiento neto)', OneTab.fmt(Math.round(netIncome))],
+      ['Employment income reduction', '\u2212 ' + OneTab.fmt(Math.round(EMPLOYMENT_REDUCTION))],
+      ['Personal minimum (m\u00ednimo personal)', OneTab.fmt(Math.round(personalMin))],
+      ['', ''],
+      ['IRPF income tax', OneTab.fmt(Math.round(irpf))],
+      ['', ''],
+      ['total-deductions', OneTab.fmt(Math.round(totalDeductions))],
+      ['total-takehome', OneTab.fmt(Math.round(annualTakeHome))]
+    ];
+
+    var tbody = document.getElementById('breakdownTable').querySelector('tbody');
+    tbody.innerHTML = '';
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i][0] === '' && rows[i][1] === '') continue;
+      var tr = document.createElement('tr');
+      if (rows[i][0] === 'total') {
+        tr.className = 'total';
+        var td1 = document.createElement('td');
+        td1.textContent = 'Total Social Security';
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      } else if (rows[i][0] === 'total-deductions') {
+        tr.className = 'total';
+        var td1 = document.createElement('td');
+        td1.textContent = 'Total deductions (IRPF + SS)';
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      } else if (rows[i][0] === 'total-takehome') {
+        tr.className = 'total';
+        var td1 = document.createElement('td');
+        td1.textContent = 'Annual take-home pay (salario neto)';
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      } else {
+        var td1 = document.createElement('td');
+        td1.textContent = rows[i][0];
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      }
+      tbody.appendChild(tr);
+    }
+
+    // ── Period comparison table ──
+    var periods = [
+      { name: 'Annual', div: 1 },
+      { name: 'Monthly (12 pagas)', div: 12 },
+      { name: 'Per payment (14 pagas)', div: 14 },
+      { name: 'Weekly', div: 52 },
+      { name: 'Daily', div: 260 }
+    ];
+    var ptbody = document.getElementById('periodTable').querySelector('tbody');
+    ptbody.innerHTML = '';
+    for (var i = 0; i < periods.length; i++) {
+      var tr = document.createElement('tr');
+      var d = periods[i].div;
+      var isHighlight = (freq === 12 && d === 12) || (freq === 14 && d === 14);
+      if (isHighlight) tr.className = 'row-highlight';
+      tr.innerHTML = '<td>' + periods[i].name + '</td><td>' + OneTab.fmt(Math.round(gross / d)) +
+        '</td><td>' + OneTab.fmt(Math.round(totalDeductions / d)) + '</td><td>' + OneTab.fmt(Math.round(annualTakeHome / d)) + '</td>';
+      ptbody.appendChild(tr);
+    }
+
+    // ── Stacked bar ──
+    var barDiv = document.getElementById('stackedBar');
+    var legDiv = document.getElementById('stackedLegend');
+    barDiv.innerHTML = '';
+    legDiv.innerHTML = '';
+
+    if (gross > 0) {
+      var segments = [
+        { label: 'Take Home', value: annualTakeHome, color: '#059669' },
+        { label: 'IRPF Income Tax', value: irpf, color: '#2563eb' },
+        { label: 'Social Security', value: ssTotal, color: '#d97706' }
+      ];
+      for (var i = 0; i < segments.length; i++) {
+        var pct = segments[i].value / gross * 100;
+        if (pct < 0.3) continue;
+        var seg = document.createElement('div');
+        seg.className = 'segment';
+        seg.style.width = pct + '%';
+        seg.style.background = segments[i].color;
+        if (pct > 8) seg.textContent = pct.toFixed(0) + '%';
+        barDiv.appendChild(seg);
+
+        var li = document.createElement('div');
+        li.className = 'legend-item';
+        li.innerHTML = '<span class="legend-dot" style="background:' + segments[i].color + '"></span>' +
+          segments[i].label + ': ' + OneTab.fmt(Math.round(segments[i].value)) + ' (' + pct.toFixed(1) + '%)';
+        legDiv.appendChild(li);
+      }
+    }
+  }
+
+  // ── Bind all inputs ──
+  var inputs = document.querySelectorAll('#grossSalary,#numChildren,#payFrequency');
+  for (var i = 0; i < inputs.length; i++) {
+    inputs[i].addEventListener('input', calculate);
+    inputs[i].addEventListener('change', calculate);
+  }
+
+  // ── Country change (update currency prefix) ──
+  OneTab.onCountryChange(function(c) {
+    var pfx = document.getElementById('pfxSalary');
+    if (pfx) pfx.textContent = c.currency;
+    calculate();
+  });
+
+  calculate();
+})();
+</script>
+</body>
+</html>
