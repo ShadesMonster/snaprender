@@ -184,6 +184,12 @@ stateEntries.forEach(function(code) {
     "a.href = '../' + slug + '/';"
   );
 
+  // Fix country redirect paths for state pages (one level deeper)
+  html = html.replace(
+    "window.location.href = COUNTRY_SLUGS[code] + '/';",
+    "window.location.href = '../' + COUNTRY_SLUGS[code] + '/';"
+  );
+
   fs.writeFileSync(path.join(dir, 'index.html'), html, 'utf8');
   console.log('Generated: ' + slug + '/index.html');
 });

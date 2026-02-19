@@ -617,7 +617,7 @@
   OneTab.onCountryChange(function(c) {
     var code = OneTab.countryCode();
     if (code !== 'US' && COUNTRY_SLUGS[code]) {
-      window.location.href = '/take-home-pay-calculator/' + COUNTRY_SLUGS[code] + '/';
+      window.location.href = COUNTRY_SLUGS[code] + '/';
       return;
     }
     var pfxs = document.querySelectorAll('[id^="pfx"]');

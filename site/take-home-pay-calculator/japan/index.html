@@ -527,7 +527,7 @@ OneTab.onCountryChange(function() {
   var code = OneTab.countryCode();
   if (code === 'JP') return;
   var slugs = {UK:'united-kingdom',CA:'canada',AU:'australia',DE:'germany',FR:'france',NL:'netherlands',SE:'sweden',ES:'spain',IT:'italy',BR:'brazil',IN:'india',JP:'japan',SG:'singapore',NZ:'new-zealand'};
-  window.location.href = (code === 'US') ? '/take-home-pay-calculator/' : '/take-home-pay-calculator/' + slugs[code] + '/';
+  window.location.href = (code === 'US') ? '../' : '../' + slugs[code] + '/';
 });
 </script>
 </body>
