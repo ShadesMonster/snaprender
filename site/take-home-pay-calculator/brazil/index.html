@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brazil Take-Home Pay Calculator (Sal&#225;rio L&#237;quido) &#8212; After Tax | OneTab</title>
+  <meta name="description" content="Calculate your Brazilian sal&#225;rio l&#237;quido (take-home pay) after IRPF income tax and INSS social security contributions. Includes 13&#186; sal&#225;rio, dependents, and 2024 tax brackets.">
+  <meta name="keywords" content="brazil take home pay calculator, sal&#225;rio l&#237;quido, IRPF calculator, INSS calculator, brazilian income tax, CLT salary, 13 sal&#225;rio, calculadora sal&#225;rio">
+
+  <meta property="og:title" content="Brazil Take-Home Pay Calculator (Sal&#225;rio L&#237;quido) | OneTab">
+  <meta property="og:description" content="Calculate your Brazilian take-home pay after IRPF income tax and INSS social security. Includes 13&#186; sal&#225;rio and dependents.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://onetab.tools/take-home-pay-calculator/brazil/">
+  <meta property="og:site_name" content="OneTab">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Brazil Take-Home Pay Calculator | OneTab">
+  <meta name="twitter:description" content="Calculate your Brazilian sal&#225;rio l&#237;quido after IRPF and INSS. Includes 13&#186; sal&#225;rio and dependents.">
+
+  <link rel="canonical" href="https://onetab.tools/take-home-pay-calculator/brazil/">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../css/style.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Brazil Take-Home Pay Calculator",
+    "url": "https://onetab.tools/take-home-pay-calculator/brazil/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "BRL" },
+    "description": "Calculate your Brazilian take-home pay (sal\u00e1rio l\u00edquido) after IRPF income tax and INSS social security contributions. Includes 13\u00ba sal\u00e1rio and dependents."
+  }
+  </script>
+
+  <script>
+    (function() {
+      var t = localStorage.getItem('onetab-theme');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+  </script>
+
+  <style>
+    .period-table { width:100%; border-collapse:collapse; }
+    .period-table th, .period-table td { padding:0.6rem 0.75rem; text-align:right; font-variant-numeric:tabular-nums; }
+    .period-table th:first-child, .period-table td:first-child { text-align:left; }
+    .period-table th { font-size:0.8rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--color-text-muted); border-bottom:2px solid var(--color-border); }
+    .period-table td { border-bottom:1px solid var(--color-border); font-size:0.9rem; }
+    .period-table tr:last-child td { border-bottom:none; }
+    .period-table .row-highlight td { font-weight:700; color:var(--color-success); background:rgba(5,150,105,0.05); }
+    .country-links { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.75rem; }
+    .country-links a { font-size:0.8rem; padding:0.25rem 0.5rem; border-radius:4px; background:var(--color-bg); border:1px solid var(--color-border); color:var(--color-text); text-decoration:none; transition:border-color 0.15s; }
+    .country-links a:hover { border-color:var(--color-primary); color:var(--color-primary); }
+    .checkbox-group { display:flex; align-items:center; gap:0.5rem; margin-top:0.25rem; }
+    .checkbox-group input[type="checkbox"] { width:1.1rem; height:1.1rem; accent-color:var(--color-primary); }
+    .checkbox-group label { font-size:0.9rem; cursor:pointer; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="../../">OneTab</a>
+  <div class="header-actions">
+    <select class="country-select-global" id="country-select-global" title="Your location"></select>
+    <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">Dark</button>
+  </div>
+</header>
+
+<main class="container">
+  <h1>Brazil Take-Home Pay Calculator</h1>
+  <p class="subtitle">Calculate your sal&#225;rio l&#237;quido after IRPF income tax and INSS social security.</p>
+
+  <div class="ad-placeholder" data-size="leaderboard"><span class="ad-label">Ad</span><span class="ad-size">728 &times; 90</span></div>
+
+  <!-- Income -->
+  <div class="card">
+    <div class="card-title">Your Income</div>
+    <div class="form-group">
+      <label>Annual gross salary</label>
+      <div class="input-with-prefix">
+        <span class="prefix" id="pfxSalary">R$</span>
+        <input type="number" id="grossSalary" value="60000" min="0" step="1000">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Number of dependents</label>
+      <input type="number" id="dependents" value="0" min="0" max="20" step="1">
+    </div>
+    <div class="form-group">
+      <label>Pay frequency</label>
+      <select id="payFrequency">
+        <option value="12" selected>Monthly (12 paychecks/yr)</option>
+        <option value="13">Monthly + 13&#186; sal&#225;rio (13 paychecks/yr)</option>
+        <option value="1">Annual</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <div class="checkbox-group">
+        <input type="checkbox" id="include13th" checked>
+        <label for="include13th">Include 13&#186; sal&#225;rio (mandatory extra month)</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="results" class="result-section visible">
+
+    <div class="card result-hero" style="border-radius:var(--radius);">
+      <div class="rate-label">Your Take-Home Pay</div>
+      <div class="rate-value" id="heroTakeHome">R$0</div>
+      <div class="rate-sublabel" id="heroSublabel">per month</div>
+    </div>
+
+    <div class="stat-grid" style="margin-bottom:1.5rem;">
+      <div class="stat-box success">
+        <div class="stat-value" id="statAnnual">R$0</div>
+        <div class="stat-label">Annual Take-Home</div>
+      </div>
+      <div class="stat-box highlight">
+        <div class="stat-value" id="statEffective">0%</div>
+        <div class="stat-label">Effective Tax Rate</div>
+      </div>
+      <div class="stat-box warning">
+        <div class="stat-value" id="statTotalTax">R$0</div>
+        <div class="stat-label">Total Deductions</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="statMarginal">0%</div>
+        <div class="stat-label">IRPF Marginal Rate</div>
+      </div>
+    </div>
+
+    <div class="ad-placeholder" data-size="rectangle"><span class="ad-label">Ad</span><span class="ad-size">300 &times; 250</span></div>
+
+    <!-- Tax Breakdown -->
+    <div class="card">
+      <h2>Tax Breakdown</h2>
+      <table class="breakdown-table" id="breakdownTable">
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Pay Period Comparison -->
+    <div class="card">
+      <h2>Pay Period Breakdown</h2>
+      <table class="period-table" id="periodTable">
+        <thead>
+          <tr><th>Period</th><th>Gross</th><th>Deductions</th><th>Take-Home</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Stacked Bar -->
+    <div class="card">
+      <h2>Where Your Money Goes</h2>
+      <div class="stacked-bar" id="stackedBar"></div>
+      <div class="stacked-legend" id="stackedLegend"></div>
+    </div>
+
+    <div class="ad-placeholder" data-size="large-rectangle"><span class="ad-label">Ad</span><span class="ad-size">336 &times; 280</span></div>
+  </div>
+
+  <!-- Related Tools -->
+  <div class="card" style="margin-top:1.5rem;">
+    <div class="card-title">Related Tools</div>
+    <div style="display:flex;flex-direction:column;gap:0.5rem;">
+      <a href="../../salary-converter/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Salary to Hourly Calculator</a>
+      <a href="../../freelance-rate-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Freelance Hourly Rate Calculator</a>
+      <a href="../../compound-interest-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Compound Interest Calculator</a>
+      <a href="../" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">US Take-Home Pay Calculator</a>
+    </div>
+  </div>
+
+  <!-- Country Links -->
+  <div class="card" style="margin-top:1rem;">
+    <div class="card-title">Take-Home Pay by Country</div>
+    <div class="country-links">
+      <a href="../">United States</a>
+      <a href="../california/">California</a>
+      <a href="../new-york/">New York</a>
+      <a href="../texas/">Texas</a>
+      <a href="../florida/">Florida</a>
+    </div>
+  </div>
+
+  <div class="ad-placeholder" data-size="in-article"><span class="ad-label">Ad</span><span class="ad-size">Responsive</span></div>
+
+  <!-- SEO Content -->
+  <div class="content-section">
+    <h2>How Brazilian Take-Home Pay Is Calculated</h2>
+    <p>In Brazil, your take-home pay (sal&#225;rio l&#237;quido) is your gross salary minus two main deductions: INSS (social security contributions) and IRPF (income tax). Unlike many countries, Brazil calculates these deductions monthly, and INSS is deducted before IRPF is calculated, reducing your taxable base.</p>
+
+    <h2>IRPF &#8212; Imposto de Renda Pessoa F&#237;sica</h2>
+    <p>IRPF is Brazil's progressive individual income tax, administered by the Receita Federal (federal revenue service). The 2024 monthly brackets are:</p>
+    <ul>
+      <li>Up to R$2,259.20/month: <strong>exempt</strong> (0%)</li>
+      <li>R$2,259.21 to R$2,826.65/month: <strong>7.5%</strong> (deduction R$169.44)</li>
+      <li>R$2,826.66 to R$3,751.05/month: <strong>15%</strong> (deduction R$381.44)</li>
+      <li>R$3,751.06 to R$4,664.68/month: <strong>22.5%</strong> (deduction R$662.77)</li>
+      <li>Above R$4,664.68/month: <strong>27.5%</strong> (deduction R$896.00)</li>
+    </ul>
+    <p>The "deduction" listed with each bracket is a simplified calculation shortcut that produces the same result as computing progressive rates across each bracket. Each dependent reduces your IRPF taxable base by R$189.59 per month.</p>
+
+    <h2>INSS &#8212; Instituto Nacional do Seguro Social</h2>
+    <p>INSS is Brazil's mandatory social security system that funds retirement pensions, disability benefits, and other social protections. Employee contributions in 2024 use progressive rates:</p>
+    <ul>
+      <li>Up to R$1,412.00/month: <strong>7.5%</strong></li>
+      <li>R$1,412.01 to R$2,666.68/month: <strong>9%</strong></li>
+      <li>R$2,666.69 to R$4,000.03/month: <strong>12%</strong></li>
+      <li>R$4,000.04 to R$7,786.02/month: <strong>14%</strong></li>
+    </ul>
+    <p>INSS has a contribution ceiling: the maximum monthly contribution is approximately R$908.85. Salaries above R$7,786.02/month do not incur additional INSS charges. Importantly, INSS is deducted from your gross salary <em>before</em> IRPF is calculated, so higher INSS contributions slightly reduce your income tax.</p>
+
+    <h2>13&#186; Sal&#225;rio &#8212; The Thirteenth Salary</h2>
+    <p>Brazilian labor law (CLT &#8212; Consolida&#231;&#227;o das Leis do Trabalho) mandates that all formal employees receive a 13th salary payment, equal to one month's gross pay. This is typically paid in two installments: the first between February and November, and the second by December 20th. The 13&#186; sal&#225;rio is subject to both INSS and IRPF, calculated separately from regular monthly pay.</p>
+
+    <h2>CLT Employment in Brazil</h2>
+    <p>CLT (Consolida&#231;&#227;o das Leis do Trabalho) is Brazil's comprehensive labor code governing formal employment. CLT workers receive various mandatory benefits beyond salary: 13&#186; sal&#225;rio, paid vacation (30 days plus one-third bonus), FGTS deposits (8% of salary deposited by the employer), and transportation vouchers. This calculator focuses on the employee-side deductions &#8212; INSS and IRPF &#8212; that reduce your gross salary to your net take-home pay.</p>
+
+    <h2>Tips to Optimize Your Take-Home Pay</h2>
+    <ul>
+      <li><strong>Declare dependents:</strong> Each dependent reduces your monthly IRPF taxable base by R$189.59, potentially saving hundreds of reais per year.</li>
+      <li><strong>Keep medical receipts:</strong> Medical and education expenses can be deducted in your annual IRPF declaration, potentially generating a tax refund.</li>
+      <li><strong>Contribute to private pension (PGBL):</strong> PGBL contributions up to 12% of gross income can be deducted from taxable income in the annual declaration.</li>
+      <li><strong>Understand your benefits:</strong> CLT benefits like FGTS (employer-paid), transportation vouchers, and meal vouchers add significant value beyond your cash salary.</li>
+    </ul>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <a href="../../" style="color:var(--color-text-muted);text-decoration:none;">&larr; Back to all tools</a>
+  <p style="margin-top:0.5rem;">Built for people who need quick answers.</p>
+</footer>
+
+<script src="../../js/onetab-global.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  // ── INSS 2024 progressive brackets (monthly) ──
+  // Each entry: [upper limit, rate]
+  var INSS_BRACKETS_MONTHLY = [
+    [1412.00, 0.075],
+    [2666.68, 0.09],
+    [4000.03, 0.12],
+    [7786.02, 0.14]
+  ];
+
+  // ── IRPF 2024 monthly brackets ──
+  // Using simplified deduction method: [upper limit, rate, monthly deduction]
+  var IRPF_BRACKETS_MONTHLY = [
+    [2259.20, 0.000, 0],
+    [2826.65, 0.075, 169.44],
+    [3751.05, 0.150, 381.44],
+    [4664.68, 0.225, 662.77],
+    [Infinity, 0.275, 896.00]
+  ];
+
+  // Dependent deduction per month for IRPF
+  var DEPENDENT_DEDUCTION_MONTHLY = 189.59;
+
+  // ── DOM elements ──
+  var grossInput = document.getElementById('grossSalary');
+  var dependentsInput = document.getElementById('dependents');
+  var freqSelect = document.getElementById('payFrequency');
+  var include13thCheckbox = document.getElementById('include13th');
+
+  // ── Calculation helpers ──
+
+  /**
+   * Calculate progressive INSS contribution for a single month.
+   * INSS uses true progressive brackets (not simplified deduction).
+   */
+  function calcINSSMonthly(monthlySalary) {
+    var total = 0;
+    var prev = 0;
+    for (var i = 0; i < INSS_BRACKETS_MONTHLY.length; i++) {
+      var limit = INSS_BRACKETS_MONTHLY[i][0];
+      var rate = INSS_BRACKETS_MONTHLY[i][1];
+      if (monthlySalary <= prev) break;
+      var taxable = Math.min(monthlySalary, limit) - prev;
+      total += taxable * rate;
+      prev = limit;
+    }
+    return total;
+  }
+
+  /**
+   * Calculate IRPF for a single month using the simplified deduction method.
+   * The base is: monthly salary - INSS - (dependents * R$189.59)
+   */
+  function calcIRPFMonthly(monthlyBase) {
+    if (monthlyBase <= 0) return { tax: 0, rate: 0 };
+    for (var i = 0; i < IRPF_BRACKETS_MONTHLY.length; i++) {
+      if (monthlyBase <= IRPF_BRACKETS_MONTHLY[i][0]) {
+        var tax = monthlyBase * IRPF_BRACKETS_MONTHLY[i][1] - IRPF_BRACKETS_MONTHLY[i][2];
+        return {
+          tax: Math.max(0, tax),
+          rate: IRPF_BRACKETS_MONTHLY[i][1]
+        };
+      }
+    }
+    // Above highest bracket
+    var last = IRPF_BRACKETS_MONTHLY[IRPF_BRACKETS_MONTHLY.length - 1];
+    var tax = monthlyBase * last[1] - last[2];
+    return { tax: Math.max(0, tax), rate: last[1] };
+  }
+
+  /**
+   * Get the IRPF marginal rate for a given monthly base.
+   */
+  function getIRPFMarginalRate(monthlyBase) {
+    if (monthlyBase <= 0) return 0;
+    for (var i = 0; i < IRPF_BRACKETS_MONTHLY.length; i++) {
+      if (monthlyBase <= IRPF_BRACKETS_MONTHLY[i][0]) {
+        return IRPF_BRACKETS_MONTHLY[i][1];
+      }
+    }
+    return IRPF_BRACKETS_MONTHLY[IRPF_BRACKETS_MONTHLY.length - 1][1];
+  }
+
+  // ── Frequency labels ──
+  var FREQ_LABELS = { '1': 'annually', '12': 'per month', '13': 'per month (incl. 13\u00ba)' };
+
+  // ── Main calculation ──
+  function calculate() {
+    var annualGross = parseFloat(grossInput.value) || 0;
+    var dependents = parseInt(dependentsInput.value) || 0;
+    var freq = parseInt(freqSelect.value);
+    var include13th = include13thCheckbox.checked;
+
+    // Number of monthly salaries paid per year
+    // If 13th salary is included, the employee effectively earns 13 months of salary
+    var totalMonths = include13th ? 13 : 12;
+
+    // Monthly gross salary (the base monthly rate, before 13th)
+    var monthlyGross = annualGross / totalMonths;
+
+    // ── Calculate INSS (monthly, same for each of the 12 or 13 months) ──
+    var inssMonthly = calcINSSMonthly(monthlyGross);
+    var inssAnnual = inssMonthly * totalMonths;
+
+    // ── Calculate IRPF ──
+    // IRPF base = monthly gross - INSS - dependent deductions
+    var dependentDeduction = dependents * DEPENDENT_DEDUCTION_MONTHLY;
+    var irpfBase = monthlyGross - inssMonthly - dependentDeduction;
+
+    var irpfResult = calcIRPFMonthly(irpfBase);
+    var irpfMonthly = irpfResult.tax;
+    var irpfAnnual = irpfMonthly * totalMonths;
+    var marginalRate = getIRPFMarginalRate(irpfBase);
+
+    // ── Totals ──
+    var totalDeductionsAnnual = inssAnnual + irpfAnnual;
+    var annualTakeHome = annualGross - totalDeductionsAnnual;
+    var effectiveRate = annualGross > 0 ? (totalDeductionsAnnual / annualGross * 100) : 0;
+
+    // Per-period take-home
+    var perPeriod;
+    if (freq === 1) {
+      perPeriod = annualTakeHome;
+    } else if (freq === 13) {
+      perPeriod = annualTakeHome / 13;
+    } else {
+      perPeriod = annualTakeHome / 12;
+    }
+
+    // ── Update hero ──
+    document.getElementById('heroTakeHome').textContent = OneTab.fmt(Math.round(perPeriod));
+    document.getElementById('heroSublabel').textContent = FREQ_LABELS[freq] || 'per month';
+
+    // ── Stats ──
+    document.getElementById('statAnnual').textContent = OneTab.fmt(Math.round(annualTakeHome));
+    document.getElementById('statEffective').textContent = effectiveRate.toFixed(1) + '%';
+    document.getElementById('statTotalTax').textContent = OneTab.fmt(Math.round(totalDeductionsAnnual));
+    document.getElementById('statMarginal').textContent = (marginalRate * 100).toFixed(1) + '%';
+
+    // ── Breakdown table ──
+    var rows = [
+      ['Gross annual salary', OneTab.fmt(Math.round(annualGross))],
+      ['Monthly gross salary (\u00f7 ' + totalMonths + ')', OneTab.fmt(Math.round(monthlyGross))],
+      ['', ''],
+      ['INSS contribution (monthly)', OneTab.fmt(Math.round(inssMonthly))],
+      ['INSS contribution (annual, \u00d7 ' + totalMonths + ')', OneTab.fmt(Math.round(inssAnnual))],
+      ['', ''],
+      ['IRPF taxable base (monthly)', OneTab.fmt(Math.round(irpfBase > 0 ? irpfBase : 0))],
+      ['Dependent deductions (' + dependents + ' \u00d7 R$189.59/mo)', '\u2212 ' + OneTab.fmt(Math.round(dependentDeduction))],
+      ['IRPF income tax (monthly)', OneTab.fmt(Math.round(irpfMonthly))],
+      ['IRPF income tax (annual, \u00d7 ' + totalMonths + ')', OneTab.fmt(Math.round(irpfAnnual))],
+      ['', ''],
+      ['total_deductions', OneTab.fmt(Math.round(totalDeductionsAnnual))],
+      ['total_takehome', OneTab.fmt(Math.round(annualTakeHome))]
+    ];
+
+    var tbody = document.getElementById('breakdownTable').querySelector('tbody');
+    tbody.innerHTML = '';
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i][0] === '' && rows[i][1] === '') continue;
+      var tr = document.createElement('tr');
+      if (rows[i][0] === 'total_deductions') {
+        tr.className = 'total';
+        var td1 = document.createElement('td');
+        td1.textContent = 'Total annual deductions';
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      } else if (rows[i][0] === 'total_takehome') {
+        tr.className = 'total';
+        var td1 = document.createElement('td');
+        td1.textContent = 'Annual take-home pay (sal\u00e1rio l\u00edquido)';
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      } else {
+        var td1 = document.createElement('td');
+        td1.textContent = rows[i][0];
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      }
+      tbody.appendChild(tr);
+    }
+
+    // ── Period comparison table ──
+    var periods = [
+      { name: 'Annual', div: 1 },
+      { name: 'Monthly (12x)', div: 12 },
+      { name: 'Monthly + 13\u00ba (13x)', div: 13 },
+      { name: 'Weekly', div: 52 }
+    ];
+    var ptbody = document.getElementById('periodTable').querySelector('tbody');
+    ptbody.innerHTML = '';
+    for (var i = 0; i < periods.length; i++) {
+      var tr = document.createElement('tr');
+      var d = periods[i].div;
+      // Highlight the selected frequency row
+      var isHighlighted = (freq === d) || (freq === 12 && d === 12) || (freq === 13 && d === 13);
+      if (isHighlighted && periods.filter(function(p) { return p.div === d; }).length > 0) {
+        if (d === freq) tr.className = 'row-highlight';
+      }
+      tr.innerHTML = '<td>' + periods[i].name + '</td><td>' + OneTab.fmt(Math.round(annualGross / d)) +
+        '</td><td>' + OneTab.fmt(Math.round(totalDeductionsAnnual / d)) + '</td><td>' + OneTab.fmt(Math.round(annualTakeHome / d)) + '</td>';
+      ptbody.appendChild(tr);
+    }
+
+    // ── Stacked bar ──
+    var barDiv = document.getElementById('stackedBar');
+    var legDiv = document.getElementById('stackedLegend');
+    barDiv.innerHTML = '';
+    legDiv.innerHTML = '';
+
+    if (annualGross > 0) {
+      var segments = [
+        { label: 'Take Home', value: annualTakeHome, color: '#059669' },
+        { label: 'IRPF Income Tax', value: irpfAnnual, color: '#2563eb' },
+        { label: 'INSS Social Security', value: inssAnnual, color: '#d97706' }
+      ];
+      for (var i = 0; i < segments.length; i++) {
+        var pct = segments[i].value / annualGross * 100;
+        if (pct < 0.3) continue;
+        var seg = document.createElement('div');
+        seg.className = 'segment';
+        seg.style.width = pct + '%';
+        seg.style.background = segments[i].color;
+        if (pct > 8) seg.textContent = pct.toFixed(0) + '%';
+        barDiv.appendChild(seg);
+
+        var li = document.createElement('div');
+        li.className = 'legend-item';
+        li.innerHTML = '<span class="legend-dot" style="background:' + segments[i].color + '"></span>' +
+          segments[i].label + ': ' + OneTab.fmt(Math.round(segments[i].value)) + ' (' + pct.toFixed(1) + '%)';
+        legDiv.appendChild(li);
+      }
+    }
+  }
+
+  // ── Bind all inputs ──
+  var inputs = document.querySelectorAll('#grossSalary,#dependents,#payFrequency,#include13th');
+  for (var i = 0; i < inputs.length; i++) {
+    inputs[i].addEventListener('input', calculate);
+    inputs[i].addEventListener('change', calculate);
+  }
+
+  // ── Country change ──
+  OneTab.onCountryChange(function() {
+    calculate();
+  });
+
+  calculate();
+})();
+</script>
+</body>
+</html>

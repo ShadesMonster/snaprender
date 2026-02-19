@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Italy Take-Home Pay Calculator (Stipendio Netto) — After Tax | OneTab</title>
+  <meta name="description" content="Calculate your stipendio netto in Italy. See your take-home pay after IRPEF income tax, INPS social security contributions, regional and municipal surcharges. Supports 13 and 14 mensilità.">
+  <meta name="keywords" content="italy take home pay calculator, stipendio netto, IRPEF calculator, INPS contributions, italian salary calculator, busta paga, RAL netto, mensilità, detrazioni lavoro dipendente">
+
+  <meta property="og:title" content="Italy Take-Home Pay Calculator (Stipendio Netto) | OneTab">
+  <meta property="og:description" content="Calculate your stipendio netto in Italy. See your take-home pay after IRPEF income tax, INPS social security contributions, regional and municipal surcharges.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://onetab.tools/take-home-pay-calculator/italy/">
+  <meta property="og:site_name" content="OneTab">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Italy Take-Home Pay Calculator (Stipendio Netto) | OneTab">
+  <meta name="twitter:description" content="Calculate your stipendio netto in Italy. See your take-home pay after IRPEF income tax, INPS social security contributions, regional and municipal surcharges.">
+
+  <link rel="canonical" href="https://onetab.tools/take-home-pay-calculator/italy/">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../css/style.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Italy Take-Home Pay Calculator",
+    "url": "https://onetab.tools/take-home-pay-calculator/italy/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+    "description": "Calculate your stipendio netto in Italy after IRPEF income tax, INPS social security, regional and municipal surcharges. Supports 13 and 14 mensilità."
+  }
+  </script>
+
+  <script>
+    (function() {
+      var t = localStorage.getItem('onetab-theme');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+  </script>
+
+  <style>
+    .period-table { width:100%; border-collapse:collapse; }
+    .period-table th, .period-table td { padding:0.6rem 0.75rem; text-align:right; font-variant-numeric:tabular-nums; }
+    .period-table th:first-child, .period-table td:first-child { text-align:left; }
+    .period-table th { font-size:0.8rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--color-text-muted); border-bottom:2px solid var(--color-border); }
+    .period-table td { border-bottom:1px solid var(--color-border); font-size:0.9rem; }
+    .period-table tr:last-child td { border-bottom:none; }
+    .period-table .row-highlight td { font-weight:700; color:var(--color-success); background:rgba(5,150,105,0.05); }
+    .country-links { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.75rem; }
+    .country-links a { font-size:0.8rem; padding:0.25rem 0.5rem; border-radius:4px; background:var(--color-bg); border:1px solid var(--color-border); color:var(--color-text); text-decoration:none; transition:border-color 0.15s; }
+    .country-links a:hover { border-color:var(--color-primary); color:var(--color-primary); }
+    .deduction-row { display:flex; gap:0.75rem; align-items:end; }
+    .deduction-row .form-group { flex:1; }
+    .deduction-row .form-group:last-child { flex:0 0 100px; }
+    @media (max-width:600px) {
+      .deduction-row { flex-direction:column; gap:0; }
+      .deduction-row .form-group:last-child { flex:1; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="../../">OneTab</a>
+  <div class="header-actions">
+    <select class="country-select-global" id="country-select-global" title="Your location"></select>
+    <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">Dark</button>
+  </div>
+</header>
+
+<main class="container">
+  <h1>Italy Take-Home Pay Calculator</h1>
+  <p class="subtitle">Calculate your stipendio netto after IRPEF income tax and INPS social security.</p>
+
+  <div class="ad-placeholder" data-size="leaderboard"><span class="ad-label">Ad</span><span class="ad-size">728 &times; 90</span></div>
+
+  <!-- Income -->
+  <div class="card">
+    <div class="card-title">Your Income</div>
+    <div class="form-group">
+      <label>Annual gross salary (RAL &mdash; Retribuzione Annua Lorda)</label>
+      <div class="input-with-prefix">
+        <span class="prefix" id="pfxSalary">&euro;</span>
+        <input type="number" id="grossSalary" value="38000" min="0" step="500">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Number of monthly payments (mensilit&agrave;)</label>
+      <select id="mensilita">
+        <option value="13" selected>13 mensilit&agrave; (standard)</option>
+        <option value="14">14 mensilit&agrave; (with quattordicesima)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Region (for regional surcharge)</label>
+      <select id="region"></select>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="results" class="result-section visible">
+
+    <div class="card result-hero" style="border-radius:var(--radius);">
+      <div class="rate-label">Your Take-Home Pay (Stipendio Netto)</div>
+      <div class="rate-value" id="heroTakeHome">&euro;0</div>
+      <div class="rate-sublabel" id="heroSublabel">per month (13 payments)</div>
+    </div>
+
+    <div class="stat-grid" style="margin-bottom:1.5rem;">
+      <div class="stat-box success">
+        <div class="stat-value" id="statAnnual">&euro;0</div>
+        <div class="stat-label">Annual Take-Home</div>
+      </div>
+      <div class="stat-box highlight">
+        <div class="stat-value" id="statEffective">0%</div>
+        <div class="stat-label">Effective Tax Rate</div>
+      </div>
+      <div class="stat-box warning">
+        <div class="stat-value" id="statTotalTax">&euro;0</div>
+        <div class="stat-label">Total Deductions</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="statMarginal">0%</div>
+        <div class="stat-label">Marginal IRPEF Rate</div>
+      </div>
+    </div>
+
+    <div class="ad-placeholder" data-size="rectangle"><span class="ad-label">Ad</span><span class="ad-size">300 &times; 250</span></div>
+
+    <!-- Tax Breakdown -->
+    <div class="card">
+      <h2>Tax &amp; Contribution Breakdown</h2>
+      <table class="breakdown-table" id="breakdownTable">
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Pay Period Comparison -->
+    <div class="card">
+      <h2>Pay Period Breakdown</h2>
+      <table class="period-table" id="periodTable">
+        <thead>
+          <tr><th>Period</th><th>Gross</th><th>Deductions</th><th>Net</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Stacked Bar -->
+    <div class="card">
+      <h2>Where Your Money Goes</h2>
+      <div class="stacked-bar" id="stackedBar"></div>
+      <div class="stacked-legend" id="stackedLegend"></div>
+    </div>
+
+    <div class="ad-placeholder" data-size="large-rectangle"><span class="ad-label">Ad</span><span class="ad-size">336 &times; 280</span></div>
+  </div>
+
+  <!-- Related Tools -->
+  <div class="card" style="margin-top:1.5rem;">
+    <div class="card-title">Related Tools</div>
+    <div style="display:flex;flex-direction:column;gap:0.5rem;">
+      <a href="../../salary-converter/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Salary to Hourly Calculator</a>
+      <a href="../../freelance-rate-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Freelance Hourly Rate Calculator</a>
+      <a href="../../compound-interest-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Compound Interest Calculator</a>
+      <a href="../../quarterly-tax-estimator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Quarterly Tax Estimator</a>
+    </div>
+  </div>
+
+  <!-- Country Pages -->
+  <div class="card" style="margin-top:1rem;">
+    <div class="card-title">Take-Home Pay by State (US)</div>
+    <div class="country-links" id="stateLinks"></div>
+  </div>
+
+  <div class="ad-placeholder" data-size="in-article"><span class="ad-label">Ad</span><span class="ad-size">Responsive</span></div>
+
+  <!-- SEO Content -->
+  <div class="content-section">
+    <h2>How Italian Take-Home Pay Is Calculated</h2>
+    <p>In Italy, your take-home pay (stipendio netto) is what remains of your gross annual salary (RAL &mdash; Retribuzione Annua Lorda) after mandatory deductions. The main deductions are IRPEF income tax, INPS social security contributions, and regional and municipal surcharges. Unlike many countries, Italian employees typically receive their salary spread across 13 or 14 monthly payments (mensilit&agrave;), which affects the amount of each individual paycheck but not the annual total.</p>
+
+    <h2>IRPEF &mdash; Imposta sul Reddito delle Persone Fisiche</h2>
+    <p>IRPEF is Italy's progressive income tax. For 2024, there are three tax brackets:</p>
+    <ul>
+      <li><strong>&euro;0 &ndash; &euro;28,000:</strong> 23%</li>
+      <li><strong>&euro;28,001 &ndash; &euro;50,000:</strong> 35%</li>
+      <li><strong>&euro;50,001 and above:</strong> 43%</li>
+    </ul>
+    <p>IRPEF is calculated on your taxable income, which is your gross salary minus INPS employee contributions. The tax is progressive, meaning you only pay the higher rate on the portion of income that falls within each bracket, not on your entire salary.</p>
+
+    <h2>Detrazioni per Lavoro Dipendente (Employment Tax Credits)</h2>
+    <p>Italian employees are entitled to tax deductions (detrazioni) that reduce the amount of IRPEF owed. These credits are designed to provide tax relief, particularly for lower and middle-income earners. The deduction amount decreases as income rises:</p>
+    <ul>
+      <li>Income up to &euro;15,000: &euro;1,955 deduction</li>
+      <li>&euro;15,001 &ndash; &euro;28,000: deduction decreases proportionally from &euro;1,910</li>
+      <li>&euro;28,001 &ndash; &euro;50,000: deduction decreases proportionally from &euro;1,910</li>
+      <li>Above &euro;50,000: no deduction</li>
+    </ul>
+    <p>This system effectively creates a no-tax area (no-tax area) of approximately &euro;8,174 for employees, because the detrazioni offset the IRPEF that would be due on that amount of income.</p>
+
+    <h2>INPS Social Security Contributions</h2>
+    <p>INPS (Istituto Nazionale della Previdenza Sociale) is Italy's national social security system. Employees contribute a mandatory percentage of their gross salary. The standard employee rate is 9.19% on earnings up to the annual ceiling of &euro;55,008. For income above this ceiling, the rate increases to 10.19%. These contributions fund pensions, unemployment insurance, and other social welfare programs. Your employer also pays a separate, larger contribution on top of your salary.</p>
+
+    <h2>Regional and Municipal Surcharges</h2>
+    <p>In addition to national IRPEF, Italian residents pay addizionale regionale (regional surcharge) and addizionale comunale (municipal surcharge). These vary significantly by location:</p>
+    <ul>
+      <li><strong>Regional surcharge:</strong> Ranges from approximately 1.23% to 3.33% depending on the region. For example, Lazio has higher rates than many other regions.</li>
+      <li><strong>Municipal surcharge:</strong> Typically around 0.8% on average, but varies by municipality, with some cities charging up to 0.9%.</li>
+    </ul>
+    <p>This calculator uses region-specific rates for the regional surcharge and a 0.8% average for the municipal surcharge.</p>
+
+    <h2>Mensilit&agrave; &mdash; 13th and 14th Month Pay</h2>
+    <p>Italian employment contracts typically include a tredicesima (13th month payment), paid in December as a kind of Christmas bonus. Many contracts, especially in certain sectors like commerce, also include a quattordicesima (14th month payment), usually paid in June or July. Your RAL is divided by the number of mensilit&agrave; to determine your monthly gross paycheck. For example, with a &euro;38,000 RAL and 13 mensilit&agrave;, each monthly gross payment is approximately &euro;2,923.</p>
+
+    <h2>Tips to Understand Your Busta Paga</h2>
+    <ul>
+      <li><strong>RAL vs. Net:</strong> Your RAL (Retribuzione Annua Lorda) is the gross annual figure in your contract. Your net monthly pay will be significantly lower after IRPEF, INPS, and surcharges.</li>
+      <li><strong>TFR (Trattamento di Fine Rapporto):</strong> Italian employers set aside approximately 6.9% of your salary as severance pay (TFR). This is not deducted from your paycheck &mdash; it is an additional cost to the employer and paid out when you leave.</li>
+      <li><strong>Tax deductions for dependents:</strong> If you have dependent family members (spouse, children), you may be entitled to additional detrazioni that further reduce your IRPEF.</li>
+      <li><strong>Bonus &euro;100 (ex-Renzi bonus):</strong> Workers with income between certain thresholds may receive a monthly bonus of up to approximately &euro;100, now integrated into the detrazioni system.</li>
+      <li><strong>Compare regions:</strong> Moving to a region with lower addizionale regionale can save you several hundred euros per year.</li>
+    </ul>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <a href="../../" style="color:var(--color-text-muted);text-decoration:none;">&larr; Back to all tools</a>
+  <p style="margin-top:0.5rem;">Built for people who need quick answers.</p>
+</footer>
+
+<script src="../../js/onetab-global.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  // ── Italian Regions with regional surcharge rates (2024) ──
+  var REGIONS = {
+    'average':     { name: 'Average (all regions)',    rate: 0.0173 },
+    'abruzzo':     { name: 'Abruzzo',                  rate: 0.0173 },
+    'basilicata':  { name: 'Basilicata',               rate: 0.0123 },
+    'calabria':    { name: 'Calabria',                  rate: 0.0173 },
+    'campania':    { name: 'Campania',                  rate: 0.0203 },
+    'emilia':      { name: 'Emilia-Romagna',            rate: 0.0173 },
+    'fvg':         { name: 'Friuli Venezia Giulia',     rate: 0.0123 },
+    'lazio':       { name: 'Lazio',                     rate: 0.0333 },
+    'liguria':     { name: 'Liguria',                   rate: 0.0173 },
+    'lombardia':   { name: 'Lombardia',                 rate: 0.0173 },
+    'marche':      { name: 'Marche',                    rate: 0.0173 },
+    'molise':      { name: 'Molise',                    rate: 0.0173 },
+    'piemonte':    { name: 'Piemonte',                  rate: 0.0173 },
+    'puglia':      { name: 'Puglia',                    rate: 0.0173 },
+    'sardegna':    { name: 'Sardegna',                  rate: 0.0173 },
+    'sicilia':     { name: 'Sicilia',                   rate: 0.0173 },
+    'toscana':     { name: 'Toscana',                   rate: 0.0173 },
+    'trentino':    { name: 'Trentino-Alto Adige',       rate: 0.0123 },
+    'umbria':      { name: 'Umbria',                    rate: 0.0173 },
+    'vda':         { name: "Valle d'Aosta",             rate: 0.0123 },
+    'veneto':      { name: 'Veneto',                    rate: 0.0173 }
+  };
+
+  var MUNICIPAL_RATE = 0.008; // 0.8% average
+
+  // ── IRPEF brackets (2024) ──
+  var IRPEF_BRACKETS = [
+    [28000,  0.23],
+    [50000,  0.35],
+    [Infinity, 0.43]
+  ];
+
+  // ── INPS employee contribution (2024) ──
+  var INPS_RATE = 0.0919;
+  var INPS_CEILING = 55008;
+  var INPS_RATE_ABOVE = 0.1019;
+
+  // ── DOM elements ──
+  var grossInput    = document.getElementById('grossSalary');
+  var mensilitaSel  = document.getElementById('mensilita');
+  var regionSelect  = document.getElementById('region');
+
+  // ── Populate region dropdown ──
+  var regionKeys = Object.keys(REGIONS);
+  for (var i = 0; i < regionKeys.length; i++) {
+    var o = document.createElement('option');
+    o.value = regionKeys[i];
+    o.textContent = REGIONS[regionKeys[i]].name;
+    regionSelect.appendChild(o);
+  }
+  regionSelect.value = 'average';
+
+  // ── Populate US state links for SEO ──
+  var US_STATES = [
+    'Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut',
+    'Delaware','District of Columbia','Florida','Georgia','Hawaii','Idaho','Illinois',
+    'Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts',
+    'Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada',
+    'New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota',
+    'Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota',
+    'Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming'
+  ];
+  var linksDiv = document.getElementById('stateLinks');
+  for (var i = 0; i < US_STATES.length; i++) {
+    var a = document.createElement('a');
+    var slug = US_STATES[i].toLowerCase().replace(/\s+/g, '-');
+    a.href = '../' + slug + '/';
+    a.textContent = US_STATES[i];
+    linksDiv.appendChild(a);
+  }
+
+  // ── Calculation helpers ──
+  function calcBracketTax(income, brackets) {
+    var tax = 0, prev = 0;
+    for (var i = 0; i < brackets.length; i++) {
+      var limit = brackets[i][0], rate = brackets[i][1];
+      if (income <= prev) break;
+      tax += (Math.min(income, limit) - prev) * rate;
+      prev = limit;
+    }
+    return Math.max(0, tax);
+  }
+
+  function getMarginalRate(income, brackets) {
+    var prev = 0;
+    for (var i = 0; i < brackets.length; i++) {
+      if (income <= brackets[i][0]) return brackets[i][1];
+      prev = brackets[i][0];
+    }
+    return brackets[brackets.length - 1][1];
+  }
+
+  // ── INPS calculation ──
+  function calcINPS(gross) {
+    if (gross <= INPS_CEILING) {
+      return gross * INPS_RATE;
+    }
+    return INPS_CEILING * INPS_RATE + (gross - INPS_CEILING) * INPS_RATE_ABOVE;
+  }
+
+  // ── Employment deductions (detrazioni lavoro dipendente) ──
+  function calcDetrazioni(income) {
+    if (income <= 15000) {
+      return 1955;
+    } else if (income <= 28000) {
+      return 1910 * (28000 - income) / 13000;
+    } else if (income <= 50000) {
+      return 1910 * (50000 - income) / 22000;
+    }
+    return 0;
+  }
+
+  // ── Main calculation ──
+  function calculate() {
+    var gross = parseFloat(grossInput.value) || 0;
+    var mensilita = parseInt(mensilitaSel.value);
+    var regionKey = regionSelect.value;
+    var regionalRate = REGIONS[regionKey] ? REGIONS[regionKey].rate : 0.0173;
+
+    // Step 1: INPS employee contribution
+    var inps = calcINPS(gross);
+
+    // Step 2: IRPEF taxable income = gross - INPS
+    var taxableIncome = Math.max(0, gross - inps);
+
+    // Step 3: Gross IRPEF
+    var grossIRPEF = calcBracketTax(taxableIncome, IRPEF_BRACKETS);
+
+    // Step 4: Employment deductions (detrazioni lavoro dipendente)
+    var detrazioni = calcDetrazioni(taxableIncome);
+
+    // Step 5: Net IRPEF (cannot go below 0)
+    var netIRPEF = Math.max(0, grossIRPEF - detrazioni);
+
+    // Step 6: Regional surcharge (on taxable income)
+    var regionalTax = taxableIncome * regionalRate;
+
+    // Step 7: Municipal surcharge (on taxable income)
+    var municipalTax = taxableIncome * MUNICIPAL_RATE;
+
+    // Step 8: Total deductions
+    var totalDeductions = inps + netIRPEF + regionalTax + municipalTax;
+
+    // Step 9: Annual take-home
+    var annualTakeHome = gross - totalDeductions;
+
+    // Step 10: Per-period
+    var perMonth = annualTakeHome / mensilita;
+
+    // Effective rate and marginal rate
+    var effectiveRate = gross > 0 ? (totalDeductions / gross * 100) : 0;
+    var marginalRate = getMarginalRate(taxableIncome, IRPEF_BRACKETS);
+
+    // ── Update hero ──
+    document.getElementById('heroTakeHome').textContent = OneTab.fmt(Math.round(perMonth));
+    document.getElementById('heroSublabel').textContent = 'per month (' + mensilita + ' payments/year)';
+
+    // ── Stats ──
+    document.getElementById('statAnnual').textContent = OneTab.fmt(Math.round(annualTakeHome));
+    document.getElementById('statEffective').textContent = effectiveRate.toFixed(1) + '%';
+    document.getElementById('statTotalTax').textContent = OneTab.fmt(Math.round(totalDeductions));
+    document.getElementById('statMarginal').textContent = (marginalRate * 100).toFixed(0) + '%';
+
+    // ── Breakdown table ──
+    var regionName = REGIONS[regionKey] ? REGIONS[regionKey].name : 'Average';
+    var rows = [
+      ['Gross salary (RAL)', OneTab.fmt(Math.round(gross))],
+      ['INPS employee contribution (9.19%)', '\u2212 ' + OneTab.fmt(Math.round(inps))],
+      ['Taxable income (imponibile IRPEF)', OneTab.fmt(Math.round(taxableIncome))],
+      ['', ''],
+      ['Gross IRPEF', OneTab.fmt(Math.round(grossIRPEF))],
+      ['Employment deductions (detrazioni)', '\u2212 ' + OneTab.fmt(Math.round(detrazioni))],
+      ['Net IRPEF', OneTab.fmt(Math.round(netIRPEF))],
+      ['Regional surcharge (' + regionName + ')', OneTab.fmt(Math.round(regionalTax))],
+      ['Municipal surcharge (0.8% avg)', OneTab.fmt(Math.round(municipalTax))],
+      ['', ''],
+      ['total_tax', OneTab.fmt(Math.round(totalDeductions))],
+      ['total_net', OneTab.fmt(Math.round(annualTakeHome))]
+    ];
+
+    var tbody = document.getElementById('breakdownTable').querySelector('tbody');
+    tbody.innerHTML = '';
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i][0] === '' && rows[i][1] === '') continue;
+      var tr = document.createElement('tr');
+      if (rows[i][0] === 'total_tax' || rows[i][0] === 'total_net') {
+        tr.className = 'total';
+        var td1 = document.createElement('td');
+        td1.textContent = rows[i][0] === 'total_net' ? 'Annual take-home (stipendio netto)' : 'Total deductions';
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      } else {
+        var td1 = document.createElement('td');
+        td1.textContent = rows[i][0];
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      }
+      tbody.appendChild(tr);
+    }
+
+    // ── Period comparison table ──
+    var periods = [
+      { name: 'Annual',  div: 1 },
+      { name: 'Monthly (12)',  div: 12 },
+      { name: 'Monthly (13)',  div: 13 },
+      { name: 'Monthly (14)',  div: 14 },
+      { name: 'Weekly',  div: 52 }
+    ];
+    var ptbody = document.getElementById('periodTable').querySelector('tbody');
+    ptbody.innerHTML = '';
+    for (var i = 0; i < periods.length; i++) {
+      var tr = document.createElement('tr');
+      var d = periods[i].div;
+      var isHighlighted = (d === mensilita) || (d === 1 && mensilita === 1);
+      if (isHighlighted) tr.className = 'row-highlight';
+      tr.innerHTML = '<td>' + periods[i].name + '</td><td>' + OneTab.fmt(Math.round(gross / d)) +
+        '</td><td>' + OneTab.fmt(Math.round(totalDeductions / d)) + '</td><td>' + OneTab.fmt(Math.round(annualTakeHome / d)) + '</td>';
+      ptbody.appendChild(tr);
+    }
+
+    // ── Stacked bar ──
+    var barDiv = document.getElementById('stackedBar');
+    var legDiv = document.getElementById('stackedLegend');
+    barDiv.innerHTML = '';
+    legDiv.innerHTML = '';
+
+    if (gross > 0) {
+      var segments = [
+        { label: 'Take Home',            value: annualTakeHome, color: '#059669' },
+        { label: 'IRPEF',                value: netIRPEF,       color: '#2563eb' },
+        { label: 'INPS',                 value: inps,           color: '#d97706' },
+        { label: 'Regional Surcharge',   value: regionalTax,    color: '#7c3aed' },
+        { label: 'Municipal Surcharge',  value: municipalTax,   color: '#dc2626' }
+      ];
+      for (var i = 0; i < segments.length; i++) {
+        var pct = segments[i].value / gross * 100;
+        if (pct < 0.3) continue;
+        var seg = document.createElement('div');
+        seg.className = 'segment';
+        seg.style.width = pct + '%';
+        seg.style.background = segments[i].color;
+        if (pct > 8) seg.textContent = pct.toFixed(0) + '%';
+        barDiv.appendChild(seg);
+
+        var li = document.createElement('div');
+        li.className = 'legend-item';
+        li.innerHTML = '<span class="legend-dot" style="background:' + segments[i].color + '"></span>' +
+          segments[i].label + ': ' + OneTab.fmt(Math.round(segments[i].value)) + ' (' + pct.toFixed(1) + '%)';
+        legDiv.appendChild(li);
+      }
+    }
+  }
+
+  // ── Bind all inputs ──
+  var inputs = document.querySelectorAll('#grossSalary,#mensilita,#region');
+  for (var i = 0; i < inputs.length; i++) {
+    inputs[i].addEventListener('input', calculate);
+    inputs[i].addEventListener('change', calculate);
+  }
+
+  // ── Country change (update currency prefix) ──
+  OneTab.onCountryChange(function() {
+    var pfxs = document.querySelectorAll('[id^="pfx"]');
+    for (var j = 0; j < pfxs.length; j++) pfxs[j].textContent = '\u20ac';
+    calculate();
+  });
+
+  calculate();
+})();
+</script>
+</body>
+</html>

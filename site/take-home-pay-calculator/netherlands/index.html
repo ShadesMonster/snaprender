@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Netherlands Take-Home Pay Calculator — Salary After Tax | OneTab</title>
+  <meta name="description" content="Calculate your Dutch take-home pay (nettoloon) after income tax, social contributions, and tax credits. Supports 30% ruling, pension deductions, and all 2024 Box 1 rates.">
+  <meta name="keywords" content="netherlands take home pay calculator, dutch salary calculator, nettoloon berekenen, 30% ruling calculator, dutch income tax, box 1 tax, arbeidskorting, heffingskorting">
+
+  <meta property="og:title" content="Netherlands Take-Home Pay Calculator — Salary After Tax | OneTab">
+  <meta property="og:description" content="Calculate your Dutch take-home pay (nettoloon) after income tax, social contributions, and tax credits. Supports 30% ruling and 2024 rates.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://onetab.tools/take-home-pay-calculator/netherlands/">
+  <meta property="og:site_name" content="OneTab">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Netherlands Take-Home Pay Calculator | OneTab">
+  <meta name="twitter:description" content="Calculate your Dutch take-home pay (nettoloon) after income tax, social contributions, and tax credits.">
+
+  <link rel="canonical" href="https://onetab.tools/take-home-pay-calculator/netherlands/">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../css/style.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Netherlands Take-Home Pay Calculator",
+    "url": "https://onetab.tools/take-home-pay-calculator/netherlands/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+    "description": "Calculate your Dutch take-home pay (nettoloon) after income tax, social contributions, and tax credits. Supports 30% ruling, pension deductions, and 2024 Box 1 rates."
+  }
+  </script>
+
+  <script>
+    (function() {
+      var t = localStorage.getItem('onetab-theme');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+  </script>
+
+  <style>
+    .period-table { width:100%; border-collapse:collapse; }
+    .period-table th, .period-table td { padding:0.6rem 0.75rem; text-align:right; font-variant-numeric:tabular-nums; }
+    .period-table th:first-child, .period-table td:first-child { text-align:left; }
+    .period-table th { font-size:0.8rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--color-text-muted); border-bottom:2px solid var(--color-border); }
+    .period-table td { border-bottom:1px solid var(--color-border); font-size:0.9rem; }
+    .period-table tr:last-child td { border-bottom:none; }
+    .period-table .row-highlight td { font-weight:700; color:var(--color-success); background:rgba(5,150,105,0.05); }
+    .state-links { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.75rem; }
+    .state-links a { font-size:0.8rem; padding:0.25rem 0.5rem; border-radius:4px; background:var(--color-bg); border:1px solid var(--color-border); color:var(--color-text); text-decoration:none; transition:border-color 0.15s; }
+    .state-links a:hover { border-color:var(--color-primary); color:var(--color-primary); }
+    .checkbox-row { display:flex; align-items:center; gap:0.5rem; margin-top:0.25rem; }
+    .checkbox-row input[type="checkbox"] { width:1.1rem; height:1.1rem; accent-color:var(--color-primary); }
+    .checkbox-row label { font-size:0.9rem; cursor:pointer; }
+    .info-hint { font-size:0.8rem; color:var(--color-text-muted); margin-top:0.25rem; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="../../">OneTab</a>
+  <div class="header-actions">
+    <select class="country-select-global" id="country-select-global" title="Your location"></select>
+    <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">Dark</button>
+  </div>
+</header>
+
+<main class="container">
+  <h1>Netherlands Take-Home Pay Calculator</h1>
+  <p class="subtitle">Calculate your nettoloon after income tax, social contributions, and tax credits.</p>
+
+  <div class="ad-placeholder" data-size="leaderboard"><span class="ad-label">Ad</span><span class="ad-size">728 &times; 90</span></div>
+
+  <!-- Income -->
+  <div class="card">
+    <div class="card-title">Your Income</div>
+    <div class="form-group">
+      <label>Annual gross salary (bruto jaarsalaris)</label>
+      <div class="input-with-prefix">
+        <span class="prefix">&euro;</span>
+        <input type="number" id="grossSalary" value="55000" min="0" step="1000">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Age</label>
+      <select id="ageGroup">
+        <option value="below66">Below 66 (AOW premiums apply)</option>
+        <option value="66andover">66 and over (no AOW premiums)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <div class="checkbox-row">
+        <input type="checkbox" id="ruling30">
+        <label for="ruling30">30% ruling eligible (30%-regeling)</label>
+      </div>
+      <div class="info-hint">If eligible, 30% of your gross salary is treated as a tax-free allowance.</div>
+    </div>
+    <div class="form-group">
+      <label>Pay frequency</label>
+      <select id="payFrequency">
+        <option value="12" selected>Monthly (12 paychecks/yr)</option>
+        <option value="1">Annual</option>
+        <option value="4">Quarterly (4/yr)</option>
+        <option value="26">Biweekly (26 paychecks/yr)</option>
+        <option value="52">Weekly (52 paychecks/yr)</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Optional Deductions -->
+  <div class="card">
+    <div class="card-title">Deductions <span style="font-weight:400;font-size:0.85rem;color:var(--color-text-muted);">(optional)</span></div>
+    <div class="form-group">
+      <label>Pension contribution (annual, employee share)</label>
+      <div class="input-with-prefix">
+        <span class="prefix">&euro;</span>
+        <input type="number" id="pensionContrib" value="0" min="0" step="100">
+      </div>
+      <div class="info-hint">Employer pension contributions are not deducted from your salary. Enter only your own contribution if applicable.</div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="results" class="result-section visible">
+
+    <div class="card result-hero" style="border-radius:var(--radius);">
+      <div class="rate-label">Your Take-Home Pay (Nettoloon)</div>
+      <div class="rate-value" id="heroTakeHome">&euro;0</div>
+      <div class="rate-sublabel" id="heroSublabel">per month</div>
+    </div>
+
+    <div class="stat-grid" style="margin-bottom:1.5rem;">
+      <div class="stat-box success">
+        <div class="stat-value" id="statAnnual">&euro;0</div>
+        <div class="stat-label">Annual Take-Home</div>
+      </div>
+      <div class="stat-box highlight">
+        <div class="stat-value" id="statEffective">0%</div>
+        <div class="stat-label">Effective Tax Rate</div>
+      </div>
+      <div class="stat-box warning">
+        <div class="stat-value" id="statTotalTax">&euro;0</div>
+        <div class="stat-label">Total Tax &amp; Premiums</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="statMarginal">0%</div>
+        <div class="stat-label">Marginal Rate</div>
+      </div>
+    </div>
+
+    <div class="ad-placeholder" data-size="rectangle"><span class="ad-label">Ad</span><span class="ad-size">300 &times; 250</span></div>
+
+    <!-- Tax Breakdown -->
+    <div class="card">
+      <h2>Tax Breakdown</h2>
+      <table class="breakdown-table" id="breakdownTable">
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Pay Period Comparison -->
+    <div class="card">
+      <h2>Pay Period Breakdown</h2>
+      <table class="period-table" id="periodTable">
+        <thead>
+          <tr><th>Period</th><th>Gross</th><th>Tax &amp; Premiums</th><th>Take-Home</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Stacked Bar -->
+    <div class="card">
+      <h2>Where Your Money Goes</h2>
+      <div class="stacked-bar" id="stackedBar"></div>
+      <div class="stacked-legend" id="stackedLegend"></div>
+    </div>
+
+    <div class="ad-placeholder" data-size="large-rectangle"><span class="ad-label">Ad</span><span class="ad-size">336 &times; 280</span></div>
+  </div>
+
+  <!-- Related Tools -->
+  <div class="card" style="margin-top:1.5rem;">
+    <div class="card-title">Related Tools</div>
+    <div style="display:flex;flex-direction:column;gap:0.5rem;">
+      <a href="../../salary-converter/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Salary to Hourly Calculator</a>
+      <a href="../../quarterly-tax-estimator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Quarterly Tax Estimator (Freelancers)</a>
+      <a href="../../freelance-rate-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Freelance Hourly Rate Calculator</a>
+      <a href="../../compound-interest-calculator/" style="color:var(--color-primary);font-weight:600;text-decoration:none;font-size:0.9rem;">Compound Interest Calculator</a>
+    </div>
+  </div>
+
+  <!-- Country Pages -->
+  <div class="card" style="margin-top:1rem;">
+    <div class="card-title">Take-Home Pay by Country</div>
+    <div class="state-links">
+      <a href="../">United States</a>
+      <a href="../united-kingdom/">United Kingdom</a>
+      <a href="../canada/">Canada</a>
+      <a href="../australia/">Australia</a>
+      <a href="../germany/">Germany</a>
+    </div>
+  </div>
+
+  <div class="ad-placeholder" data-size="in-article"><span class="ad-label">Ad</span><span class="ad-size">Responsive</span></div>
+
+  <!-- SEO Content -->
+  <div class="content-section">
+    <h2>How Dutch Take-Home Pay Is Calculated</h2>
+    <p>In the Netherlands, your take-home pay (nettoloon) is your gross salary minus income tax (inkomstenbelasting), social insurance premiums (volksverzekeringen), and any applicable pension contributions. The Dutch tax system groups income into three "boxes." Employment income falls under Box 1, which uses a progressive rate structure combining income tax and social insurance premiums into a single combined rate.</p>
+
+    <h2>Box 1: Income Tax &amp; Social Insurance (2024)</h2>
+    <p>Box 1 covers income from employment and home ownership. For 2024, the combined rate (income tax plus social insurance premiums) is <strong>36.97%</strong> on income up to &euro;75,518 and <strong>49.50%</strong> on income above that threshold. The social insurance premiums embedded in the lower bracket include AOW (state pension, 17.9%), Anw (survivor benefits, 0.1%), and Wlz (long-term care, 9.65%), totalling 27.65% on the first &euro;38,098 of income. If you are 66 or older and have reached the AOW retirement age, the AOW premium (17.9%) no longer applies, which effectively lowers your combined rate on the first bracket.</p>
+
+    <h2>Tax Credits (Heffingskortingen)</h2>
+    <p>The Netherlands provides two important tax credits that directly reduce the amount of tax you owe:</p>
+    <ul>
+      <li><strong>General tax credit (algemene heffingskorting):</strong> &euro;3,362 for incomes up to &euro;24,813. This credit phases out linearly for incomes between &euro;24,813 and &euro;75,518, reaching &euro;0 at &euro;75,518.</li>
+      <li><strong>Employment tax credit (arbeidskorting):</strong> Up to &euro;5,532 for employed workers. It phases out for incomes above &euro;39,957 and is fully gone at &euro;124,934. This credit rewards labor force participation.</li>
+    </ul>
+    <p>These credits are subtracted from your calculated tax liability, which means they can significantly boost your net pay, especially for middle incomes.</p>
+
+    <h2>The 30% Ruling (30%-regeling)</h2>
+    <p>The 30% ruling is a Dutch tax advantage for skilled expatriate workers recruited from abroad. If eligible, your employer can pay 30% of your gross salary as a tax-free allowance (to compensate for extraterritorial costs). This means only 70% of your salary is subject to Dutch income tax and premiums. The ruling can last up to five years and can save eligible employees thousands of euros annually. Eligibility depends on specific expertise requirements and being recruited from at least 150 km outside the Dutch border.</p>
+
+    <h2>Social Insurance Premiums (Volksverzekeringen)</h2>
+    <p>Dutch social insurance premiums are split into two categories:</p>
+    <ul>
+      <li><strong>National insurance (volksverzekeringen):</strong> AOW (17.9%), Anw (0.1%), and Wlz (9.65%) premiums are paid by the employee and are included in the Box 1 combined rate. These apply only to the first &euro;38,098 of income.</li>
+      <li><strong>Employee insurance (werknemersverzekeringen):</strong> WW (unemployment), WIA/WAO (disability), and ZW (sickness) premiums are paid by the employer and are not deducted from your salary.</li>
+    </ul>
+    <p>Health insurance (zorgverzekering) in the Netherlands is mandatory but separate from payroll taxes. The income-dependent health insurance contribution (Zvw) of approximately 5.32% is typically paid by the employer on your behalf and is not deducted from your gross salary. You do pay a nominal monthly health insurance premium directly to an insurer (roughly &euro;130&ndash;&euro;170/month), but that is a personal expense, not a payroll deduction.</p>
+
+    <h2>Pension Contributions</h2>
+    <p>Many Dutch employers offer pension plans, often through industry-wide pension funds. Contributions are usually shared between employer and employee. Your employee share is deducted from your gross salary before tax, reducing your taxable income. The exact contribution rate depends on your employer's pension scheme, industry, and salary level.</p>
+
+    <h2>Tips to Optimize Your Dutch Take-Home Pay</h2>
+    <ul>
+      <li><strong>Check 30% ruling eligibility:</strong> If you moved to the Netherlands for work, the 30% ruling can save thousands in taxes each year.</li>
+      <li><strong>Maximize pension contributions:</strong> Employee pension contributions reduce your taxable income, lowering your effective tax rate.</li>
+      <li><strong>Mortgage interest deduction:</strong> If you buy a home, mortgage interest on your primary residence is deductible in Box 1.</li>
+      <li><strong>Commuting allowance:</strong> Many employers offer a tax-free commuting allowance (&euro;0.23/km in 2024). Make sure you claim it.</li>
+      <li><strong>File your tax return:</strong> Even though your employer withholds tax, filing an annual return (aangifte inkomstenbelasting) may result in a refund if you have additional deductions.</li>
+    </ul>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <a href="../../" style="color:var(--color-text-muted);text-decoration:none;">&larr; Back to all tools</a>
+  <p style="margin-top:0.5rem;">Built for people who need quick answers.</p>
+</footer>
+
+<script src="../../js/onetab-global.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  // ── Dutch Tax Constants (2024) ──
+
+  // Box 1 combined brackets (income tax + social insurance premiums)
+  var BOX1_BRACKET1_LIMIT = 75518;
+  var BOX1_RATE1 = 0.3697;  // 36.97%
+  var BOX1_RATE2 = 0.4950;  // 49.50%
+
+  // Social insurance premiums (volksverzekeringen) — included in Box 1 rates
+  var AOW_RATE = 0.179;      // 17.9% — state pension
+  var ANW_RATE = 0.001;      // 0.1%  — survivor benefit
+  var WLZ_RATE = 0.0965;     // 9.65% — long-term care
+  var SOCIAL_TOTAL = 0.2765;  // 27.65% total
+  var SOCIAL_CAP = 38098;     // premiums only on first €38,098
+
+  // For age 66+: no AOW premium, so lower rate on bracket 1
+  // Box 1 rate for 66+: 36.97% - 17.9% = 19.07% on first bracket
+  var BOX1_RATE1_AOW_EXEMPT = 0.1907;
+
+  // General tax credit (algemene heffingskorting)
+  var AHK_MAX = 3362;
+  var AHK_PHASE_START = 24813;
+  var AHK_PHASE_END = 75518;
+
+  // Employment tax credit (arbeidskorting)
+  var AK_MAX = 5532;
+  var AK_PHASE_START = 39957;
+  var AK_PHASE_END = 124934;
+
+  // ── DOM elements ──
+  var grossInput = document.getElementById('grossSalary');
+  var ageSelect = document.getElementById('ageGroup');
+  var ruling30Check = document.getElementById('ruling30');
+  var freqSelect = document.getElementById('payFrequency');
+  var pensionInput = document.getElementById('pensionContrib');
+
+  // ── Frequency labels ──
+  var FREQ_LABELS = { '1':'annually', '4':'per quarter', '12':'per month', '26':'per paycheck', '52':'per week' };
+  var FREQ_NAMES = { '1':'Annual', '4':'Quarterly', '12':'Monthly', '26':'Biweekly', '52':'Weekly' };
+
+  // ── Calculation helpers ──
+
+  function calcBox1Tax(taxableIncome, isAOWExempt) {
+    if (taxableIncome <= 0) return 0;
+    var rate1 = isAOWExempt ? BOX1_RATE1_AOW_EXEMPT : BOX1_RATE1;
+    if (taxableIncome <= BOX1_BRACKET1_LIMIT) {
+      return taxableIncome * rate1;
+    }
+    return BOX1_BRACKET1_LIMIT * rate1 + (taxableIncome - BOX1_BRACKET1_LIMIT) * BOX1_RATE2;
+  }
+
+  function getMarginalRate(taxableIncome, isAOWExempt) {
+    if (taxableIncome <= BOX1_BRACKET1_LIMIT) {
+      return isAOWExempt ? BOX1_RATE1_AOW_EXEMPT : BOX1_RATE1;
+    }
+    return BOX1_RATE2;
+  }
+
+  function calcGeneralTaxCredit(taxableIncome) {
+    // Algemene heffingskorting: full below phase-start, linear phase-out, 0 at phase-end
+    if (taxableIncome <= AHK_PHASE_START) return AHK_MAX;
+    if (taxableIncome >= AHK_PHASE_END) return 0;
+    var fraction = (taxableIncome - AHK_PHASE_START) / (AHK_PHASE_END - AHK_PHASE_START);
+    return Math.max(0, AHK_MAX * (1 - fraction));
+  }
+
+  function calcEmploymentTaxCredit(taxableIncome) {
+    // Arbeidskorting: builds up to max, then phases out
+    // Simplified: max at €39,957, phases out between €39,957 and €124,934
+    if (taxableIncome <= 0) return 0;
+
+    // Build-up phase (simplified): linearly increases to max at AK_PHASE_START
+    var credit;
+    if (taxableIncome <= 11491) {
+      credit = taxableIncome * 0.08231;
+    } else if (taxableIncome <= 24821) {
+      credit = 945 + (taxableIncome - 11491) * 0.29861;
+    } else if (taxableIncome <= AK_PHASE_START) {
+      credit = 4926 + (taxableIncome - 24821) * 0.04006;
+    } else {
+      credit = AK_MAX;
+    }
+
+    // Phase-out above AK_PHASE_START
+    if (taxableIncome > AK_PHASE_START) {
+      var reduction = (taxableIncome - AK_PHASE_START) * (AK_MAX / (AK_PHASE_END - AK_PHASE_START));
+      credit = Math.max(0, AK_MAX - reduction);
+    }
+
+    return Math.min(credit, AK_MAX);
+  }
+
+  function calcSocialPremiumBreakdown(taxableIncome, isAOWExempt) {
+    // Social premiums are included in the Box 1 rate, but we break them out for display
+    var base = Math.min(taxableIncome, SOCIAL_CAP);
+    if (base <= 0) return { aow: 0, anw: 0, wlz: 0, total: 0 };
+    var aow = isAOWExempt ? 0 : base * AOW_RATE;
+    var anw = base * ANW_RATE;
+    var wlz = base * WLZ_RATE;
+    return { aow: aow, anw: anw, wlz: wlz, total: aow + anw + wlz };
+  }
+
+  // ── Main calculation ──
+  function calculate() {
+    var gross = parseFloat(grossInput.value) || 0;
+    var isAOWExempt = ageSelect.value === '66andover';
+    var has30Ruling = ruling30Check.checked;
+    var freq = parseInt(freqSelect.value);
+    var pensionAnnual = parseFloat(pensionInput.value) || 0;
+
+    // 30% ruling: 30% of gross is tax-free
+    var taxFreeAllowance = has30Ruling ? gross * 0.30 : 0;
+    var taxableGross = gross - taxFreeAllowance;
+
+    // Pension contribution reduces taxable income
+    var taxableIncome = Math.max(0, taxableGross - pensionAnnual);
+
+    // Box 1 tax (combined income tax + social premiums)
+    var grossTax = calcBox1Tax(taxableIncome, isAOWExempt);
+
+    // Tax credits
+    var generalCredit = calcGeneralTaxCredit(taxableIncome);
+    var employmentCredit = calcEmploymentTaxCredit(taxableIncome);
+    var totalCredits = generalCredit + employmentCredit;
+
+    // Net tax after credits (cannot go below 0)
+    var netTax = Math.max(0, grossTax - totalCredits);
+
+    // Social premium breakdown (for display — these are part of the Box 1 tax)
+    var socialBreakdown = calcSocialPremiumBreakdown(taxableIncome, isAOWExempt);
+
+    // Income tax portion (Box 1 tax minus social premiums)
+    var incomeTaxPortion = grossTax - socialBreakdown.total;
+
+    // Total deductions = net tax + pension
+    var totalDeductions = netTax + pensionAnnual;
+    var annualTakeHome = gross - totalDeductions;
+    var perPeriod = annualTakeHome / freq;
+
+    var effectiveRate = gross > 0 ? (netTax / gross * 100) : 0;
+    var marginalRate = getMarginalRate(taxableIncome, isAOWExempt) * 100;
+
+    // ── Update hero ──
+    document.getElementById('heroTakeHome').textContent = OneTab.fmt(Math.round(perPeriod));
+    document.getElementById('heroSublabel').textContent = FREQ_LABELS[freq] || 'per month';
+
+    // ── Stats ──
+    document.getElementById('statAnnual').textContent = OneTab.fmt(Math.round(annualTakeHome));
+    document.getElementById('statEffective').textContent = effectiveRate.toFixed(1) + '%';
+    document.getElementById('statTotalTax').textContent = OneTab.fmt(Math.round(netTax));
+    document.getElementById('statMarginal').textContent = marginalRate.toFixed(1) + '%';
+
+    // ── Breakdown table ──
+    var rows = [
+      ['Gross salary (bruto)', OneTab.fmt(Math.round(gross))]
+    ];
+
+    if (has30Ruling) {
+      rows.push(['30% ruling tax-free allowance', '\u2212 ' + OneTab.fmt(Math.round(taxFreeAllowance))]);
+      rows.push(['Taxable gross (70%)', OneTab.fmt(Math.round(taxableGross))]);
+    }
+
+    if (pensionAnnual > 0) {
+      rows.push(['Pension contribution', '\u2212 ' + OneTab.fmt(Math.round(pensionAnnual))]);
+    }
+
+    rows.push(['Taxable income (Box 1)', OneTab.fmt(Math.round(taxableIncome))]);
+    rows.push(['', '']);
+
+    rows.push(['Box 1 combined tax (' + (isAOWExempt ? '19.07' : '36.97') + '% / 49.50%)', OneTab.fmt(Math.round(grossTax))]);
+
+    // Show social premium breakdown
+    if (!isAOWExempt && socialBreakdown.aow > 0) {
+      rows.push(['  \u2514 Incl. AOW premium (17.9%)', OneTab.fmt(Math.round(socialBreakdown.aow))]);
+    }
+    if (socialBreakdown.anw > 0) {
+      rows.push(['  \u2514 Incl. Anw premium (0.1%)', OneTab.fmt(Math.round(socialBreakdown.anw))]);
+    }
+    if (socialBreakdown.wlz > 0) {
+      rows.push(['  \u2514 Incl. Wlz premium (9.65%)', OneTab.fmt(Math.round(socialBreakdown.wlz))]);
+    }
+
+    rows.push(['', '']);
+    rows.push(['General tax credit (algemene heffingskorting)', '\u2212 ' + OneTab.fmt(Math.round(generalCredit))]);
+    rows.push(['Employment tax credit (arbeidskorting)', '\u2212 ' + OneTab.fmt(Math.round(employmentCredit))]);
+    rows.push(['Total tax credits', '\u2212 ' + OneTab.fmt(Math.round(totalCredits))]);
+    rows.push(['', '']);
+    rows.push(['total', OneTab.fmt(Math.round(netTax))]);
+    rows.push(['', '']);
+
+    if (pensionAnnual > 0) {
+      rows.push(['Pension contribution', '\u2212 ' + OneTab.fmt(Math.round(pensionAnnual))]);
+    }
+
+    rows.push(['total', OneTab.fmt(Math.round(annualTakeHome))]);
+
+    var tbody = document.getElementById('breakdownTable').querySelector('tbody');
+    tbody.innerHTML = '';
+    var totalIndex = 0;
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i][0] === '' && rows[i][1] === '') continue;
+      var tr = document.createElement('tr');
+      if (rows[i][0] === 'total') {
+        tr.className = 'total';
+        totalIndex++;
+        var td1 = document.createElement('td');
+        td1.textContent = totalIndex === 1 ? 'Net tax after credits' : 'Annual take-home pay (nettoloon)';
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      } else {
+        var td1 = document.createElement('td');
+        td1.textContent = rows[i][0];
+        tr.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.textContent = rows[i][1];
+        tr.appendChild(td2);
+      }
+      tbody.appendChild(tr);
+    }
+
+    // ── Period comparison table ──
+    var periods = [
+      { name:'Annual', div:1 },
+      { name:'Monthly', div:12 },
+      { name:'Quarterly', div:4 },
+      { name:'Biweekly', div:26 },
+      { name:'Weekly', div:52 }
+    ];
+    var ptbody = document.getElementById('periodTable').querySelector('tbody');
+    ptbody.innerHTML = '';
+    for (var i = 0; i < periods.length; i++) {
+      var tr = document.createElement('tr');
+      var d = periods[i].div;
+      if (FREQ_NAMES[freq] === periods[i].name) tr.className = 'row-highlight';
+      tr.innerHTML = '<td>' + periods[i].name + '</td><td>' + OneTab.fmt(Math.round(gross / d)) +
+        '</td><td>' + OneTab.fmt(Math.round(netTax / d)) + '</td><td>' + OneTab.fmt(Math.round(annualTakeHome / d)) + '</td>';
+      ptbody.appendChild(tr);
+    }
+
+    // ── Stacked bar ──
+    var barDiv = document.getElementById('stackedBar');
+    var legDiv = document.getElementById('stackedLegend');
+    barDiv.innerHTML = '';
+    legDiv.innerHTML = '';
+
+    if (gross > 0) {
+      // Break net tax into income tax portion and social premiums portion
+      var socialAfterCredits = Math.min(socialBreakdown.total, netTax);
+      var incomeTaxAfterCredits = netTax - socialAfterCredits;
+
+      var segments = [
+        { label:'Take Home', value:annualTakeHome, color:'#059669' },
+        { label:'Income Tax', value:incomeTaxAfterCredits, color:'#2563eb' },
+        { label:'Social Premiums', value:socialAfterCredits, color:'#d97706' }
+      ];
+      if (taxFreeAllowance > 0) {
+        // The 30% ruling portion goes to take-home, it's already in annualTakeHome
+      }
+      if (pensionAnnual > 0) {
+        segments.push({ label:'Pension Contribution', value:pensionAnnual, color:'#6b7280' });
+      }
+
+      for (var i = 0; i < segments.length; i++) {
+        var pct = segments[i].value / gross * 100;
+        if (pct < 0.3) continue;
+        var seg = document.createElement('div');
+        seg.className = 'segment';
+        seg.style.width = pct + '%';
+        seg.style.background = segments[i].color;
+        if (pct > 8) seg.textContent = pct.toFixed(0) + '%';
+        barDiv.appendChild(seg);
+
+        var li = document.createElement('div');
+        li.className = 'legend-item';
+        li.innerHTML = '<span class="legend-dot" style="background:' + segments[i].color + '"></span>' +
+          segments[i].label + ': ' + OneTab.fmt(Math.round(segments[i].value)) + ' (' + pct.toFixed(1) + '%)';
+        legDiv.appendChild(li);
+      }
+    }
+  }
+
+  // ── Bind all inputs ──
+  var inputs = document.querySelectorAll('#grossSalary,#ageGroup,#ruling30,#payFrequency,#pensionContrib');
+  for (var i = 0; i < inputs.length; i++) {
+    inputs[i].addEventListener('input', calculate);
+    inputs[i].addEventListener('change', calculate);
+  }
+
+  calculate();
+})();
+</script>
+</body>
+</html>
