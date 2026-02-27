@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit Rate Calculator</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 700px; margin: 20px auto; padding: 0 15px; background: #fff; color: #333; font-size: 14px; }
+  h1 { font-size: 18px; margin-bottom: 4px; }
+  p.sub { color: #888; font-size: 12px; margin-bottom: 20px; }
+  label { font-weight: bold; font-size: 13px; }
+  input[type="number"], input[type="text"] { border: 1px solid #ccc; border-radius: 3px; padding: 5px 7px; font-size: 13px; font-family: monospace; }
+  .target-row { margin-bottom: 20px; }
+  .target-row input { width: 180px; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+  th { text-align: left; font-size: 12px; padding: 4px 6px; border-bottom: 2px solid #333; background: #f5f5f5; }
+  td { padding: 4px 6px; border-bottom: 1px solid #ddd; }
+  td input { width: 100%; box-sizing: border-box; }
+  .btn { padding: 6px 14px; font-size: 13px; cursor: pointer; border: 1px solid #999; border-radius: 3px; background: #f0f0f0; }
+  .btn:hover { background: #e0e0e0; }
+  .btn-solve { background: #4a90d9; color: #fff; border-color: #4a90d9; padding: 8px 24px; font-size: 14px; width: 100%; margin-top: 10px; }
+  .btn-solve:hover { background: #3a7bc8; }
+  .btn-rm { background: none; border: none; color: #c00; cursor: pointer; font-size: 16px; padding: 2px 6px; }
+  .options { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 10px; font-size: 12px; color: #666; }
+  .options input { width: 60px; }
+  .results { margin-top: 20px; }
+  .results h2 { font-size: 15px; margin-bottom: 5px; }
+  .results-info { font-size: 12px; color: #888; margin-bottom: 8px; }
+  .results table td { font-family: monospace; font-size: 13px; }
+  tr.exact td { color: #080; font-weight: bold; }
+  .diff-pos { color: #c00; }
+  .diff-zero { color: #080; font-weight: bold; }
+  .diff-neg { color: #b80; }
+  .scroll { max-height: 350px; overflow-y: auto; }
+  .note { font-size: 11px; color: #999; margin-top: 6px; }
+</style>
+</head>
+<body>
+<h1>Unit Rate Calculator</h1>
+<p class="sub">Enter rates, fill in what you know, leave blanks to solve</p>
+
+<div class="target-row">
+  <label>Target Total: £</label>
+  <input type="number" id="target" step="0.01" placeholder="0.00">
+</div>
+
+<table id="items-table">
+  <thead><tr><th>Name</th><th>Rate</th><th>Min</th><th>Max</th><th>Qty</th><th></th></tr></thead>
+  <tbody id="items-body"></tbody>
+</table>
+<button class="btn" onclick="addItem()">+ Add row</button>
+
+<div class="options">
+  <span>Max results: <input type="number" id="maxResults" value="50"></span>
+  <span>Global min: <input type="number" id="minQty" value="0"></span>
+  <span>Global max: <input type="number" id="maxQty" value="800"></span>
+</div>
+
+<button class="btn btn-solve" id="solveBtn" onclick="runSolve()">Solve</button>
+<p class="note">Enter a quantity to fix it. Leave blank to solve for it. Works best with 1-2 unknowns.</p>
+
+<div class="results" id="results" style="display:none">
+  <h2>Results</h2>
+  <div class="results-info" id="results-info"></div>
+  <div class="scroll">
+    <table><thead id="rhead"></thead><tbody id="rbody"></tbody></table>
+  </div>
+</div>
+
+<script>
+let uid=0;
+function addItem(n='',r='',mn='',mx=''){
+  const id=uid++;
+  const tr=document.createElement('tr'); tr.id='r'+id;
+  tr.innerHTML=`<td><input type="text" data-f="name" value="${n}" placeholder="name"></td>
+    <td><input type="number" data-f="rate" value="${r}" step="0.01" placeholder="0.00"></td>
+    <td><input type="number" data-f="min" value="${mn}" placeholder="0"></td>
+    <td><input type="number" data-f="max" value="${mx}" placeholder="—"></td>
+    <td><input type="number" data-f="qty" placeholder="blank=solve"></td>
+    <td><button class="btn-rm" onclick="document.getElementById('r${id}').remove()">×</button></td>`;
+  document.getElementById('items-body').appendChild(tr);
+}
+
+function getItems(){
+  const items=[];
+  document.querySelectorAll('#items-body tr').forEach(tr=>{
+    const g=f=>tr.querySelector(`[data-f="${f}"]`).value;
+    const rate=parseFloat(g('rate'));
+    if(isNaN(rate)||rate<=0) return;
+    const q=g('qty'), has=q!==''&&!isNaN(parseInt(q)), mx=g('max');
+    items.push({name:g('name')||'?',rate,qty:has?parseInt(q):null,locked:has,
+      minqty:parseInt(g('min'))||0,maxqty:mx!==''?parseInt(mx):null});
+  });
+  return items;
+}
+
+function runSolve(){
+  const b=document.getElementById('solveBtn');
+  b.textContent='Solving...'; b.disabled=true;
+  setTimeout(()=>{ solve(); b.textContent='Solve'; b.disabled=false; },50);
+}
+
+function solve(){
+  const target=parseFloat(document.getElementById('target').value);
+  const maxResults=parseInt(document.getElementById('maxResults').value)||50;
+  const minQty=parseInt(document.getElementById('minQty').value)||0;
+  const maxQty=parseInt(document.getElementById('maxQty').value)||800;
+  const items=getItems();
+  if(!items.length||isNaN(target)) return;
+  const locked=items.filter(i=>i.locked), unlocked=items.filter(i=>!i.locked);
+  let lockedTotal=0; locked.forEach(i=>lockedTotal+=i.qty*i.rate);
+  const remCents=Math.round((target-lockedTotal)*100);
+  let solutions=[];
+
+  if(unlocked.length===0){
+    solutions.push({qtys:[],diff:Math.round((target-lockedTotal)*100)/100});
+  } else if(unlocked.length===1){
+    const mn=Math.max(minQty,unlocked[0].minqty);
+    const mx=unlocked[0].maxqty!==null?Math.min(maxQty,unlocked[0].maxqty):maxQty;
+    const ex=(target-lockedTotal)/unlocked[0].rate;
+    new Set([Math.floor(ex),Math.ceil(ex),Math.round(ex)]).forEach(q=>{
+      if(q>=mn&&q<=mx) solutions.push({qtys:[q],diff:Math.round((q*unlocked[0].rate+lockedTotal-target)*100)/100});
+    });
+    const seen=new Set();
+    solutions=solutions.filter(s=>{if(seen.has(s.qtys[0]))return false;seen.add(s.qtys[0]);return true;});
+  } else if(unlocked.length===2){
+    const r0=Math.round(unlocked[0].rate*100),r1=Math.round(unlocked[1].rate*100);
+    const mn0=Math.max(minQty,unlocked[0].minqty),mn1=Math.max(minQty,unlocked[1].minqty);
+    const mx0=unlocked[0].maxqty!==null?Math.min(maxQty,unlocked[0].maxqty):maxQty;
+    const mx1=unlocked[1].maxqty!==null?Math.min(maxQty,unlocked[1].maxqty):maxQty;
+    let best=[];
+    for(let q0=mn0;q0<=mx0;q0++){
+      const lf=remCents-r0*q0;
+      if(lf<r1*mn1) break;
+      if(lf>=0&&lf%r1===0){const q1=lf/r1;if(q1>=mn1&&q1<=mx1) best.push({qtys:[q0,q1],diff:0});}
+    }
+    if(!best.length){
+      for(let q0=mn0;q0<=mx0;q0++){
+        const lf=remCents-r0*q0,q1e=lf/r1;
+        for(const q1 of[Math.floor(q1e),Math.ceil(q1e)]){
+          if(q1>=mn1&&q1<=mx1) best.push({qtys:[q0,q1],diff:Math.round(r0*q0+r1*q1-remCents)/100});
+        }
+      }
+    }
+    best.sort((a,b)=>{const ae=a.diff===0?0:1,be=b.diff===0?0:1;if(ae!==be)return ae-be;return Math.abs(a.diff)-Math.abs(b.diff);});
+    solutions=best.slice(0,maxResults);
+  } else {
+    const rates=unlocked.map(u=>Math.round(u.rate*100));
+    const mins=unlocked.map(u=>Math.max(minQty,u.minqty));
+    const maxes=unlocked.map(u=>u.maxqty!==null?Math.min(maxQty,u.maxqty):maxQty);
+    const n=unlocked.length; let exact=[];
+    function srch(idx,rem,qtys){
+      if(idx===n-1){if(rem>=0&&rem%rates[idx]===0){const q=rem/rates[idx];if(q>=mins[idx]&&q<=maxes[idx])exact.push({qtys:[...qtys,q],diff:0});}return;}
+      const mf=Math.min(maxes[idx],Math.floor(rem/rates[idx]));
+      for(let q=mins[idx];q<=mf;q++){srch(idx+1,rem-rates[idx]*q,[...qtys,q]);if(exact.length>=maxResults)return;}
+    }
+    srch(0,remCents,[]);
+    if(exact.length){solutions=exact.slice(0,maxResults);}
+    else{
+      let approx=[],bestD=Infinity;
+      function srch2(idx,rem,qtys){
+        if(approx.length>maxResults*50)return;
+        if(idx===n-1){for(const qr of[Math.floor(rem/rates[idx]),Math.ceil(rem/rates[idx])]){
+          if(qr>=mins[idx]&&qr<=maxes[idx]){const d=(rates[idx]*qr-rem)/100,ad=Math.abs(d);
+            if(ad<=bestD+1){if(ad<bestD)bestD=ad;approx.push({qtys:[...qtys,qr],diff:Math.round(d*100)/100});}
+          }}return;}
+        const mf=Math.min(maxes[idx],Math.floor(rem/rates[idx])+1);
+        for(let q=mins[idx];q<=mf;q++){srch2(idx+1,rem-rates[idx]*q,[...qtys,q]);if(approx.length>maxResults*50)return;}
+      }
+      srch2(0,remCents,[]);
+      approx.sort((a,b)=>Math.abs(a.diff)-Math.abs(b.diff));
+      solutions=approx.slice(0,maxResults);
+    }
+  }
+  solutions.sort((a,b)=>{const ae=a.diff===0?0:1,be=b.diff===0?0:1;if(ae!==be)return ae-be;return Math.abs(a.diff)-Math.abs(b.diff);});
+  solutions=solutions.slice(0,maxResults);
+  show(locked,unlocked,solutions);
+}
+
+function show(locked,unlocked,sols){
+  document.getElementById('results').style.display='block';
+  const hd=document.getElementById('rhead'),bd=document.getElementById('rbody'),info=document.getElementById('results-info');
+  if(!sols.length){hd.innerHTML='';bd.innerHTML='<tr><td>No solutions found</td></tr>';info.textContent='';return;}
+  const ec=sols.filter(s=>s.diff===0).length;
+  info.textContent=sols.length+' shown'+(ec?' · '+ec+' exact':'');
+  let h='<tr>';
+  locked.forEach(i=>h+=`<th>${i.name} (fixed)</th>`);
+  unlocked.forEach(i=>h+=`<th>${i.name}</th>`);
+  h+='<th>Total</th><th>Diff (£)</th></tr>'; hd.innerHTML=h;
+  const allItems=[...locked.map(i=>({name:i.name,rate:i.rate,locked:true})),...unlocked.map(i=>({name:i.name,rate:i.rate,locked:false}))];
+  const colSpan=allItems.length+2;
+  let b='';
+  sols.forEach(s=>{
+    b+=`<tr class="${s.diff===0?'exact':''}">`;
+    locked.forEach(i=>b+=`<td>${i.qty}</td>`);
+    s.qtys.forEach(q=>b+=`<td>${q}</td>`);
+    let t=0;locked.forEach(i=>t+=i.qty);s.qtys.forEach(q=>t+=q);
+    b+=`<td>${t}</td>`;
+    const cls=s.diff===0?'diff-zero':s.diff>0?'diff-pos':'diff-neg';
+    const str=s.diff===0?'✓ exact':(s.diff>0?'+':'')+s.diff.toFixed(2);
+    b+=`<td class="${cls}">${str}</td></tr>`;
+    // Proof row
+    const allQtys=[...locked.map(i=>i.qty),...s.qtys];
+    let parts=[], grand=0;
+    allItems.forEach((item,idx)=>{
+      const sub=item.rate*allQtys[idx];
+      grand+=sub;
+      parts.push(`£${sub.toFixed(2)} (${allQtys[idx]} × ${item.rate})`);
+    });
+    b+=`<tr><td colspan="${colSpan}" style="font-size:11px;color:#888;padding:2px 6px 8px;border-bottom:2px solid #ddd;">${parts.join(' + ')} = <b>£${grand.toFixed(2)}</b></td></tr>`;
+  });
+  bd.innerHTML=b;
+}
+
+for(let i=0;i<4;i++) addItem();
+</script>
+</body>
+</html>
